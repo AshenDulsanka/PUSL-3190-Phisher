@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+    }
+    .probability-meter {
+      width: 100%;
+      height: 20px;
+      background-color: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .probability-fill {
+      height: 100%;
+      background-color: #ff4444;
+      transition: width 0.3s ease;
+    }
+    .safe {
+      background-color: #4CAF50;
+    }
+    .warning {
+      background-color: #FFC107;
+    }
+    .danger {
+      background-color: #ff4444;
+    }
+  </style>
+</head>
+<body>
+  <h2>AI Phishing Detector</h2>
+  <p>Current website phishing probability:</p>
+  <div class="probability-meter">
+    <div id="probabilityFill" class="probability-fill" style="width: 0%"></div>
+  </div>
+  <p id="probabilityText">Loading...</p>
+  <script src="popup.js"></script>
+</body>
+</html>
