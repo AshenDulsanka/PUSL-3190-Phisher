@@ -1,0 +1,33 @@
+{
+  "name": "random_forest_v1",
+  "type": "random_forest",
+  "version": "1.0",
+  "trained_at": "2025-03-23T11:32:07.353225",
+  "accuracy": 0.7315230412906317,
+  "precision": 0.7046448010378183,
+  "recall": 0.7977395357747198,
+  "f1_score": 0.7483078766097634,
+  "auc": 0.8202831761047747,
+  "parameters": {
+    "n_estimators": 100,
+    "max_depth": 20,
+    "min_samples_split": 10,
+    "min_samples_leaf": 4
+  },
+  "feature_importances": {
+    "importance": {
+      "url_length": 0.34225091772606087,
+      "num_dots": 0.2575037559581319,
+      "num_special_chars": 0.21175287071602614,
+      "has_ip": 0.0676386036095324,
+      "num_subdomains": 0.06043469944698642,
+      "has_hyphen": 0.04518755594266595,
+      "has_at_symbol": 0.008067409281787213,
+      "is_shortened": 0.007137947709242223,
+      "has_https": 2.6239609566898525e-05
+    }
+  },
+  "dataset_size": 313022,
+  "training_samples": 250417,
+  "test_samples": 62605
+}
