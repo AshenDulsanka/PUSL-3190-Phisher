@@ -1,43 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>
-    body {
-      width: 300px;
-      padding: 15px;
-      font-family: Arial, sans-serif;
-    }
-    .probability-meter {
-      width: 100%;
-      height: 20px;
-      background-color: #eee;
-      border-radius: 10px;
-      overflow: hidden;
-      margin: 10px 0;
-    }
-    .probability-fill {
-      height: 100%;
-      background-color: #ff4444;
-      transition: width 0.3s ease;
-    }
-    .safe {
-      background-color: #4CAF50;
-    }
-    .warning {
-      background-color: #FFC107;
-    }
-    .danger {
-      background-color: #ff4444;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phisher</title>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h2>AI Phishing Detector</h2>
-  <p>Current website phishing probability:</p>
-  <div class="probability-meter">
-    <div id="probabilityFill" class="probability-fill" style="width: 0%"></div>
+  <header class="header">
+    <div class="logo">
+      <img src="../icons/icon48.png" alt="Phisher logo" class="logo-img">
+      <h1>Phisher</h1>
+    </div>
+  </header>
+  
+  <main class="main-content">
+    <div id="analysis-result" class="analysis-result">
+      <!-- This will be populated by JavaScript -->
+    </div>
+    
+    <div class="url-container">
+      <div id="current-url" class="current-url">
+        <!-- Current URL will be displayed here -->
+      </div>
+    </div>
+    
+    <div class="actions">
+      <button id="analyze-btn" class="btn primary-btn">Analyze Further</button>
+    </div>
+    
+    <div class="secondary-actions">
+      <button id="report-btn" class="btn secondary-btn">Report False Positive</button>
+      <button id="settings-btn" class="btn secondary-btn">Settings</button>
+    </div>
+  </main>
+  
+  <!-- Settings Panel -->
+  <div id="settings-panel" class="settings-panel hidden">
+    <h2>Settings</h2>
+    <div class="setting-item">
+      <label for="real-time-scanning">
+        <span>Real-time Scanning</span>
+        <input type="checkbox" id="real-time-scanning" checked>
+      </label>
+    </div>
+    
+    <div class="setting-item">
+      <label for="notification-level">Notification Level</label>
+      <select id="notification-level">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+    
+    <div class="setting-item">
+      <label for="redirect-threshold">AI Chat Redirect Threshold</label>
+      <input type="range" id="redirect-threshold" min="0" max="100" value="30">
+      <span id="threshold-value">30</span>
+    </div>
+    
+    <div class="settings-actions">
+      <button id="save-settings" class="btn primary-btn">Save</button>
+      <button id="cancel-settings" class="btn secondary-btn">Cancel</button>
+    </div>
   </div>
-  <p id="probabilityText">Loading...</p>
+
+  <!-- Chat Redirect Dialog -->
+  <div id="chat-redirect-dialog" class="dialog hidden">
+    <h2>Deep Analysis Recommended</h2>
+    <p>This URL has a high phishing score. Would you like to get a deeper analysis from our AI chatbot?</p>
+    <div class="dialog-actions">
+      <button id="redirect-yes" class="btn primary-btn">Yes, Analyze</button>
+      <button id="redirect-no" class="btn secondary-btn">No, Thanks</button>
+    </div>
+  </div>
+  
   <script src="popup.js"></script>
 </body>
 </html>
