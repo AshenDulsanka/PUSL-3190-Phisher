@@ -27,10 +27,10 @@ An intelligent system that combines browser extension and chatbot technologies t
 ## Tech Stack
 
 - **Frontend**: React.js, Chrome Extensions API, Tailwind CSS
-- **Backend**: Python, FastAPI, PostgreSQL
+- **Backend**: Python, FastAPI, PostgreSQL, Prisma
 - **AI/ML**: Scikit-learn (Random Forest & Gradient Boosting Classifiers)
 - **Infrastructure**: Docker, Google Cloud Platform
 
 ## Research
 
-This project is part of a research study on AI-powered phishing detection methods.
+This project is part of a research study on AI-Powered URL Phishing Detection System methods.
