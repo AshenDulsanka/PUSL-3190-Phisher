@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Stores information about analyzed URLs
+model URL {
+  id                Int            @id @default(autoincrement())
+  url               String         @unique
+  isPhishing        Boolean
+  suspiciousScore   Float          // Score between 0-100
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  
+  // URL features for analysis
+  usingIP           Boolean?
+  urlLength         Int?
+  domainAge         Int?           // Age in days
+  hasHTTPS          Boolean?
+  numDots           Int?
+  numHyphens        Int?
+  numSubdomains     Int?
+  hasAtSymbol       Boolean?
+  isShortened       Boolean?
+  hasSpecialChars   Boolean?
+  hasIframe         Boolean?
+  disablesRightClick Boolean?
+  hasPopup          Boolean?
+  
+  // Relations
+  detectionSessions DetectionSession[]
+  modelEvaluations  ModelEvaluation[]
+}
+
+// Logs of browser extension detections
+model DetectionSession {
+  id                Int      @id @default(autoincrement())
+  sessionId         String   @unique // Generated unique ID for each browser session
+  browserInfo       String?  // Browser info like version, etc.
+  detectedAt        DateTime @default(now())
+  redirectedToChatbot Boolean @default(false)
+  
+  // Relations
+  urlId             Int
+  url               URL      @relation(fields: [urlId], references: [id])
+}
+
+// Chatbot conversations about specific URLs
+model ChatSession {
+  id                Int      @id @default(autoincrement())
+  sessionId         String   @unique
+  startedAt         DateTime @default(now())
+  endedAt           DateTime?
+  userFeedback      Boolean? // Whether user confirmed if URL was indeed phishing
+  
+  // Store messages in the session
+  messages          ChatMessage[]
+  
+  // URL that was analyzed (optional as chat may start without URL)
+  analyzedUrl       String?
+}
+
+// Individual messages in a chat session
+model ChatMessage {
+  id                Int      @id @default(autoincrement())
+  content           String
+  isFromUser        Boolean  // True if from user, false if from system
+  timestamp         DateTime @default(now())
+  
+  // Relations
+  chatSessionId     Int
+  chatSession       ChatSession @relation(fields: [chatSessionId], references: [id])
+}
+
+// ML model information
+model MLModel {
+  id                Int      @id @default(autoincrement())
+  name              String   @unique // e.g., "random_forest_v1", "gradient_boost_v2"
+  type              String   // "random_forest" or "gradient_boost"
+  version           String   
+  trainedAt         DateTime @default(now())
+  accuracy          Float?
+  precision         Float?
+  recall            Float?
+  f1Score           Float?
+  areaUnderROC      Float?
+  
+  // Model parameters as JSON
+  parameters        String?  // JSON string of parameters
+  
+  // Relations
+  evaluations       ModelEvaluation[]
+}
+
+// Evaluations of model performance on specific URLs
+model ModelEvaluation {
+  id                Int      @id @default(autoincrement())
+  predictedScore    Float
+  actualLabel       Boolean?  // True if was actually phishing, null if unknown
+  evaluatedAt       DateTime @default(now())
+  
+  // Relations
+  modelId           Int
+  model             MLModel  @relation(fields: [modelId], references: [id])
+  urlId             Int
+  url               URL      @relation(fields: [urlId], references: [id])
+}
+
+// System logs for research paper
+model SystemLog {
+  id                Int      @id @default(autoincrement())
+  component         String   // e.g., "extension", "chatbot", "model_training"
+  logLevel          String   // "INFO", "WARNING", "ERROR", etc.
+  message           String
+  timestamp         DateTime @default(now())
+  metadata          String?  // Additional JSON data if needed
+}
