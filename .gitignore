@@ -39,7 +39,6 @@ yarn-error.log
 .DS_Store
 
 # Project-specific
-/models/*.pkl
 .env.local
 .env.development.local
 .env.test.local
