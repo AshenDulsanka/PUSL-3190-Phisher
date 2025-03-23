@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
   })
   
   // API endpoint for ML model
-  const API_ENDPOINT = process.env.BROWSER_EXTENSION_API_ENDPOINT
+  const API_ENDPOINT = "https://test-api.com/analyze"
   
   // Function to extract features from URL
   function extractUrlFeatures(url) {
