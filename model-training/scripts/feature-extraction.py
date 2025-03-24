@@ -120,3 +120,24 @@ class FeatureExtractor:
         
         return features
 
+if __name__ == "__main__":
+    urls = [
+        "https://www.google.com",
+        "http://suspicious-login.tk/account/verify.php",
+        "https://bit.ly/3xR2sFp"
+    ]
+    
+    for url in urls:
+        print(f"\nAnalyzing URL: {url}")
+        
+        # Lightweight features
+        light_features = FeatureExtractor.extract_lightweight_features(url)
+        print("\nLightweight features:")
+        for key, value in light_features.items():
+            print(f"  {key}: {value}")
+        
+        # Comprehensive features
+        comp_features = FeatureExtractor.extract_comprehensive_features(url)
+        print("\nComprehensive features:")
+        for key, value in comp_features.items():
+            print(f"  {key}: {value}")
