@@ -178,3 +178,37 @@ def predict_url(url_features):
     
     print(f"Model exported to {output_dir}/{model_name}.pkl")
     print(f"Inference script created at {output_dir}/{model_name}_inference.py")
+
+if __name__ == "__main__":
+    import sys
+    
+    if len(sys.argv) < 4:
+        print("Usage: python model_evaluation.py <model_file> <test_data_file> <output_dir>")
+        sys.exit(1)
+    
+    model_file = sys.argv[1]
+    test_data_file = sys.argv[2]
+    output_dir = sys.argv[3]
+    
+    # Load model
+    model = joblib.load(model_file)
+    
+    # Load test data
+    test_data = pd.read_csv(test_data_file)
+    X_test = test_data.drop("is_phishing", axis=1)
+    y_test = test_data["is_phishing"]
+    
+    # Evaluate model
+    model_name = os.path.basename(model_file).split(".")[0]
+    metrics = evaluate_model(model, X_test, y_test, model_name, output_dir)
+    
+    # Export model for production
+    export_model_for_production(
+        model, 
+        None,  # No scaler in this example
+        X_test.columns.tolist(),
+        model_name,
+        output_dir
+    )
+    
+    print(f"Evaluation complete. Accuracy: {metrics['accuracy']:.4f}")
