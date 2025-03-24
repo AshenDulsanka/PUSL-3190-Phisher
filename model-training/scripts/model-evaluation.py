@@ -10,8 +10,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 def evaluate_model(model, X_test, y_test, model_name, output_dir):
     """
-    Evaluate a trained model and save evaluation metrics
-    
     Args:
         model: The trained scikit-learn model
         X_test: Test features
@@ -95,3 +93,88 @@ def evaluate_model(model, X_test, y_test, model_name, output_dir):
         plt.savefig(f"{output_dir}/{model_name}_feature_importances.png")
     
     return metrics
+
+def export_model_for_production(model, scaler, feature_list, model_name, output_dir):
+    """
+    Args:
+        model: The trained scikit-learn model
+        scaler: The feature scaler
+        feature_list: List of feature names used by the model
+        model_name: Name of the model
+        output_dir: Directory to save the exported model
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Save the model
+    joblib.dump(model, f"{output_dir}/{model_name}.pkl")
+    
+    # Save the scaler
+    if scaler is not None:
+        joblib.dump(scaler, f"{output_dir}/{model_name}_scaler.pkl")
+    
+    # Save feature list
+    with open(f"{output_dir}/{model_name}_features.json", "w") as f:
+        json.dump(feature_list, f, indent=2)
+    
+    # Create a simple inference script
+    inference_script = f"""
+import joblib
+import json
+import numpy as np
+
+# Load the model and related artifacts
+model = joblib.load("{model_name}.pkl")
+try:
+    scaler = joblib.load("{model_name}_scaler.pkl")
+except:
+    scaler = None
+
+with open("{model_name}_features.json", "r") as f:
+    features = json.load(f)
+
+def predict_url(url_features):
+    \"\"\"
+    Make a prediction on URL features
+    
+    Args:
+        url_features (dict): Dictionary of URL features
+        
+    Returns:
+        dict: Prediction results
+    \"\"\"
+    # Prepare feature vector
+    feature_vector = []
+    for feature in features:
+        if feature in url_features:
+            feature_vector.append(url_features[feature])
+        else:
+            feature_vector.append(0)  # Default value if feature is missing
+    
+    # Convert to numpy array
+    X = np.array(feature_vector).reshape(1, -1)
+    
+    # Scale features if a scaler is available
+    if scaler is not None:
+        X = scaler.transform(X)
+    
+    # Make prediction
+    is_phishing = bool(model.predict(X)[0])
+    
+    # Get probability if available
+    if hasattr(model, "predict_proba"):
+        probability = float(model.predict_proba(X)[0, 1])
+    else:
+        probability = float(model.decision_function(X)[0])
+    
+    return {
+        "is_phishing": is_phishing,
+        "phishing_probability": probability,
+        "suspicious_score": probability * 100  # Convert to 0-100 scale
+    }
+"""
+    
+    with open(f"{output_dir}/{model_name}_inference.py", "w") as f:
+        f.write(inference_script)
+    
+    print(f"Model exported to {output_dir}/{model_name}.pkl")
+    print(f"Inference script created at {output_dir}/{model_name}_inference.py")
