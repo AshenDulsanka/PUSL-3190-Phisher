@@ -59,3 +59,64 @@ class FeatureExtractor:
         features['is_shortened'] = 1 if any(shortener in url for shortener in url_shorteners) else 0
         
         return features
+    
+    @staticmethod
+    def extract_comprehensive_features(url, additional_data=None):
+        """
+        Extract comprehensive features for deep analysis in the chatbot
+        
+        Args:
+            url (str): The URL to analyze
+            additional_data (dict, optional): Additional data about the URL if available
+            
+        Returns:
+            dict: Dictionary of extracted features
+        """
+        # Start with lightweight features
+        features = FeatureExtractor.extract_lightweight_features(url)
+        
+        # Need to all the features
+        
+        # Get domain and path
+        try:
+            parsed = urlparse(url)
+            domain = parsed.netloc
+            path = parsed.path
+        except:
+            domain = url.split('/')[0] if '/' in url else url
+            path = '/'.join(url.split('/')[1:]) if '/' in url else ''
+            
+        # Suspicious TLD - Common phishing TLDs
+        suspicious_tlds = ['.tk', '.ml', '.ga', '.cf', '.gq', '.xyz', '.top', '.club']
+        features['suspicious_tld'] = 1 if any(domain.endswith(tld) for tld in suspicious_tlds) else 0
+        
+        # Suspicious keywords in URL
+        suspicious_keywords = ['secure', 'account', 'webscr', 'login', 'signin', 'verify', 'banking']
+        features['suspicious_keywords'] = sum(keyword in url.lower() for keyword in suspicious_keywords)
+        
+        # URL entropy (measure of randomness, higher in phishing URLs)
+        def calculate_entropy(text):
+            """Calculate Shannon entropy of a string"""
+            if not text:
+                return 0
+            text = text.lower()
+            p, counts = np.unique(list(text), return_counts=True)
+            return -sum(count/len(text) * np.log2(count/len(text)) for count in counts)
+        
+        features['url_entropy'] = calculate_entropy(domain)
+        
+        # If additional_data is provided, use it
+        if additional_data:
+            if 'domain_age' in additional_data:
+                features['domain_age'] = additional_data['domain_age']
+            if 'ssl_validity' in additional_data:
+                features['ssl_validity'] = additional_data['ssl_validity']
+            # Add more as needed
+        else:
+            # Otherwise use placeholder values
+            # In a real implementation, these would come from WHOIS, DNS, etc.
+            features['domain_age'] = 0  # Unknown
+            features['ssl_validity'] = 0  # Unknown
+        
+        return features
+
