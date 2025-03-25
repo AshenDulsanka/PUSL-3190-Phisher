@@ -15,20 +15,86 @@ chrome.runtime.onInstalled.addListener(() => {
   
   // Function to extract features from URL
   function extractUrlFeatures(url) {
-    // Basic feature extraction - this would be enhanced in a production system
-    const urlObj = new URL(url)
-    
-    const features = {
-      protocol: urlObj.protocol,
-      hostname: urlObj.hostname,
-      pathname: urlObj.pathname,
-      hasSubdomain: urlObj.hostname.split('.').length > 2,
-      domainLength: urlObj.hostname.length,
-      numSpecialChars: (url.match(/[^a-zA-Z0-9]/g) || []).length,
-      hasIP: /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(urlObj.hostname)
+    try {
+      // Parse the URL
+      const urlObj = new URL(url)
+      const domain = urlObj.hostname
+      const fullUrl = url
+      
+      const features = {}
+
+      // UsingIP - Check if IP address is used as domain
+      features.UsingIP = /\d+\.\d+\.\d+\.\d+/.test(domain) ? 1 : 0
+      
+      // LongURL - Flag URLs that are suspiciously long
+      features.LongURL = fullUrl.length > 75 ? 1 : 0
+      
+      // ShortURL - Check for URL shortening services
+      const shorteners = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'is.gd', 'cli.gs', 'ow.ly', 'tiny.cc', 'shorte.st', 'go2l.ink']
+      features.ShortURL = shorteners.some(shortener => domain.includes(shortener)) ? 1 : 0
+      
+      // Symbol@ - Check for @ symbol in URL
+      features.SymbolAt = fullUrl.includes('@') ? 1 : 0
+      
+      // Redirecting// - Check for multiple forward slashes
+      features.RedirectingSlashes = (fullUrl.match(/\/\//g) || []).length > 1 ? 1 : 0
+      
+      // PrefixSuffix- - Check for hyphens in domain
+      features.PrefixSuffix = domain.includes('-') ? 1 : 0
+      
+      // SubDomains - Count subdomains (dots in domain)
+      features.SubDomains = domain.split('.').length - 1
+      
+      // HTTPS - Check if URL uses HTTPS
+      features.HTTPS = urlObj.protocol === 'https:' ? 1 : 0
+      
+      // DomainRegLen - Estimate domain age/registration length
+      features.DomainRegLen = 0
+      
+      // NonStdPort - Check for non-standard port
+      features.NonStdPort = urlObj.port && ![80, 443, ''].includes(urlObj.port) ? 1 : 0
+      
+      // HTTPSDomainURL - Check if 'https' appears in domain part
+      features.HTTPSDomainURL = domain.includes('https') ? 1 : 0
+      
+      // AbnormalURL - Check for suspicious patterns
+      const suspiciousTerms = ['login', 'signin', 'verify', 'account', 'security', 'update', 'confirm', 'payment']
+      features.AbnormalURL = suspiciousTerms.some(term => fullUrl.toLowerCase().includes(term)) ? 1 : 0
+      
+      // InfoEmail - Check for email-related terms
+      features.InfoEmail = ['mail', 'email', 'contact'].some(term => fullUrl.toLowerCase().includes(term)) ? 1 : 0
+      
+      // URL entropy (measure of randomness)
+      features.URLEntropy = calculateEntropy(domain)
+      
+      // Domain length 
+      features.DomainLength = domain.length
+      
+      // Special character ratio
+      features.SpecialCharRatio = (fullUrl.match(/[^a-zA-Z0-9.]/g) || []).length / fullUrl.length
+      
+      return features
+    } catch (error) {
+      console.error('Error extracting features:', error)
+      return {
+        UsingIP: 0,
+        LongURL: 0,
+        ShortURL: 0,
+        SymbolAt: 0,
+        RedirectingSlashes: 0,
+        PrefixSuffix: 0,
+        SubDomains: 0,
+        HTTPS: 0,
+        DomainRegLen: 0,
+        NonStdPort: 0,
+        HTTPSDomainURL: 0,
+        AbnormalURL: 0,
+        InfoEmail: 0,
+        URLEntropy: 0,
+        DomainLength: 0,
+        SpecialCharRatio: 0
+      }
     }
-    
-    return features
   }
   
   // Function to make prediction using the ML model via API
