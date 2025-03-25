@@ -96,6 +96,28 @@ chrome.runtime.onInstalled.addListener(() => {
       }
     }
   }
+
+  // Helper function to calculate entropy (randomness) of URL
+  function calculateEntropy(text) {
+    if (!text) return 0;
+    
+    // Count character frequencies
+    const charFreq = {};
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i].toLowerCase();
+      charFreq[char] = (charFreq[char] || 0) + 1;
+    }
+    
+    // Calculate entropy
+    let entropy = 0;
+    const len = text.length;
+    Object.values(charFreq).forEach(count => {
+      const p = count / len;
+      entropy -= p * Math.log2(p);
+    });
+    
+    return entropy;
+  }
   
   // Function to make prediction using the ML model via API
   async function analyzeSuspiciousUrl(url) {
