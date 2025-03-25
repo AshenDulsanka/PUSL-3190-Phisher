@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
   })
   
   // API endpoint for ML model
-  const API_ENDPOINT = "https://test-api.com/analyze"
+  const API_ENDPOINT = "http://localhost:8000/api/analyze-url"
   
   // Function to extract features from URL
   function extractUrlFeatures(url) {
@@ -122,22 +122,11 @@ chrome.runtime.onInstalled.addListener(() => {
   // Function to make prediction using the ML model via API
   async function analyzeSuspiciousUrl(url) {
     try {
-      // For development/testing - simulate an API response
-      if (process.env.NODE_ENV === 'development') {
-        // Simulate different scores for demo purposes
-        const score = url.includes('login') || url.includes('signin') ? 
-          Math.floor(Math.random() * 70) + 30 : 
-          Math.floor(Math.random() * 30)
-        
-        return {
-          score: score,
-          status: score > 60 ? 'Warning' : score > 20 ? 'Safe' : 'None',
-          details: 'Simulated analysis for development'
-        }
-      }
-      
       // Extract features
       const features = extractUrlFeatures(url)
+
+      // features debugging
+      console.log('Extracted features:', features)
       
       // Call the API for real analysis
       const response = await fetch(API_ENDPOINT, {
@@ -145,20 +134,42 @@ chrome.runtime.onInstalled.addListener(() => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ url, features })
+        body: JSON.stringify({ 
+          url, 
+          features,
+          client: 'browser_extension'
+        })
       })
       
       if (!response.ok) {
-        throw new Error('API request failed')
+        const errorText = await response.text()
+        console.error('API Error:', errorText)
+        throw new Error(`API request failed: ${response.status}`)
       }
+
+      const data = await response.json();
+      console.log('API response:', data);
       
-      return await response.json()
+      return {
+        score: data.threat_score || data.score || 0,
+        is_phishing: data.is_phishing || false,
+        status: data.is_phishing ? 'Warning' : 'Safe',
+        details: data.details || 'URL analyzed successfully',
+        confidence: data.probability || 0
+      }
     } catch (error) {
       console.error('Error analyzing URL:', error)
+
+      // Fallback to simple heuristics if API fails
+      const features = extractUrlFeatures(url)
+      const heuristicScore = calculateHeuristicScore(features)
+
       return {
-        score: 0,
-        status: 'Error',
-        details: 'Could not analyze URL'
+        score: heuristicScore,
+        is_phishing: heuristicScore > 60,
+        status: heuristicScore > 60 ? 'Warning' : heuristicScore > 30 ? 'Suspicious' : 'Safe',
+        details: 'Analyzed using offline heuristics (API unavailable)',
+        confidence: 0.5
       }
     }
   }
