@@ -206,47 +206,66 @@ chrome.runtime.onInstalled.addListener(() => {
       // Get settings
       const settings = await chrome.storage.local.get([
         'enableRealTimeScanning',
+        'notificationLevel',
         'redirectThreshold'
       ])
       
       // Skip if real-time scanning is disabled
       if (!settings.enableRealTimeScanning) return
       
-      const analysis = await analyzeSuspiciousUrl(tab.url)
-      
-      // Send analysis result to content script
-      chrome.tabs.sendMessage(tabId, {
-        action: 'analysisResult',
-        data: analysis
-      })
-      
-      // Update badge based on risk level
-      if (analysis.score > 60) {
-        chrome.action.setBadgeBackgroundColor({ color: '#FF5F5F' });
-        chrome.action.setBadgeText({ text: '!' })
-      } else if (analysis.score > 20) {
-        chrome.action.setBadgeBackgroundColor({ color: '#75D7BE' });
-        chrome.action.setBadgeText({ text: '✓' })
-      } else {
-        chrome.action.setBadgeText({ text: '' })
-      }
-      
-      // Store the result for the popup to access
-      chrome.storage.local.set({ lastAnalysis: {
-        url: tab.url,
-        result: analysis,
-        timestamp: Date.now()
-      }})
-      
-      // If score exceeds the redirect threshold, notify the user
-      if (analysis.score >= settings.redirectThreshold) {
+      try {
+        const analysis = await analyzeSuspiciousUrl(tab.url)
+        
+        // Send analysis result to content script
         chrome.tabs.sendMessage(tabId, {
-          action: 'showWarning',
-          data: {
-            score: analysis.score,
-            url: tab.url
+          action: 'analysisResult',
+          data: analysis
+        }).catch(err => console.log('Error sending message to content script:', err))
+        
+        // Update badge based on risk level
+        if (analysis.score > 70) {
+          chrome.action.setBadgeBackgroundColor({ color: '#FF0000' })
+          chrome.action.setBadgeText({ text: '!' })
+        } else if (analysis.score > 40) {
+          chrome.action.setBadgeBackgroundColor({ color: '#FFA500' })
+          chrome.action.setBadgeText({ text: '?' })
+        } else {
+          chrome.action.setBadgeBackgroundColor({ color: '#00C853' })
+          chrome.action.setBadgeText({ text: '✓' })
+        }
+        
+        // Store the result for the popup to access
+        chrome.storage.local.set({ 
+          lastAnalysis: {
+            url: tab.url,
+            result: analysis,
+            timestamp: Date.now()
           }
         })
+        
+        // Show warning based on notification level setting
+        const notificationThresholds = {
+          'low': 80, // Only show for very high risk
+          'medium': 60, // Show for medium and high risk
+          'high': 40 // Show for low, medium, and high risk
+        }
+        
+        const threshold = notificationThresholds[settings.notificationLevel] || 60
+        
+        // If score exceeds the threshold, notify the user
+        if (analysis.score >= threshold) {
+          chrome.tabs.sendMessage(tabId, {
+            action: 'showWarning',
+            data: {
+              score: analysis.score,
+              url: tab.url,
+              details: analysis.details,
+              is_phishing: analysis.is_phishing
+            }
+          }).catch(err => console.log('Error sending warning to content script:', err))
+        }
+      } catch (error) {
+        console.error('Error in URL analysis:', error)
       }
     }
   })
