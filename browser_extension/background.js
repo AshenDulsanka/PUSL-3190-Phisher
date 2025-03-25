@@ -173,6 +173,28 @@ chrome.runtime.onInstalled.addListener(() => {
       }
     }
   }
+
+  // Simple heuristic scoring as fallback when API is unavailable
+  function calculateHeuristicScore(features) {
+    let score = 0
+    
+    // Add points for each suspicious feature
+    if (features.UsingIP) score += 20
+    if (features.LongURL) score += 10
+    if (features.ShortURL) score += 15
+    if (features.SymbolAt) score += 20
+    if (features.RedirectingSlashes) score += 10
+    if (features.PrefixSuffix) score += 10
+    if (features.SubDomains > 2) score += 10
+    if (!features.HTTPS) score += 15
+    if (features.NonStdPort) score += 15
+    if (features.HTTPSDomainURL) score += 20
+    if (features.AbnormalURL) score += 15
+    if (features.URLEntropy > 4) score += 10
+    
+    // Cap the score at 100
+    return Math.min(score, 100)
+  }
   
   // Listen for tab updates to check URLs
   chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
