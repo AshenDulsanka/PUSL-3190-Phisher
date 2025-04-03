@@ -1,15 +1,15 @@
 import os
 from pathlib import Path
 
-# Base paths
+# base paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MODELS_DIR = BASE_DIR / "models"
 LOGS_DIR = BASE_DIR / "logs" / "extension_backend"
 
-# Ensure log directory exists
+# ensure log directory exists
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-# Model paths
+# model paths
 RANDOM_FOREST_MODEL_PATH = MODELS_DIR / "random_forest_model" / "random_forest_v1.pkl"
 RANDOM_FOREST_SCALER_PATH = MODELS_DIR / "random_forest_model" / "random_forest_v1_scaler.pkl"
 FEATURE_LIST_PATH = MODELS_DIR / "random_forest_model" / "random_forest_features.json"
@@ -27,9 +27,9 @@ CORS_ORIGINS = [
     "http://localhost:8000",  # local testing
 ]
 
-# Security settings
+# security settings
 API_KEY_HEADER = "X-API-Key"
 API_KEY = os.getenv("API_KEY", "phisher-dev-key")
 
-# Rate limiting
+# rate limiting
 RATE_LIMIT_PER_MINUTE = 60
