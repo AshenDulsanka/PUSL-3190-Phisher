@@ -1,0 +1,10 @@
+fastapi>=0.95.0
+uvicorn>=0.22.0
+pydantic>=1.10.7
+scikit-learn>=1.2.2
+numpy>=1.24.3
+pandas>=2.0.0
+joblib>=1.2.0
+validators>=0.20.0
+python-multipart>=0.0.6
+python-dotenv>=1.0.0
