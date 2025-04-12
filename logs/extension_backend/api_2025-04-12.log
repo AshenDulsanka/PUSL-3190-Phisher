@@ -1,0 +1,226 @@
+2025-04-12 13:07:58,593 - __main__ - INFO - Initializing model service...
+2025-04-12 13:07:58,593 - extension_backend.src.services.model_service - INFO - Loading model from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_model.pkl
+2025-04-12 13:08:14,995 - extension_backend.src.services.model_service - INFO - Loading scaler from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_scaler.pkl
+2025-04-12 13:08:15,047 - extension_backend.src.services.model_service - INFO - Loading feature list from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_metadata.json
+2025-04-12 13:08:15,047 - extension_backend.src.services.model_service - INFO - Model and related artifacts loaded successfully
+2025-04-12 13:08:15,048 - __main__ - INFO - Starting API server at 0.0.0.0:8000
+2025-04-12 13:11:00,680 - __main__ - INFO - Initializing model service...
+2025-04-12 13:11:00,681 - extension_backend.src.services.model_service - INFO - Loading model from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_model.pkl
+2025-04-12 13:11:00,682 - extension_backend.src.services.model_service - ERROR - Error loading model: No module named 'sklearn'
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 53, in _load_model
+    self.model = joblib.load(RANDOM_FOREST_MODEL_PATH)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\joblib\numpy_pickle.py", line 658, in load
+    obj = _unpickle(fobj, filename, mmap_mode)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\joblib\numpy_pickle.py", line 577, in _unpickle
+    obj = unpickler.load()
+          ^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1213, in load
+    dispatch[key[0]](self)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1538, in load_stack_global
+    self.append(self.find_class(module, name))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\pickle.py", line 1580, in find_class
+    __import__(module, level=0)
+ModuleNotFoundError: No module named 'sklearn'
+2025-04-12 13:11:00,694 - __main__ - INFO - Starting API server at 0.0.0.0:8000
+2025-04-12 13:13:51,439 - __main__ - INFO - Initializing model service...
+2025-04-12 13:13:51,440 - extension_backend.src.services.model_service - INFO - Loading model from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_model.pkl
+2025-04-12 13:13:57,389 - extension_backend.src.services.model_service - INFO - Loading scaler from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_scaler.pkl
+2025-04-12 13:13:57,390 - extension_backend.src.services.model_service - INFO - Loading feature list from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_metadata.json
+2025-04-12 13:13:57,390 - extension_backend.src.services.model_service - INFO - Model and related artifacts loaded successfully
+2025-04-12 13:13:57,391 - __main__ - INFO - Starting API server at 0.0.0.0:8000
+2025-04-12 13:17:10,930 - __main__ - INFO - Initializing model service...
+2025-04-12 13:17:10,930 - extension_backend.src.services.model_service - INFO - Loading model from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_model.pkl
+2025-04-12 13:17:11,628 - extension_backend.src.services.model_service - INFO - Loading scaler from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_scaler.pkl
+2025-04-12 13:17:11,629 - extension_backend.src.services.model_service - INFO - Loading feature list from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_metadata.json
+2025-04-12 13:17:11,629 - extension_backend.src.services.model_service - INFO - Model and related artifacts loaded successfully
+2025-04-12 13:17:11,629 - __main__ - INFO - Starting API server at 0.0.0.0:8000
+2025-04-12 13:17:40,676 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:17:40,687 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://www.youtube.com/watch?v=zy4cp0QZjkw... from client: browser_extension
+2025-04-12 13:17:40,690 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:17:40,691 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0038s
+2025-04-12 13:17:40,691 - extension_backend.src.main - INFO - Request completed in 0.0150 seconds
+2025-04-12 13:17:53,796 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:17:53,797 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://www.youtube.com/watch?v=zy4cp0QZjkw... from client: browser_extension
+2025-04-12 13:17:53,798 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:17:53,799 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0022s
+2025-04-12 13:17:53,799 - extension_backend.src.main - INFO - Request completed in 0.0032 seconds
+2025-04-12 13:18:56,857 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:18:56,858 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://securecodingdojo.owasp.org/public/index.ht... from client: browser_extension
+2025-04-12 13:18:56,859 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:18:56,859 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0015s
+2025-04-12 13:18:56,859 - extension_backend.src.main - INFO - Request completed in 0.0025 seconds
+2025-04-12 13:18:58,770 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:18:58,772 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://securecodingdojo.owasp.org/public/locallog... from client: browser_extension
+2025-04-12 13:18:58,773 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:18:58,774 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0021s
+2025-04-12 13:18:58,775 - extension_backend.src.main - INFO - Request completed in 0.0049 seconds
+2025-04-12 13:19:37,066 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:19:37,067 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://securecodingdojo.owasp.org/public/locallog... from client: browser_extension
+2025-04-12 13:19:37,068 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:19:37,069 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0025s
+2025-04-12 13:19:37,070 - extension_backend.src.main - INFO - Request completed in 0.0045 seconds
+2025-04-12 13:19:47,883 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:19:47,884 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://securecodingdojo.owasp.org/main#!/... from client: browser_extension
+2025-04-12 13:19:47,885 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:19:47,885 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0010s
+2025-04-12 13:19:47,886 - extension_backend.src.main - INFO - Request completed in 0.0030 seconds
+2025-04-12 13:19:50,277 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:19:50,278 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://securecodingdojo.owasp.org/main#!/challeng... from client: browser_extension
+2025-04-12 13:19:50,280 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:19:50,280 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0022s
+2025-04-12 13:19:50,280 - extension_backend.src.main - INFO - Request completed in 0.0032 seconds
+2025-04-12 13:20:00,764 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:20:00,765 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: http://3.145.82.141:8080//cwe79.jsp... from client: browser_extension
+2025-04-12 13:20:00,766 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:20:00,767 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0020s
+2025-04-12 13:20:00,768 - extension_backend.src.main - INFO - Request completed in 0.0043 seconds
+2025-04-12 13:20:58,503 - __main__ - INFO - Initializing model service...
+2025-04-12 13:20:58,503 - extension_backend.src.services.model_service - INFO - Loading model from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_model.pkl
+2025-04-12 13:20:59,233 - extension_backend.src.services.model_service - INFO - Loading scaler from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_scaler.pkl
+2025-04-12 13:20:59,234 - extension_backend.src.services.model_service - INFO - Loading feature list from E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\models\random_forest_model\random_forest_metadata.json
+2025-04-12 13:20:59,235 - extension_backend.src.services.model_service - INFO - Model and related artifacts loaded successfully
+2025-04-12 13:20:59,235 - __main__ - INFO - Starting API server at 0.0.0.0:8000
+2025-04-12 13:21:08,380 - extension_backend.src.main - INFO - Request POST /api/analyze-url from 127.0.0.1
+2025-04-12 13:21:08,387 - extension_backend.src.routers.url_analyzer - INFO - Analyzing URL: https://chatgpt.com/c/67fa1771-92e0-8007-b32e-da6b... from client: browser_extension
+2025-04-12 13:21:08,389 - extension_backend.src.services.model_service - ERROR - Error making prediction: X has 14 features, but StandardScaler is expecting 9 features as input.
+Traceback (most recent call last):
+  File "E:\NSBM\NSBM Year 3\FYP\PUSL-3190-Phisher\extension_backend\src\services\model_service.py", line 105, in predict
+    X = self.scaler.transform(X)
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 319, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 1062, in transform
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2965, in validate_data
+    _check_n_features(_estimator, X, reset=reset)
+  File "C:\Users\Ashen\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 2829, in _check_n_features
+    raise ValueError(
+ValueError: X has 14 features, but StandardScaler is expecting 9 features as input.
+2025-04-12 13:21:08,391 - extension_backend.src.routers.url_analyzer - INFO - URL analysis result: is_phishing=False, threat_score=0, time=0.0040s
+2025-04-12 13:21:08,391 - extension_backend.src.main - INFO - Request completed in 0.0115 seconds
