@@ -1,0 +1,25 @@
+services:
+  extension_backend:
+    build: 
+      context: ./extension_backend
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT_BE}:8000"
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - API_DEBUG=${API_DEBUG_BE}
+      - API_HOST=${API_HOST_BE}
+      - API_PORT=${API_PORT_BE}
+      - API_KEY=${API_KEY_BE}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s

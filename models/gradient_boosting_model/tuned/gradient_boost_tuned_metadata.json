@@ -1,5 +1,5 @@
 {
-  "name": "gradient_boost_tuned_v1",
+  "name": "gradient_boost_tuned_metadata",
   "type": "gradient_boost",
   "version": "1.0",
   "trained_at": "2025-03-24T09:37:48.214238",

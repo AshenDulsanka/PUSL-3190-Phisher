@@ -44,7 +44,7 @@ class URLAnalysisResponse(BaseModel):
                 "probability": 0.15,
                 "details": "This URL has been analyzed and appears to be legitimate.",
                 "features_used": ["url_length", "num_dots", "num_special_chars"],
-                "model_version": "random_forest_v1"
+                "model_version": "random_forest_model"
             }
         }
 

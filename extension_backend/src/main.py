@@ -81,4 +81,4 @@ if __name__ == "__main__":
     
     # run the API server
     logger.info(f"Starting API server at {API_HOST}:{API_PORT}")
-    uvicorn.run("extension_backend.src.main:app", host=API_HOST, port=API_PORT, reload=API_DEBUG)
+    uvicorn.run("src.main:app", host=API_HOST, port=API_PORT, reload=API_DEBUG)
