@@ -10,9 +10,9 @@ LOGS_DIR = BASE_DIR / "logs" / "extension_backend"
 os.makedirs(LOGS_DIR, exist_ok=True)
 
 # model paths
-RANDOM_FOREST_MODEL_PATH = MODELS_DIR / "random_forest_model" / "random_forest_v1.pkl"
-RANDOM_FOREST_SCALER_PATH = MODELS_DIR / "random_forest_model" / "random_forest_v1_scaler.pkl"
-FEATURE_LIST_PATH = MODELS_DIR / "random_forest_model" / "random_forest_features.json"
+RANDOM_FOREST_MODEL_PATH = MODELS_DIR / "random_forest_model" / "random_forest_model.pkl"
+RANDOM_FOREST_SCALER_PATH = MODELS_DIR / "random_forest_model" / "random_forest_scaler.pkl"
+FEATURE_LIST_PATH = MODELS_DIR / "random_forest_model" / "random_forest_metadata.json"
 
 # API settings
 API_PREFIX = "/api"
