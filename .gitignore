@@ -44,5 +44,10 @@ yarn-error.log
 .env.test.local
 .env.production.local
 
+# Ignore logs directory
+logs/browser_extension/*
+logs/chatbot/*
+logs/extension_backend/*
+
 # Don't ignore .gitkeep files
 !.gitkeep

@@ -61,7 +61,21 @@ class ModelService:
             if os.path.exists(FEATURE_LIST_PATH):
                 logger.info(f"Loading feature list from {FEATURE_LIST_PATH}")
                 with open(FEATURE_LIST_PATH, 'r') as f:
-                    self.feature_list = json.load(f)
+                    metadata = json.load(f)
+                
+                # extract feature names from importance section
+                if "feature_importances" in metadata and "importance" in metadata["feature_importances"]:
+                    # get features from the importance dict keys
+                    self.feature_list = list(metadata["feature_importances"]["importance"].keys())
+                    logger.info(f"Extracted {len(self.feature_list)} features: {self.feature_list}")
+                else:
+                    # default lightweight features if no feature list is found in metadata
+                    logger.warning("No features found in metadata, using default feature list")
+                    self.feature_list = [
+                        "url_length", "num_dots", "num_special_chars", 
+                        "has_ip", "has_at_symbol", "num_subdomains", 
+                        "has_https", "has_hyphen", "is_shortened"
+                    ]
             else:
                 # default lightweight features if no feature list is available
                 self.feature_list = [
@@ -91,11 +105,25 @@ class ModelService:
             # extract features if not provided
             if features is None:
                 features = FeatureExtractor.extract_features(url)
+
+            # debugging - print feature keys
+            logger.info(f"Features provided: {list(features.keys())}")
+            logger.info(f"Feature list expected: {self.feature_list}")
+
+            # filter features to only include those in the feature_list
+            filtered_features = {}
+            for feature in self.feature_list:
+                if feature in features:
+                    filtered_features[feature] = features[feature]
+                else:
+                    filtered_features[feature] = 0  # default value
+                    logger.warning(f"Missing feature: {feature}")
             
             # prepare features for the model
             if self.feature_list:
                 # use feature list to ensure correct order
                 X = FeatureExtractor.prepare_features_for_model(features, self.feature_list)
+                logger.info(f"Prepared feature array shape: {X.shape}")
             else:
                 # fallback if feature list is not available
                 X = np.array(list(features.values())).reshape(1, -1)

@@ -6,8 +6,6 @@ from ..logging_config import get_logger
 logger = get_logger(__name__)
 
 class FeatureExtractor:
-    """Utility class for extracting lightweight features for browser extension"""
-    
     @staticmethod
     def extract_features(url):
         try:
@@ -51,7 +49,18 @@ class FeatureExtractor:
             url_shorteners = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'is.gd', 'cli.gs', 'ow.ly']
             features['is_shortened'] = 1 if any(shortener in url for shortener in url_shorteners) else 0
             
-            return features
+            # only return these specific 9 features that match the metadata and scaler expectations
+            return {
+                'url_length': features['url_length'],
+                'num_dots': features['num_dots'],
+                'num_special_chars': features['num_special_chars'],
+                'has_ip': features['has_ip'],
+                'has_at_symbol': features['has_at_symbol'],
+                'num_subdomains': features['num_subdomains'],
+                'has_https': features['has_https'],
+                'has_hyphen': features['has_hyphen'],
+                'is_shortened': features['is_shortened']
+            }
             
         except Exception as e:
             logger.error(f"Error extracting features for URL {url}: {str(e)}")

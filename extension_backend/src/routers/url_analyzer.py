@@ -63,9 +63,7 @@ async def analyze_url(
         model_service = ModelService()
         
         # use client-provided features or extract them
-        features = request_data.features
-        if not features:
-            features = FeatureExtractor.extract_features(request_data.url)
+        features = FeatureExtractor.extract_features(request_data.url)
         
         # make prediction
         result = model_service.predict(request_data.url, features)
