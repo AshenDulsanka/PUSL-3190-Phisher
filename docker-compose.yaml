@@ -1,6 +1,7 @@
 services:
   # extension backend (python fastAPI)
   extension_backend:
+    container_name: extension_backend
     build: 
       context: ./extension_backend
       dockerfile: Dockerfile
@@ -27,6 +28,7 @@ services:
   
   # web client (react)
   web_client:
+    container_name: web_client
     build:
       context: ./web/client
       dockerfile: Dockerfile
@@ -42,6 +44,7 @@ services:
   
   # web server (node)
   web_server:
+    container_name: web_server
     build:
       context: ./web/server
       dockerfile: Dockerfile
@@ -63,6 +66,7 @@ services:
     
   # database (postgres)
   database:
+    container_name: database
     image: postgres:17-alpine
     ports: 
       - ${DB_PORT}:5432
