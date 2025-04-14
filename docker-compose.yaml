@@ -1,4 +1,5 @@
 services:
+  # extension backend (python fastAPI)
   extension_backend:
     build: 
       context: ./extension_backend
@@ -23,3 +24,18 @@ services:
       timeout: 10s
       retries: 3
       start_period: 5s
+  
+  # web client (react)
+  web_client:
+    build:
+      context: ./web/client
+      dockerfile: Dockerfile
+    ports:
+      - "${WEB_CLIENT_PORT}:5173"
+    volumes:
+      - ./web/client:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:${WEB_SERVER_PORT}
+    depends_on:
+      - web_server
