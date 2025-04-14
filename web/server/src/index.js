@@ -44,8 +44,8 @@ app.use((err, req, res, next) => {
 })
 
 // start server
-app.listen(WEB_SERVER_PORT, () => {
-  console.log(`Server running on port ${WEB_SERVER_PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
 
 // handle shutdown
