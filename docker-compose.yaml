@@ -31,7 +31,7 @@ services:
       context: ./web/client
       dockerfile: Dockerfile
     ports:
-      - "${WEB_CLIENT_PORT}:5173"
+      - "${WEB_CLIENT_PORT}:3000"
     volumes:
       - ./web/client:/app
       - /app/node_modules

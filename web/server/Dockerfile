@@ -11,10 +11,7 @@ RUN npm install
 # copy source code
 COPY . .
 
-# generate Prisma client
-RUN npx prisma generate --schema=/app/database/prisma/schema.prisma
-
 EXPOSE 5000
 
 # use nodemon for development
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "npx prisma generate --schema=/app/database/prisma/schema.prisma && npm run dev"]
