@@ -2,19 +2,19 @@ FROM node:23-alpine
 
 WORKDIR /app
 
-# Copy package files
+# copy package files
 COPY package*.json ./
 
-# Install dependencies
+# install dependencies
 RUN npm install
 
-# Copy source code
+# copy source code
 COPY . .
 
-# Generate Prisma client
-RUN npx prisma generate
+# generate Prisma client
+RUN npx prisma generate --schema=/app/database/prisma/schema.prisma
 
 EXPOSE 5000
 
-# Use nodemon for development
+# use nodemon for development
 CMD ["npm", "run", "dev"]

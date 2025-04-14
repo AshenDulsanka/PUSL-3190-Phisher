@@ -2,17 +2,17 @@ FROM node:23-alpine
 
 WORKDIR /app
 
-# Copy package files
+# copy package files
 COPY package*.json ./
 
-# Install dependencies
+# install dependencies
 RUN npm install
 
-# Copy source code
+# copy source code
 COPY . .
 
-# Expose dev server port
+# expose dev server port
 EXPOSE 3000
 
-# Start the development server with host set for Docker
+# start the development server with host set for docker
 CMD ["npm", "run", "dev"]

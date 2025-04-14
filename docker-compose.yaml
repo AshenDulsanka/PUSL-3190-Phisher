@@ -50,6 +50,7 @@ services:
     volumes:
       - ./web/server:/app
       - /app/node_modules
+      - ./database:/app/database
     env_file:
       - .env
     environment:
@@ -59,3 +60,17 @@ services:
       - CLIENT_URL=http://localhost:${WEB_CLIENT_PORT}
     depends_on:
       - database
+    
+  # database (postgres)
+  database:
+    image: postgres:17-alpine
+    ports: 
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_DB: ${DB_NAME}
+      - POSTGRES_HOST_AUTH_METHOD: ${DB_AUTH_METHOD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
