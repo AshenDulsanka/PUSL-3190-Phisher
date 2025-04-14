@@ -67,8 +67,8 @@ services:
     ports: 
       - ${DB_PORT}:5432
     environment:
-      - POSTGRES_DB: ${DB_NAME}
-      - POSTGRES_HOST_AUTH_METHOD: ${DB_AUTH_METHOD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_HOST_AUTH_METHOD=${DB_AUTH_METHOD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
