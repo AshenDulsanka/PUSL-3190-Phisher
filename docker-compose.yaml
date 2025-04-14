@@ -39,3 +39,23 @@ services:
       - VITE_API_URL=http://localhost:${WEB_SERVER_PORT}
     depends_on:
       - web_server
+  
+  # web server (node)
+  web_server:
+    build:
+      context: ./web/server
+      dockerfile: Dockerfile
+    ports:
+      - "${WEB_SERVER_PORT}:5000"
+    volumes:
+      - ./web/server:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    environment:
+      - PORT=${WEB_SERVER_PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL}
+      - CLIENT_URL=http://localhost:${WEB_CLIENT_PORT}
+    depends_on:
+      - database
