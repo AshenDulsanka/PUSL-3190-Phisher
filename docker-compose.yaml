@@ -38,7 +38,7 @@ services:
       - ./web/client:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:${WEB_SERVER_PORT}
+      - VITE_API_URL=${WEB_SERVER_URL}
     depends_on:
       - web_server
   
@@ -60,7 +60,7 @@ services:
       - PORT=${WEB_SERVER_PORT}
       - NODE_ENV=${NODE_ENV}
       - DATABASE_URL=${DATABASE_URL}
-      - CLIENT_URL=http://localhost:${WEB_CLIENT_PORT}
+      - CLIENT_URL=${WEB_CLIENT_URL}
     depends_on:
       - database
     

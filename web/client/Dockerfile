@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 3000
 
 # start the development server with host set for docker
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
