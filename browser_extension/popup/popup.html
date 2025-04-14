@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phisher</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="../icons/icon48.png" alt="Logo">
+        <h1>Phisher</h1>
+      </div>
+      <div class="version">v1.1</div>
+    </header>
+    
+    <div id="loading" class="section">
+      <div class="spinner"></div>
+      <p>Analyzing URL...</p>
+    </div>
+    
+    <div id="result" class="section" style="display: none;">
+      <div class="url-container">
+        <h3>Current URL</h3>
+        <div class="url-box">
+          <p id="url-text" class="truncate"></p>
+        </div>
+      </div>
+      
+      <div class="risk-container">
+        <h3>Risk Assessment</h3>
+        <div class="score-display">
+          <div class="gauge-container">
+            <div id="gauge">
+              <div id="gauge-value"></div>
+            </div>
+            <span id="score-value">0</span>
+          </div>
+          <div id="risk-level" class="risk-badge">Unknown</div>
+        </div>
+        
+        <div class="details-box">
+          <h4>Analysis Details</h4>
+          <p id="details-text">No details available</p>
+        </div>
+      </div>
+      
+      <div class="actions">
+        <button id="analyze-btn" class="btn primary">Re-analyze</button>
+        <button id="report-btn" class="btn secondary">Report URL</button>
+        <button id="learn-btn" class="btn secondary">Learn More</button>
+      </div>
+    </div>
+    
+    <div id="error" class="section" style="display: none;">
+      <div class="error-icon">⚠️</div>
+      <h3>Analysis Error</h3>
+      <p id="error-message">Unable to analyze this URL.</p>
+      <button id="retry-btn" class="btn primary">Retry</button>
+    </div>
+    
+    <div class="settings-container">
+      <h3>Settings</h3>
+      <div class="setting-item">
+        <label class="switch">
+          <input type="checkbox" id="real-time-toggle">
+          <span class="slider round"></span>
+        </label>
+        <span>Real-time scanning</span>
+      </div>
+      
+      <div class="setting-item">
+        <label for="notification-level">Notification level:</label>
+        <select id="notification-level">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="deep-scan-container">
+      <h3>Need deeper analysis?</h3>
+      <p>Our AI chatbot can provide comprehensive analysis of suspicious URLs.</p>
+      <button id="chatbot-btn" class="btn primary">Go to Chatbot</button>
+    </div>
+    
+    <footer>
+      <p>AI-Powered Phishing Detection System</p>
+    </footer>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
