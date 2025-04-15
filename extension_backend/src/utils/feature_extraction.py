@@ -30,7 +30,8 @@ class FeatureExtractor:
                 path = '/'.join(url.split('/')[1:]) if '/' in url else ''
             
             # presence of IP address (simple check for 4 numbers separated by dots)
-            features['has_ip'] = 1 if bool(re.search(r'\d+\.\d+\.\d+\.\d+', url)) else 0
+            ipv4_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
+            features['has_ip'] = 1 if re.search(ipv4_pattern, url) else 0
             
             # presence of @ symbol
             features['has_at_symbol'] = 1 if '@' in url else 0
