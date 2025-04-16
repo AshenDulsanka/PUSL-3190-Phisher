@@ -34,6 +34,7 @@ model URL {
   // Relations
   detectionSessions DetectionSession[]
   modelEvaluations  ModelEvaluation[]
+  reports           URLReport[]
 }
 
 // Logs of browser extension detections
@@ -56,12 +57,17 @@ model ChatSession {
   startedAt         DateTime @default(now())
   endedAt           DateTime?
   userFeedback      Boolean? // Whether user confirmed if URL was indeed phishing
+
+  userId            Int?
+  user              User?    @relation(fields: [userId], references: [id])
   
   // Store messages in the session
   messages          ChatMessage[]
   
   // URL that was analyzed (optional as chat may start without URL)
   analyzedUrl       String?
+
+  @@map("chat_sessions")
 }
 
 // Individual messages in a chat session
@@ -118,4 +124,44 @@ model SystemLog {
   message           String
   timestamp         DateTime @default(now())
   metadata          String?  // Additional JSON data if needed
+}
+
+// User model for authentication
+model User {
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  email             String    @unique
+  password          String    
+  firstName         String?
+  lastName          String?
+  isVerified        Boolean   @default(false)
+  verificationToken String?
+  resetToken        String?   @unique
+  resetTokenExpiry  DateTime?
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  lastLoginAt       DateTime? @map("last_login_at")
+  
+  // Relations - can be extended as needed
+  chatSessions      ChatSession[]
+  urlReports        URLReport[]
+  
+  @@map("users")
+}
+
+// Add this related model
+model URLReport {
+  id                Int      @id @default(autoincrement())
+  reportedUrl       String
+  reportType        String   // "phishing", "malware", "scam", etc.
+  comments          String?
+  reportedAt        DateTime @default(now())
+  
+  // Relations
+  userId            Int?
+  user              User?    @relation(fields: [userId], references: [id])
+  urlId             Int?
+  url               URL?     @relation(fields: [urlId], references: [id])
+  
+  @@map("url_reports")
 }
