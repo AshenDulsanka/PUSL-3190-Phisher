@@ -5,6 +5,9 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 
+// import routes
+import authRoutes from './routes/authRoutes.js'
+
 // initialize
 dotenv.config()
 const app = express()
@@ -20,6 +23,9 @@ app.use(cors({
 app.use(express.json())
 app.use(morgan('dev'))
 
+// routes
+app.use('/api/auth', authRoutes)
+
 // health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date() })
@@ -30,7 +36,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ 
     message: 'Phisher Chatbot API',
     version: '1.0.0',
-    endpoints: ['/health', '/api/chat', '/api/url', '/api/report']
+    endpoints: ['/health', '/api/auth']
   })
 })
 
