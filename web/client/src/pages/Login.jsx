@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { 
   Box, Container, Typography, TextField, Button, 
-  InputAdornment, IconButton, Divider, Grid, Paper
+  InputAdornment, IconButton, Divider, Grid, Paper, Alert
 } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import ShieldIcon from '@mui/icons-material/Shield'
@@ -10,13 +10,17 @@ import FacebookIcon from '@mui/icons-material/Facebook'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import AppleIcon from '@mui/icons-material/Apple'
 import GoogleIcon from '@mui/icons-material/Google'
+import { authService } from '../services/api'
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +32,23 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login data submitted:', formData)
+    setError('');
+    
+    try {
+      setIsLoading(true);
+      const response = await authService.login(formData);
+      
+      // Store token in localStorage
+      localStorage.setItem('token', response.token);
+      
+      // Navigate to home page
+      navigate('/');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -49,6 +69,12 @@ const Login = () => {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
             Sign in to continue protecting against phishing attacks
           </Typography>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2, width: '100%' }}>
+              {error}
+            </Alert>
+          )}
 
           <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
             <TextField
@@ -107,8 +133,9 @@ const Login = () => {
                 bgcolor: 'primary.main',
                 '&:hover': { bgcolor: '#24A579' }
               }}
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
             
             <Box sx={{ textAlign: 'center', mt: 2, mb: 2 }}>

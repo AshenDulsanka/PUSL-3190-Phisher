@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon --legacy-watch src/index.js",
     "prisma:generate": "prisma generate --schema=../../database/prisma/schema.prisma"
   },
   "keywords": [],

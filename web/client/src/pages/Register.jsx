@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { 
   Box, Container, Typography, TextField, Button, 
   Checkbox, FormControlLabel, InputAdornment, IconButton,
-  Divider, Grid, Paper
+  Divider, Grid, Paper, Alert
 } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import ShieldIcon from '@mui/icons-material/Shield'
@@ -11,8 +11,10 @@ import FacebookIcon from '@mui/icons-material/Facebook'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import AppleIcon from '@mui/icons-material/Apple'
 import GoogleIcon from '@mui/icons-material/Google'
+import { authService } from '../services/api'
 
 const Register = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -23,6 +25,8 @@ const Register = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target
@@ -34,15 +38,30 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
     
     // form validation would go here
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
+      setError("Passwords don't match")
       return
     }
     
-    // will implement actual API call later
-    console.log('Form data submitted:', formData)
+    try {
+      setIsLoading(true)
+      const { username, email, password } = formData
+      const response = await authService.register({ username, email, password })
+      
+      // Store token in localStorage
+      localStorage.setItem('token', response.token)
+      
+      // Navigate to home page
+      navigate('/')
+    } catch (err) {
+      console.error('Registration error:', err)
+      setError(err.response?.data?.message || 'Registration failed. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -63,6 +82,12 @@ const Register = () => {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
             Register now to detect and analyze malicious URLs with AI-powered security
           </Typography>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2, width: '100%' }}>
+              {error}
+            </Alert>
+          )}
 
           <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
             <TextField
@@ -171,9 +196,9 @@ const Register = () => {
                 bgcolor: 'primary.main',
                 '&:hover': { bgcolor: '#24A579' }
               }}
-              disabled={!formData.agreeToTerms}
+              disabled={!formData.agreeToTerms || isLoading}
             >
-              Sign Up
+              {isLoading ? 'Signing up...' : 'Sign Up'}
             </Button>
             
             <Box sx={{ textAlign: 'center', mt: 2, mb: 2 }}>
