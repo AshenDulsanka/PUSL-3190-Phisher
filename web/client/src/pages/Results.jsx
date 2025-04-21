@@ -1,48 +1,48 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Box, Container, Typography, Paper, Button, Grid,
   Divider, List, ListItem, ListItemIcon, ListItemText,
   LinearProgress, Link, Alert
-} from '@mui/material';
-import SecurityIcon from '@mui/icons-material/Security';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import DangerousIcon from '@mui/icons-material/Dangerous';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import FlagIcon from '@mui/icons-material/Flag';
-import LinkIcon from '@mui/icons-material/Link';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import urlAnalysisService from '../services/urlAnalysisService';
+} from '@mui/material'
+import SecurityIcon from '@mui/icons-material/Security'
+import VerifiedIcon from '@mui/icons-material/Verified'
+import DangerousIcon from '@mui/icons-material/Dangerous'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import FlagIcon from '@mui/icons-material/Flag'
+import LinkIcon from '@mui/icons-material/Link'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
+import CheckIcon from '@mui/icons-material/Check'
+import CloseIcon from '@mui/icons-material/Close'
+import urlAnalysisService from '../services/urlAnalysisService'
 
 const Results = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [result, setResult] = useState(null);
-  const [reportSubmitted, setReportSubmitted] = useState(false);
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [result, setResult] = useState(null)
+  const [reportSubmitted, setReportSubmitted] = useState(false)
 
   useEffect(() => {
     // If we don't have a result from navigation state, go back to home
     if (!location.state?.result) {
-      navigate('/');
-      return;
+      navigate('/')
+      return
     }
     
-    setResult(location.state.result);
-  }, [location, navigate]);
+    setResult(location.state.result)
+  }, [location, navigate])
 
   const handleReportUrl = async () => {
     try {
       await urlAnalysisService.reportUrl({
         url: result.url,
         reportType: result.isPhishing ? 'confirm_phishing' : 'false_negative',
-      });
-      setReportSubmitted(true);
+      })
+      setReportSubmitted(true)
     } catch (error) {
-      console.error('Error reporting URL:', error);
+      console.error('Error reporting URL:', error)
     }
-  };
+  }
 
   if (!result) {
     return (
@@ -52,7 +52,7 @@ const Results = () => {
           <LinearProgress sx={{ mt: 2 }} />
         </Box>
       </Container>
-    );
+    )
   }
 
   const { 
@@ -62,11 +62,11 @@ const Results = () => {
     probability,
     details,
     features = {} 
-  } = result;
+  } = result
 
   // Extract domain name from URL for display
   // eslint-disable-next-line no-unused-vars
-  const domain = url.replace(/^https?:\/\//, '').split('/')[0];
+  const domain = url.replace(/^https?:\/\//, '').split('/')[0]
 
   // Map features to user-readable format
   const featureExplanations = {
@@ -79,7 +79,7 @@ const Results = () => {
     hasHTTPS: 'Uses HTTPS',
     domainAge: 'Domain registration age',
     hasSpecialChars: 'Contains unusual special characters'
-  };
+  }
 
   return (
     <Container>
@@ -249,7 +249,7 @@ const Results = () => {
         </Box>
       </Box>
     </Container>
-  );
-};
+  )
+}
 
-export default Results;
+export default Results
