@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import Register from './pages/Register'
-import Login from './pages/Login'
 import Home from './pages/Home'
+import Results from './pages/Results'
 import NotFound from './pages/NotFound'
 import './App.css'
 
@@ -11,10 +10,10 @@ import './App.css'
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2BBE89', // Green from your design
+      main: '#2BBE89', 
     },
     secondary: {
-      main: '#FF5722', // Orange for warnings
+      main: '#FF5722', 
     },
     background: {
       default: '#F5F5F5',
@@ -32,8 +31,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/results" element={<Results />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
