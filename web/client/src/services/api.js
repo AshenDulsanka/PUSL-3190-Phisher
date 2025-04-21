@@ -9,31 +9,21 @@ const api = axios.create({
   },
 })
 
-// add authentication token to requests if available
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+const urlAnalysisService = {
+  analyzeUrl: async (url) => {
+    const response = await api.post('/url/analyze', { url })
+    return response.data
+  },
+  
+  reportUrl: async (data) => {
+    const response = await api.post('/url/report', data)
+    return response.data
+  },
+  
+  getRecentAnalyses: async () => {
+    const response = await api.get('/url/recent')
+    return response.data
   }
-  return config
-})
-
-// auth services
-export const authService = {
-  register: async (userData) => {
-    const response = await api.post('/api/auth/register', userData)
-    return response.data
-  },
-  
-  login: async (credentials) => {
-    const response = await api.post('/api/auth/login', credentials)
-    return response.data
-  },
-  
-  validateToken: async () => {
-    const response = await api.get('/api/auth/validate')
-    return response.data
-  },
 }
 
-export default api
+export default urlAnalysisService
