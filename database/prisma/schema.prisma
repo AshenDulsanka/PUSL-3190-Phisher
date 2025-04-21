@@ -37,49 +37,17 @@ model URL {
   reports           URLReport[]
 }
 
-// Logs of browser extension detections
+// Public URL scanning sessions
 model DetectionSession {
   id                Int      @id @default(autoincrement())
-  sessionId         String   @unique // Generated unique ID for each browser session
+  sessionId         String   @unique // Generated unique ID for each scan session
   browserInfo       String?  // Browser info like version, etc.
   detectedAt        DateTime @default(now())
-  redirectedToChatbot Boolean @default(false)
+  ipAddress         String?  // Optional IP tracking
   
   // Relations
   urlId             Int
   url               URL      @relation(fields: [urlId], references: [id])
-}
-
-// Chatbot conversations about specific URLs
-model ChatSession {
-  id                Int      @id @default(autoincrement())
-  sessionId         String   @unique
-  startedAt         DateTime @default(now())
-  endedAt           DateTime?
-  userFeedback      Boolean? // Whether user confirmed if URL was indeed phishing
-
-  userId            Int?
-  user              User?    @relation(fields: [userId], references: [id])
-  
-  // Store messages in the session
-  messages          ChatMessage[]
-  
-  // URL that was analyzed (optional as chat may start without URL)
-  analyzedUrl       String?
-
-  @@map("chat_sessions")
-}
-
-// Individual messages in a chat session
-model ChatMessage {
-  id                Int      @id @default(autoincrement())
-  content           String
-  isFromUser        Boolean  // True if from user, false if from system
-  timestamp         DateTime @default(now())
-  
-  // Relations
-  chatSessionId     Int
-  chatSession       ChatSession @relation(fields: [chatSessionId], references: [id])
 }
 
 // ML model information
@@ -126,40 +94,29 @@ model SystemLog {
   metadata          String?  // Additional JSON data if needed
 }
 
-// User model for authentication
-model User {
+// Admin user model (simplified)
+model Admin {
   id                Int       @id @default(autoincrement())
   username          String    @unique
   email             String    @unique
   password          String    
-  firstName         String?
-  lastName          String?
-  isVerified        Boolean   @default(false)
-  verificationToken String?
-  resetToken        String?   @unique
-  resetTokenExpiry  DateTime?
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
-  lastLoginAt       DateTime? @map("last_login_at")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  lastLoginAt       DateTime?
   
-  // Relations - can be extended as needed
-  chatSessions      ChatSession[]
-  urlReports        URLReport[]
-  
-  @@map("users")
+  @@map("admins")
 }
 
-// Add this related model
+// Public URL reporting
 model URLReport {
   id                Int      @id @default(autoincrement())
   reportedUrl       String
   reportType        String   // "phishing", "malware", "scam", etc.
   comments          String?
   reportedAt        DateTime @default(now())
+  reporterEmail     String?  // Optional email for feedback
   
   // Relations
-  userId            Int?
-  user              User?    @relation(fields: [userId], references: [id])
   urlId             Int?
   url               URL?     @relation(fields: [urlId], references: [id])
   
