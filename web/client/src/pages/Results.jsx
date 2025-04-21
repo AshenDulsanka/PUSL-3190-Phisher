@@ -23,7 +23,7 @@ const Results = () => {
   const [reportSubmitted, setReportSubmitted] = useState(false)
 
   useEffect(() => {
-    // If we don't have a result from navigation state, go back to home
+    // if we don't have a result from navigation state, go back to home
     if (!location.state?.result) {
       navigate('/')
       return
@@ -64,11 +64,11 @@ const Results = () => {
     features = {} 
   } = result
 
-  // Extract domain name from URL for display
+  // extract domain name from URL for display
   // eslint-disable-next-line no-unused-vars
   const domain = url.replace(/^https?:\/\//, '').split('/')[0]
 
-  // Map features to user-readable format
+  // map features to user-readable format
   const featureExplanations = {
     usingIP: 'Uses IP address instead of domain name',
     urlLength: 'URL is suspiciously long',
