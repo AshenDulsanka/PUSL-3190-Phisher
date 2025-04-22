@@ -1,55 +1,55 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { 
   Box, Container, Typography, TextField, Button, 
   Paper, CircularProgress, InputAdornment
-} from '@mui/material';
-import ShieldIcon from '@mui/icons-material/Shield';
-import SearchIcon from '@mui/icons-material/Search';
-import LinkIcon from '@mui/icons-material/Link';
-import WarningIcon from '@mui/icons-material/Warning';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import urlAnalysisService from '../services/urlAnalysisService';
+} from '@mui/material'
+import ShieldIcon from '@mui/icons-material/Shield'
+import SearchIcon from '@mui/icons-material/Search'
+import LinkIcon from '@mui/icons-material/Link'
+import WarningIcon from '@mui/icons-material/Warning'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import urlAnalysisService from '../services/urlAnalysisService'
 
 const Home = () => {
-  const navigate = useNavigate();
-  const [url, setUrl] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [quickResult, setQuickResult] = useState(null);
+  const navigate = useNavigate()
+  const [url, setUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [quickResult, setQuickResult] = useState(null)
 
   const handleAnalyzeUrl = async () => {
     if (!url) {
-      setError('Please enter a URL');
-      return;
+      setError('Please enter a URL')
+      return
     }
 
-    // Simple URL validation
+    // simple URL validation
     if (!url.match(/^(http|https):\/\/[a-zA-Z0-9-_.]+\.[a-zA-Z]{2,}(\/.*)?$/)) {
-      setError('Please enter a valid URL (including http:// or https://)');
-      return;
+      setError('Please enter a valid URL (including http:// or https://)')
+      return
     }
 
-    setLoading(true);
-    setError('');
+    setLoading(true)
+    setError('')
     try {
-      const result = await urlAnalysisService.analyzeUrl(url);
+      const result = await urlAnalysisService.analyzeUrl(url)
       
-      // Show quick result
-      setQuickResult(result);
+      // show quick result
+      setQuickResult(result)
       
-      // Navigate to detailed result page after a short delay
+      // navigate to detailed result page after a short delay
       setTimeout(() => {
-        navigate('/results', { state: { result } });
-      }, 1500);
+        navigate('/results', { state: { result } })
+      }, 1500)
       
     } catch (err) {
-      console.error('Error analyzing URL:', err);
-      setError('Failed to analyze URL. Please try again.');
+      console.error('Error analyzing URL:', err)
+      setError('Failed to analyze URL. Please try again.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Container maxWidth="md">
@@ -183,7 +183,7 @@ const Home = () => {
         </Typography>
       </Box>
     </Container>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
