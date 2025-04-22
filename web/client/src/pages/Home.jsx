@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import LinkIcon from '@mui/icons-material/Link'
 import WarningIcon from '@mui/icons-material/Warning'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import { FormControlLabel, Checkbox } from '@mui/material'
 import urlAnalysisService from '../services/urlAnalysisService'
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [quickResult, setQuickResult] = useState(null)
+  const [deepAnalysis, setDeepAnalysis] = useState(false)
 
   const handleAnalyzeUrl = async () => {
     if (!url) {
@@ -33,7 +35,8 @@ const Home = () => {
     setLoading(true)
     setError('')
     try {
-      const result = await urlAnalysisService.analyzeUrl(url)
+      // pass the deepAnalysis flag to the service
+      const result = await urlAnalysisService.analyzeUrl(url, deepAnalysis)
       
       // show quick result
       setQuickResult(result)
@@ -128,7 +131,20 @@ const Home = () => {
                 </InputAdornment>
               ),
             }}
-            sx={{ mb: 3 }}
+            sx={{ mb: 2 }}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={deepAnalysis}
+                onChange={(e) => setDeepAnalysis(e.target.checked)}
+                name="deepAnalysis"
+                color="primary"
+              />
+            }
+            label="Use deep analysis (slower but more accurate)"
+            sx={{ mb: 2 }}
           />
           
           <Button
@@ -140,7 +156,7 @@ const Home = () => {
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SearchIcon />}
             sx={{ py: 1.5 }}
           >
-            {loading ? 'Analyzing...' : 'Analyze URL'}
+            {loading ? `${deepAnalysis ? 'Deep ' : ''}Analyzing...` : `${deepAnalysis ? 'Deep ' : ''}Analyze URL`}
           </Button>
 
           {quickResult && (
