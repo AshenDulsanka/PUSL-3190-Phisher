@@ -2,10 +2,10 @@
   "name": "phisher-chatbot-server",
   "version": "1.0.0",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon --legacy-watch src/index.js",
+    "start": "node src/server.js",
+    "dev": "nodemon --legacy-watch src/server.js",
     "prisma:generate": "prisma generate --schema=../../database/prisma/schema.prisma"
   },
   "keywords": [],
