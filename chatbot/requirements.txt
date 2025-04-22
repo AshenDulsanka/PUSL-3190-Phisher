@@ -7,7 +7,7 @@ validators==0.22.0
 python-dotenv==1.0.0
 pydantic==2.4.2
 tldextract==3.4.4
-requests==2.31.0
+requests==2.32.2
 beautifulsoup4==4.12.2
 python-whois==0.8.0
 python-multipart==0.0.18
