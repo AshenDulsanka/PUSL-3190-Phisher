@@ -3,12 +3,13 @@ import { PrismaClient } from '@prisma/client'
 import axios from 'axios'
 
 const prisma = new PrismaClient()
-const ML_API_ENDPOINT = process.env.ML_API_ENDPOINT
+const EXTENSION_API_ENDPOINT = process.env.EXTENSION_API_ENDPOINT
+const CHATBOT_API_ENDPOINT = process.env.CHATBOT_API_ENDPOINT
 
-// analyze a URL for phishing indicators
+// analyze a URL for phishing indicators with option for deep analysis
 export const analyzeUrl = async (req, res) => {
   try {
-    const { url } = req.body
+    const { url, deepAnalysis = false } = req.body
 
     if (!url) {
       return res.status(400).json({ message: 'URL is required' })
@@ -19,7 +20,7 @@ export const analyzeUrl = async (req, res) => {
       where: { url }
     })
 
-    if (existingUrl) {
+    if (existingUrl && !deepAnalysis) {
       // create a new detection session for this URL
       await prisma.detectionSession.create({
         data: {
@@ -45,17 +46,23 @@ export const analyzeUrl = async (req, res) => {
           numSubdomains: existingUrl.numSubdomains,
           hasHTTPS: existingUrl.hasHTTPS,
           hasSpecialChars: existingUrl.hasSpecialChars
-        }
+        },
+        analysisType: 'cached'
       })
     }
 
+    // choose appropriate API endpoint based on analysis depth
+    const apiEndpoint = deepAnalysis ? CHATBOT_API_ENDPOINT : EXTENSION_API_ENDPOINT
+
     // call the ML API to analyze the URL
-    const response = await axios.post(ML_API_ENDPOINT, { url })
+    const response = await axios.post(apiEndpoint, {
+        url,
+        client: deepAnalysis ? 'chatbot' : 'web_client'
+    })
     const analysisResult = response.data
 
     // store URL analysis result in database
-    const newUrl = await prisma.uRL.create({
-      data: {
+    const urlData = {
         url,
         isPhishing: analysisResult.is_phishing,
         suspiciousScore: analysisResult.threat_score,
@@ -67,37 +74,80 @@ export const analyzeUrl = async (req, res) => {
         numSubdomains: analysisResult.features?.num_subdomains || null,
         hasAtSymbol: analysisResult.features?.has_at_symbol || null,
         hasSpecialChars: analysisResult.features?.has_special_chars || null,
+        
+        // additional fields for deep analysis
+        domainAge: deepAnalysis ? (analysisResult.features?.domain_age || null) : null,
+        hasIframe: deepAnalysis ? (analysisResult.features?.has_iframe || null) : null,
+        disablesRightClick: deepAnalysis ? (analysisResult.features?.disables_right_click || null) : null,
+        hasPopup: deepAnalysis ? (analysisResult.features?.has_popup || null) : null,
+        isShortened: analysisResult.features?.is_shortened || null,
         detectionSessions: {
-          create: {
+            create: {
             sessionId: uuidv4(),
             browserInfo: req.headers['user-agent'] || null,
             ipAddress: req.ip || null
-          }
+            }
         }
-      }
+    }
+
+    // create new or update existing URL record
+    const newUrl = existingUrl 
+      ? await prisma.uRL.update({
+          where: { id: existingUrl.id },
+          data: urlData
+        })
+      : await prisma.uRL.create({
+          data: urlData
+        })
+
+    // store model evaluation data
+    const modelInfo = await prisma.mLModel.findFirst({
+      where: { name: analysisResult.model_version || (deepAnalysis ? 'gradient_boost_model' : 'random_forest_model') }
     })
+
+    if (modelInfo) {
+      await prisma.modelEvaluation.create({
+        data: {
+          predictedScore: analysisResult.threat_score,
+          evaluatedAt: new Date(),
+          modelId: modelInfo.id,
+          urlId: newUrl.id
+        }
+      })
+    }
 
     // return analysis result
     res.status(200).json({
-      url,
-      isPhishing: analysisResult.is_phishing,
-      threatScore: analysisResult.threat_score,
-      probability: analysisResult.probability,
-      details: analysisResult.details,
-      features: {
-        usingIP: analysisResult.features?.using_ip || false,
-        urlLength: analysisResult.features?.url_length || 0,
-        hasAtSymbol: analysisResult.features?.has_at_symbol || false,
-        hasDash: (analysisResult.features?.num_hyphens || 0) > 0,
-        numSubdomains: analysisResult.features?.num_subdomains || 0,
-        hasHTTPS: analysisResult.features?.has_https || false,
-        hasSpecialChars: analysisResult.features?.has_special_chars || false
-      }
-    })
-  } catch (error) {
-    console.error('URL analysis error:', error)
-    res.status(500).json({ message: 'Error analyzing URL' })
-  }
+        url,
+        isPhishing: analysisResult.is_phishing,
+        threatScore: analysisResult.threat_score,
+        probability: analysisResult.probability,
+        details: analysisResult.details,
+        features: {
+          usingIP: analysisResult.features?.using_ip || false,
+          urlLength: analysisResult.features?.url_length || 0,
+          hasAtSymbol: analysisResult.features?.has_at_symbol || false,
+          hasDash: (analysisResult.features?.num_hyphens || 0) > 0,
+          numSubdomains: analysisResult.features?.num_subdomains || 0,
+          hasHTTPS: analysisResult.features?.has_https || false,
+          hasSpecialChars: analysisResult.features?.has_special_chars || false,
+          
+          // add deep analysis features if available
+          ...(deepAnalysis && {
+            domainAge: analysisResult.features?.domain_age || null,
+            hasIframe: analysisResult.features?.has_iframe || false,
+            disablesRightClick: analysisResult.features?.disables_right_click || false,
+            hasPopup: analysisResult.features?.has_popup || false,
+            isShortened: analysisResult.features?.is_shortened || false,
+          })
+        },
+        analysisType: deepAnalysis ? 'deep' : 'standard',
+        modelUsed: analysisResult.model_version || (deepAnalysis ? 'gradient_boost_model' : 'random_forest_model')
+      })
+    } catch (error) {
+      console.error('URL analysis error:', error)
+      res.status(500).json({ message: 'Error analyzing URL' })
+    }
 }
 
 // report incorrect analysis
