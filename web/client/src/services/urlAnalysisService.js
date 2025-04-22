@@ -10,9 +10,12 @@ const api = axios.create({
 })
 
 const urlAnalysisService = {
-  analyzeUrl: async (url) => {
-    const response = await api.post('/url/analyze', { url })
-    return response.data
+  analyzeUrl: async (url, deepAnalysis = false) => {
+    const response = await api.post('/url/analyze', { 
+      url,
+      deepAnalysis 
+    });
+    return response.data;
   },
   
   reportUrl: async (data) => {
