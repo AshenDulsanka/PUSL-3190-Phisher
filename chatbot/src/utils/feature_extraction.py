@@ -213,3 +213,12 @@ class DeepFeatureExtractor:
             features["favicon_same_domain"] = 1
             
         return features
+    
+    @staticmethod
+    def _is_ip(netloc: str) -> bool:
+        """check if the netloc is an IP address"""
+        try:
+            socket.inet_aton(netloc.split(':')[0])
+            return True
+        except:
+            return False
