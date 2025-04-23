@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# base paths
 # base paths - adjust for docker environment
 if os.path.exists('/app'):
     # docker
@@ -12,13 +11,14 @@ if os.path.exists('/app'):
 else:
     # local development
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 MODELS_DIR = BASE_DIR / "models"
 LOGS_DIR = BASE_DIR / "logs" / "extension_backend"
 
 # ensure log directory exists and is writable
 os.makedirs(LOGS_DIR, exist_ok=True)
 try:
-    # Test write access by touching a file
+    # test write access by touching a file
     test_file = LOGS_DIR / ".write_test"
     with open(test_file, 'w') as f:
         f.write("test")
@@ -39,14 +39,14 @@ API_PORT = int(os.getenv("API_PORT_BE"))
 
 # CORS settings
 CORS_ORIGINS = [
-    "chrome-extension://*/",  # allow Chrome extensions
-    "http://localhost:3000",  # local frontend development
-    "http://localhost:8000",  # local testing
+    os.getenv("CHROME_EXTENSION"),  # allow Chrome extensions
+    os.getenv("WEB_CLIENT_URL"),  # frontend 
+    os.getenv("EXTENSION_BACKEND_URL"),  # testing
 ]
 
 # security settings
 API_KEY_HEADER = "X-API-Key"
-API_KEY = os.getenv("API_KEY_BE", "phisher-dev-key")
+API_KEY = os.getenv("API_KEY_BE")
 
 # rate limiting
-RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
+RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE_BE"))
