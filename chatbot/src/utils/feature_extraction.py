@@ -88,3 +88,42 @@ class DeepFeatureExtractor:
         features["num_subdomains"] = len(subdomain.split('.')) if subdomain else 0
         
         return features
+    
+    @staticmethod
+    def _extract_domain_features(url: str) -> Dict[str, Any]:
+        """extract features related to the domain"""
+        features = {}
+        
+        try:
+            # get domain details
+            ext = tldextract.extract(url)
+            domain = ext.domain
+            suffix = ext.suffix
+            
+            if domain and suffix:
+                # domain age (in days)
+                try:
+                    domain_info = whois.whois(f"{domain}.{suffix}")
+                    if domain_info.creation_date:
+                        # handle both single and multiple creation dates
+                        if isinstance(domain_info.creation_date, list):
+                            creation_date = domain_info.creation_date[0]
+                        else:
+                            creation_date = domain_info.creation_date
+                            
+                        domain_age = (datetime.now() - creation_date).days
+                        features["domain_age"] = domain_age
+                    else:
+                        features["domain_age"] = 0
+                except Exception:
+                    features["domain_age"] = 0
+            
+            # check if domain is in Alexa top 1M (simplified)
+            features["domain_in_alexa_top_1m"] = 0  # Default to 0
+                
+        except Exception as e:
+            logger.warning(f"Error extracting domain features: {e}")
+            features["domain_age"] = 0
+            features["domain_in_alexa_top_1m"] = 0
+            
+        return features
