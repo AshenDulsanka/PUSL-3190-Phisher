@@ -127,3 +127,89 @@ class DeepFeatureExtractor:
             features["domain_in_alexa_top_1m"] = 0
             
         return features
+    
+    @staticmethod
+    def _extract_content_features(url: str) -> Dict[str, Any]:
+        """extract features from page content"""
+        features = {}
+        
+        try:
+            # request with a timeout and user agent
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+            response = requests.get(url, headers=headers, timeout=5, verify=False)
+            
+            if response.status_code == 200:
+                html_content = response.text
+                soup = BeautifulSoup(html_content, 'html.parser')
+                
+                # check for iframes
+                features["has_iframe"] = 1 if soup.find('iframe') else 0
+                
+                # check for JavaScript that might disable right click
+                scripts = soup.find_all('script')
+                script_text = ' '.join([script.string for script in scripts if script.string])
+                features["disables_right_click"] = 1 if 'preventDefault' in script_text and 'contextmenu' in script_text else 0
+                
+                # check for popups
+                features["has_popup"] = 1 if 'window.open' in script_text else 0
+                
+                # check for login forms
+                forms = soup.find_all('form')
+                has_login_form = 0
+                forms_to_external = 0
+                
+                for form in forms:
+                    # check if form has password field
+                    if form.find('input', {'type': 'password'}):
+                        has_login_form = 1
+                        
+                    # check if form submits to external domain
+                    if form.get('action'):
+                        form_action = form['action']
+                        if form_action.startswith('http') and url not in form_action:
+                            forms_to_external = 1
+                
+                features["has_login_form"] = has_login_form
+                features["forms_to_external"] = forms_to_external
+                
+                # check if favicon is from the same domain
+                favicon_link = soup.find('link', rel=lambda x: x and ('icon' in x.lower() or 'shortcut' in x.lower()))
+                features["favicon_same_domain"] = 1  # Default to yes
+                
+                if favicon_link and favicon_link.get('href'):
+                    favicon_url = favicon_link['href']
+                    if favicon_url.startswith('http') and url not in favicon_url:
+                        features["favicon_same_domain"] = 0
+                
+                # calculate ratio of external JavaScript files
+                js_links = soup.find_all('script', src=True)
+                ext_js = 0
+                for js in js_links:
+                    if js['src'].startswith('http') and url not in js['src']:
+                        ext_js += 1
+                
+                features["external_js_ratio"] = ext_js / len(js_links) if js_links else 0
+            else:
+                # default values if page couldn't be loaded
+                features["has_iframe"] = 0
+                features["disables_right_click"] = 0
+                features["has_popup"] = 0
+                features["has_login_form"] = 0
+                features["forms_to_external"] = 0
+                features["external_js_ratio"] = 0
+                features["favicon_same_domain"] = 1
+                
+        except Exception as e:
+            logger.warning(f"Error fetching URL content: {e}")
+            # default values if page couldn't be loaded
+            features["has_iframe"] = 0
+            features["disables_right_click"] = 0
+            features["has_popup"] = 0
+            features["has_login_form"] = 0
+            features["forms_to_external"] = 0
+            features["external_js_ratio"] = 0
+            features["favicon_same_domain"] = 1
+            
+        return features
