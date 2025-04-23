@@ -54,4 +54,37 @@ class DeepFeatureExtractor:
             logger.error(f"Error extracting features: {e}")
         
         return features
-    
+
+    @staticmethod
+    def _extract_url_features(url: str) -> Dict[str, Any]:
+        """extract basic features from URL string"""
+        parsed_url = urllib.parse.urlparse(url)
+        path = parsed_url.path
+        query = parsed_url.query
+        
+        # basic URL features
+        features = {
+            "url_length": len(url),
+            "num_dots": url.count('.'),
+            "num_special_chars": len(re.findall(r'[^a-zA-Z0-9\.]', url)),
+            "has_ip": 1 if DeepFeatureExtractor._is_ip(parsed_url.netloc) else 0,
+            "has_at_symbol": 1 if '@' in url else 0,
+            "has_hyphen": 1 if '-' in parsed_url.netloc else 0,
+            "num_hyphens": parsed_url.netloc.count('-'),
+            "num_underscores": url.count('_'),
+            "num_percent": url.count('%'),
+            "num_query_components": len(query.split('&')) if query else 0,
+            "num_path_components": len(path.split('/')) if path else 0,
+            "has_https": 1 if parsed_url.scheme == 'https' else 0,
+        }
+        
+        # URL shortening service detection
+        shortening_services = ['bit.ly', 'goo.gl', 't.co', 'tinyurl.com', 'is.gd', 'cli.gs', 'ow.ly']
+        features["is_shortened"] = 1 if any(service in parsed_url.netloc for service in shortening_services) else 0
+        
+        # number of subdomains
+        ext = tldextract.extract(url)
+        subdomain = ext.subdomain
+        features["num_subdomains"] = len(subdomain.split('.')) if subdomain else 0
+        
+        return features
