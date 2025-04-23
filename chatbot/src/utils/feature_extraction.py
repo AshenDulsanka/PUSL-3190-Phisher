@@ -222,3 +222,12 @@ class DeepFeatureExtractor:
             return True
         except:
             return False
+        
+    @staticmethod
+    def prepare_features_for_model(features, feature_list):
+        """create an array with features in the correct order"""
+        feature_array = []
+        for feature_name in feature_list:
+            feature_array.append(features.get(feature_name, 0))
+            
+        return np.array(feature_array).reshape(1, -1)
