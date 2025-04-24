@@ -97,3 +97,124 @@ class ModelService:
             
         except Exception as e:
             logger.error(f"Error loading model: {str(e)}", exc_info=True)
+    
+    def predict(self, url: str, features: Dict[str, Any] = None) -> Dict[str, Any]:
+        try:
+            # check if model is loaded
+            if self.model is None:
+                logger.error("Model not loaded")
+                return {
+                    "is_phishing": False,
+                    "threat_score": 0,
+                    "probability": 0.0,
+                    "details": "Unable to make prediction: Model not loaded",
+                    "model_version": self.model_info["version"]
+                }
+            
+            # extract features if not provided
+            if features is None:
+                features = DeepFeatureExtractor.extract_features(url)
+
+            # debugging - print feature keys
+            logger.info(f"Features provided: {list(features.keys())}")
+            logger.info(f"Feature list expected: {self.feature_list}")
+
+            # filter features to only include those in the feature_list
+            filtered_features = {}
+            for feature in self.feature_list:
+                if feature in features:
+                    filtered_features[feature] = features[feature]
+                else:
+                    filtered_features[feature] = 0  # Default value
+                    logger.warning(f"Missing feature: {feature}")
+            
+            # prepare features for the model
+            if self.feature_list:
+                # use feature list to ensure correct order
+                X = DeepFeatureExtractor.prepare_features_for_model(features, self.feature_list)
+                logger.info(f"Prepared feature array shape: {X.shape}")
+            else:
+                # fallback if feature list is not available
+                X = np.array(list(features.values())).reshape(1, -1)
+            
+            # apply scaling if scaler is available
+            if self.scaler is not None:
+                X = self.scaler.transform(X)
+            
+            # make prediction
+            prediction = self.model.predict(X)[0]
+            is_phishing = prediction == 'bad'
+            
+            # get probability if available
+            if hasattr(self.model, "predict_proba"):
+                # find the index of the 'bad' class
+                bad_class_idx = list(self.model.classes_).index('bad') if 'bad' in self.model.classes_ else 1
+                probability = float(self.model.predict_proba(X)[0, bad_class_idx])
+            else:
+                probability = float(is_phishing)
+            
+            # calculate threat score (0-100)
+            threat_score = int(round(probability * 100))
+            
+            # generate details based on prediction
+            if is_phishing:
+                if threat_score > 80:
+                    details = "This URL has a very high probability of being a phishing website based on deep analysis."
+                elif threat_score > 60:
+                    details = "This URL appears to be a phishing website according to our comprehensive analysis."
+                else:
+                    details = "This URL shows some concerning characteristics of a phishing website."
+            else:
+                if threat_score < 20:
+                    details = "Comprehensive analysis indicates this URL is legitimate with high confidence."
+                elif threat_score < 40:
+                    details = "This URL is likely legitimate but has some suspicious characteristics."
+                else:
+                    details = "This URL has multiple phishing indicators but was ultimately classified as legitimate."
+            
+            # add feature explanation if it's a phishing URL
+            if is_phishing and threat_score > 50:
+                # find the most suspicious features
+                suspicious_features = []
+                if features.get('has_ip', 0) == 1:
+                    suspicious_features.append("Uses an IP address instead of a domain name")
+                if features.get('url_length', 0) > 75:
+                    suspicious_features.append("Uses an unusually long URL")
+                if features.get('has_at_symbol', 0) == 1:
+                    suspicious_features.append("Contains @ symbol in URL")
+                if features.get('is_shortened', 0) == 1:
+                    suspicious_features.append("Uses a URL shortening service")
+                if features.get('domain_age', 100) < 30:
+                    suspicious_features.append("Domain was registered very recently")
+                if features.get('has_iframe', 0) == 1:
+                    suspicious_features.append("Page contains hidden iframes")
+                if features.get('disables_right_click', 0) == 1:
+                    suspicious_features.append("Page disables right-click (anti-copy technique)")
+                if features.get('has_popup', 0) == 1:
+                    suspicious_features.append("Page contains suspicious popup elements")
+                
+                if suspicious_features:
+                    details += " Suspicious characteristics: " + ", ".join(suspicious_features) + "."
+            
+            # return prediction results with comprehensive features
+            return {
+                "url": url,
+                "is_phishing": is_phishing,
+                "threat_score": threat_score,
+                "probability": probability,
+                "details": details,
+                "features": features,
+                "features_used": self.feature_list[:5] if self.feature_list else None,
+                "model_version": self.model_info["name"]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error making prediction: {str(e)}", exc_info=True)
+            return {
+                "url": url,
+                "is_phishing": False,
+                "threat_score": 0,
+                "probability": 0.0,
+                "details": f"Error analyzing URL: {str(e)}",
+                "model_version": self.model_info["name"]
+            }
