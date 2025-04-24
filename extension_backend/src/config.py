@@ -32,7 +32,7 @@ RANDOM_FOREST_SCALER_PATH = MODELS_DIR / "random_forest_model" / "random_forest_
 FEATURE_LIST_PATH = MODELS_DIR / "random_forest_model" / "random_forest_metadata.json"
 
 # API settings
-API_PREFIX = "/api"
+API_PREFIX = os.getenv("API_PREFIX_BE")
 API_DEBUG = os.getenv("API_DEBUG_BE").lower() in ("true", "1", "t")
 API_HOST = os.getenv("API_HOST_BE")
 API_PORT = int(os.getenv("API_PORT_BE"))
