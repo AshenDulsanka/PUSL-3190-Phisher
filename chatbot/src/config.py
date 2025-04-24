@@ -27,9 +27,9 @@ except Exception as e:
     print(f"WARNING: Cannot write to logs directory: {e}")
 
 # model paths
-GRADIENT_BOOST_MODEL_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boosting_model.pkl"
-GRADIENT_BOOST_SCALER_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boosting_scaler.pkl"
-FEATURE_LIST_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boosting_metadata.json"
+GRADIENT_BOOST_MODEL_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boost_model.pkl"
+GRADIENT_BOOST_SCALER_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boost_scaler.pkl"
+FEATURE_LIST_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boost_metadata.json"
 
 # API settings
 API_PREFIX = os.getenv("API_PREFIX_CB")
