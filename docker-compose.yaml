@@ -65,7 +65,7 @@ services:
       - ./web/client:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=${WEB_SERVER_URL}
+      - VITE_API_URL=${WEB_SERVER_API}
     depends_on:
       - web_server
   
