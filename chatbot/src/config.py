@@ -32,7 +32,7 @@ GRADIENT_BOOST_SCALER_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_
 FEATURE_LIST_PATH = MODELS_DIR / "gradient_boosting_model" / "gradient_boosting_metadata.json"
 
 # API settings
-API_PREFIX = "/api"
+API_PREFIX = os.getenv("API_PREFIX_CB")
 API_DEBUG = os.getenv("API_DEBUG_CB").lower() in ("true", "1", "t")
 API_HOST = os.getenv("API_HOST_CB")
 API_PORT = int(os.getenv("API_PORT_CB"))
