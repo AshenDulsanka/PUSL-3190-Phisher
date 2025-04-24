@@ -134,11 +134,18 @@ class DeepFeatureExtractor:
         features = {}
         
         try:
+            # Validate the URL to prevent SSRF
+            parsed_url = urllib.parse.urlparse(url)
+            if not parsed_url.scheme.startswith("http"):
+                raise ValueError("Invalid URL scheme. Only HTTP and HTTPS are allowed.")
+            if DeepFeatureExtractor._is_private_ip(parsed_url.hostname):
+                raise ValueError("URL resolves to a private or reserved IP address.")
+            
             # request with a timeout and user agent
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
             }
-            response = requests.get(url, headers=headers, timeout=5, verify=False)
+            response = requests.get(url, headers=headers, timeout=5)
             
             if response.status_code == 200:
                 html_content = response.text
@@ -215,13 +222,26 @@ class DeepFeatureExtractor:
         return features
     
     @staticmethod
-    def _is_ip(netloc: str) -> bool:
-        """check if the netloc is an IP address"""
+    def _is_private_ip(hostname: str) -> bool:
+        """Check if the hostname resolves to a private or reserved IP address."""
         try:
-            socket.inet_aton(netloc.split(':')[0])
-            return True
-        except:
+            ip = socket.gethostbyname(hostname)
+            private_ranges = [
+                ("10.0.0.0", "10.255.255.255"),
+                ("172.16.0.0", "172.31.255.255"),
+                ("192.168.0.0", "192.168.255.255"),
+                ("127.0.0.0", "127.255.255.255"),
+                ("169.254.0.0", "169.254.255.255"),
+                ("::1", "::1"),  # IPv6 loopback
+                ("fc00::", "fdff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"),  # IPv6 private
+            ]
+            ip_addr = ipaddress.ip_address(ip)
+            for start, end in private_ranges:
+                if ipaddress.ip_address(start) <= ip_addr <= ipaddress.ip_address(end):
+                    return True
             return False
+        except Exception:
+            return True  # Default to private if resolution fails
         
     @staticmethod
     def prepare_features_for_model(features, feature_list):
