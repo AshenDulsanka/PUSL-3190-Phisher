@@ -17,10 +17,37 @@ services:
       - API_HOST=${API_HOST_BE}
       - API_PORT=${API_PORT_BE}
       - API_KEY=${API_KEY_BE}
-      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE_BE}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "sh", "-c", "curl -f  $EXTENSION_HEALTH_CHECK_URL"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+  
+  # chatbot backend (python fastAPI)
+  chatbot:
+    container_name: chatbot
+    build: 
+      context: ./chatbot
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT_CB}:8001"
+    volumes:
+      - ./models:/app/models
+      - ./logs:/app/logs
+    env_file:
+      - .env
+    environment:
+      - API_DEBUG=${API_DEBUG_CB}
+      - API_HOST=${API_HOST_CB}
+      - API_PORT=${API_PORT_CB}
+      - API_KEY=${API_KEY_CB}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE_CB}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -f $CHATBOT_HEALTH_CHECK_URL"]
       interval: 30s
       timeout: 10s
       retries: 3
