@@ -13,17 +13,17 @@ RUN apt-get update && \
 RUN mkdir -p /app/models/random_forest_model /app/logs/extension_backend && \
     chmod -R 777 /app/logs
 
-# Copy requirements first to leverage Docker caching
+# copy requirements first to leverage Docker caching
 COPY requirements.txt /app/
 
-# Install dependencies
+# install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
+# copy the rest of the application
 COPY . /app/
 
-# Expose the port the app runs on
+# expose the port the app runs on
 EXPOSE 8000
 
-# Command to run the application
+# command to run the application
 CMD ["python", "-m", "src.main"]
