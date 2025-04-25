@@ -69,11 +69,11 @@ class ModelService:
                     self.feature_list = metadata
                     logger.info(f"Loaded {len(self.feature_list)} features from list")
                 elif "feature_importances" in metadata and "importance" in metadata["feature_importances"]:
-                    # get features from the importance dict keys
+                    # get ALL features from the importance dict keys, not just top ones
                     self.feature_list = list(metadata["feature_importances"]["importance"].keys())
                     logger.info(f"Extracted {len(self.feature_list)} features from importance dict")
                 else:
-                    # default features matching notebook's training
+                    # default features matching notebook's training - make sure all 30 are listed
                     logger.warning("No features found in metadata, using default feature list for deep analysis")
                     self.feature_list = [
                         'UsingIP', 'LongURL', 'ShortURL', 'Symbol@',
@@ -102,7 +102,7 @@ class ModelService:
                     'PageRank', 'GoogleIndex', 'LinksPointingToPage',
                     'StatsReport'
                 ]
-            
+                
             logger.info("Model and related artifacts loaded successfully")
             
         except Exception as e:
