@@ -2,7 +2,7 @@
   "name": "random_forest_v1",
   "type": "random_forest",
   "version": "1.0",
-  "trained_at": "2025-04-27T05:54:57.481103",
+  "trained_at": "2025-04-27T08:59:07.593400",
   "accuracy": 0.991,
   "precision": 0.9924774322968907,
   "recall": 0.9895,

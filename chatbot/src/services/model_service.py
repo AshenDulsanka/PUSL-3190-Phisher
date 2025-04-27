@@ -154,7 +154,7 @@ class ModelService:
             
             # make prediction
             prediction = self.model.predict(X)[0]
-            is_phishing = prediction == 1 or prediction == 'bad'
+            is_phishing = bool(prediction)
             
             # get probability if available
             if hasattr(self.model, "predict_proba"):
@@ -174,7 +174,7 @@ class ModelService:
                 probability = float(is_phishing)
             
             # calculate threat score (0-100)
-            threat_score = int(round(probability * 100))
+            threat_score = int(probability * 100)
             
             # generate details based on prediction
             if is_phishing:

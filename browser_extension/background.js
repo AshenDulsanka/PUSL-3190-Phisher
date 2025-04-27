@@ -115,7 +115,7 @@ async function analyzeSuspiciousUrl(url) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ 
-        url, 
+        url: url, 
         client: 'browser_extension'
       })
     })

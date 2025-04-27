@@ -130,22 +130,28 @@ class ModelService:
             
             # apply scaling if scaler is available
             if self.scaler is not None:
-                X = self.scaler.transform(X)
+                try:
+                    X = self.scaler.transform(X)
+                    logger.info("Applied feature scaling")
+                except Exception as e:
+                    logger.error(f"Error during scaling: {str(e)}")
             
             # make prediction
             prediction = self.model.predict(X)[0]
-            is_phishing = prediction == 'bad'
+            is_phishing = bool(prediction)
             
             # get probability if available
             if hasattr(self.model, "predict_proba"):
-                # find the index of the 'bad' class
-                bad_class_idx = list(self.model.classes_).index('bad') if 'bad' in self.model.classes_ else 1
-                probability = float(self.model.predict_proba(X)[0, bad_class_idx])
+                if hasattr(self.model, "classes_") and len(self.model.classes_) > 1:
+                    # for binary classification, use index 1 (positive class)
+                    probability = float(self.model.predict_proba(X)[0, 1])
+                else:
+                    probability = float(is_phishing)
             else:
                 probability = float(is_phishing)
             
             # calculate threat score (0-100)
-            threat_score = int(round(probability * 100))
+            threat_score = int(probability * 100)
             
             # generate details based on prediction
             if is_phishing:
