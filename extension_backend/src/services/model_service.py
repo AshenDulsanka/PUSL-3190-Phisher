@@ -128,71 +128,53 @@ class ModelService:
                 # fallback if feature list is not available
                 X = np.array(list(features.values())).reshape(1, -1)
             
-            # apply scaling if scaler is available
-            if self.scaler is not None:
-                try:
-                    X = self.scaler.transform(X)
-                    logger.info("Applied feature scaling")
-                except Exception as e:
-                    logger.error(f"Error during scaling: {str(e)}")
+            # After scaling the features and before making prediction, add debug logging:
+            logger.info(f"Making prediction for URL: {url[:50]}...")
             
-            # make prediction
-            prediction = self.model.predict(X)[0]
-            is_phishing = bool(prediction)
+            # Get the raw prediction and probability
+            X_scaled = self.scaler.transform(X)
+            raw_prediction = self.model.predict(X_scaled)[0]
             
-            # get probability if available
-            if hasattr(self.model, "predict_proba"):
-                if hasattr(self.model, "classes_") and len(self.model.classes_) > 1:
-                    # for binary classification, use index 1 (positive class)
-                    probability = float(self.model.predict_proba(X)[0, 1])
-                else:
-                    probability = float(is_phishing)
-            else:
-                probability = float(is_phishing)
+            # Get the probability of the positive class (phishing)
+            # Ensure we're getting probability for class 1 (phishing)
+            raw_probability = float(self.model.predict_proba(X_scaled)[0, 1])
             
-            # calculate threat score (0-100)
-            threat_score = int(probability * 100)
+            logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
             
-            # generate details based on prediction
+            # Use a conservative threshold - URLs are considered phishing ONLY if 
+            # probability is high enough
+            PHISHING_THRESHOLD = 0.4 
+            
+            # Apply the threshold to determine if it's phishing
+            is_phishing = raw_probability >= PHISHING_THRESHOLD
+            
+            # Calculate threat score based on raw probability
+            threat_score = int(raw_probability * 100)
+            
+            logger.info(f"Final decision: is_phishing={is_phishing}, threat_score={threat_score}, threshold={PHISHING_THRESHOLD}")
+            
+            # Add more context to the result
+            details = ""
             if is_phishing:
-                if threat_score > 80:
+                if threat_score > 85:
                     details = "This URL has a very high probability of being a phishing website."
-                elif threat_score > 60:
+                elif threat_score > 70:
                     details = "This URL appears to be a phishing website."
                 else:
                     details = "This URL shows some characteristics of a phishing website."
             else:
-                if threat_score < 20:
-                    details = "This URL appears to be legitimate with high confidence."
-                elif threat_score < 40:
-                    details = "This URL is likely legitimate but has some suspicious characteristics."
+                if threat_score > 50:
+                    details = "This URL has some suspicious characteristics but appears to be legitimate."
                 else:
-                    details = "This URL has some phishing indicators but was classified as legitimate."
+                    details = "This URL appears to be legitimate."
             
-            # add feature explanation if it's a phishing URL
-            if is_phishing and threat_score > 50:
-                # find the most suspicious features
-                suspicious_features = []
-                if features.get('has_ip', 0) == 1:
-                    suspicious_features.append("Uses an IP address instead of a domain name")
-                if features.get('url_length', 0) > 75:
-                    suspicious_features.append("Uses an unusually long URL")
-                if features.get('has_at_symbol', 0) == 1:
-                    suspicious_features.append("Contains @ symbol in URL")
-                if features.get('is_shortened', 0) == 1:
-                    suspicious_features.append("Uses a URL shortening service")
-                
-                if suspicious_features:
-                    details += " Suspicious characteristics: " + ", ".join(suspicious_features) + "."
-            
-            # return prediction results
+            # Return the result
             return {
+                "url": url,
                 "is_phishing": is_phishing,
                 "threat_score": threat_score,
-                "probability": probability,
-                "details": details,
-                "features_used": self.feature_list[:5] if self.feature_list else None,  # Show first 5 features
-                "model_version": self.model_info["version"]
+                "probability": raw_probability,
+                "details": details
             }
             
         except Exception as e:
