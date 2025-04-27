@@ -138,12 +138,13 @@ class ModelService:
             # Get the probability of the positive class (phishing)
             # Ensure we're getting probability for class 1 (phishing)
             raw_probability = float(self.model.predict_proba(X_scaled)[0, 1])
+            logger.info(f"URL features for {url[:30]}: {features}")
             
             logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
             
             # Use a conservative threshold - URLs are considered phishing ONLY if 
             # probability is high enough
-            PHISHING_THRESHOLD = 0.4 
+            PHISHING_THRESHOLD = 0.8 
             
             # Apply the threshold to determine if it's phishing
             is_phishing = raw_probability >= PHISHING_THRESHOLD
