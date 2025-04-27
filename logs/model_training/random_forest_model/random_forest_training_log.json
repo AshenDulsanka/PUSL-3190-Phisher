@@ -174,5 +174,163 @@
     "event_type": "MODEL_SAVING",
     "message": "Saving model and artifacts",
     "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:47:01.599017",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:47:02.313445",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:47:02.314468",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 0.72 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:47:21.546103",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:47:21.681132",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:47:21.681535",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 0.13 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:49:02.763255",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:49:02.877242",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:49:02.877713",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 0.11 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:49:31.932957",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Extracting lightweight features for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:49:43.400883",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 11.47 seconds",
+    "metadata": {
+      "num_features": 9
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:49:46.738135",
+    "event_type": "MODEL_TRAINING",
+    "message": "Starting model training with Random Forest",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:49:50.810671",
+    "event_type": "DATA_SPLIT",
+    "message": "Data split into training and testing sets",
+    "metadata": {
+      "train_samples": 16000,
+      "test_samples": 4000
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:49:54.489241",
+    "event_type": "TIMING",
+    "message": "Model training completed in 7.75 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:49:57.681821",
+    "event_type": "MODEL_EVALUATION",
+    "message": "Evaluating Random Forest model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:50:29.986250",
+    "event_type": "EVALUATION_METRICS",
+    "message": "Model performance metrics",
+    "metadata": {
+      "accuracy": 0.991,
+      "precision": 0.9924774322968907,
+      "recall": 0.9895,
+      "f1_score": 0.9909864797195793,
+      "auc": NaN
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:50:55.950202",
+    "event_type": "TIMING",
+    "message": "Model evaluation completed in 58.27 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:51:01.410429",
+    "event_type": "MODEL_SAVING",
+    "message": "Saving model and artifacts",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:55:12.370642",
+    "event_type": "MODEL_EXPORT",
+    "message": "Exporting lightweight model for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:55:32.291050",
+    "event_type": "SMALL_MODEL_EVALUATION",
+    "message": "Lightweight model performance",
+    "metadata": {
+      "accuracy": 0.99025,
+      "precision": 0.9909864797195793,
+      "recall": 0.9895,
+      "f1_score": 0.9902426820115087,
+      "features_used": [
+        "has_https",
+        "num_special_chars",
+        "url_length",
+        "has_hyphen",
+        "num_subdomains"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-04-27T05:56:47.341688",
+    "event_type": "TIMING",
+    "message": "Model saving completed in 345.93 seconds",
+    "metadata": {}
   }
 ]

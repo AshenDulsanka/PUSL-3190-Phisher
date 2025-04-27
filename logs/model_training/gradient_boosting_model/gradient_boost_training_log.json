@@ -1,12 +1,12 @@
 [
   {
-    "timestamp": "2025-03-24T08:37:59.749196",
+    "timestamp": "2025-03-28T16:26:00.530836",
     "event_type": "DATA_LOADING",
     "message": "Loading dataset",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T08:38:01.294390",
+    "timestamp": "2025-03-28T16:26:02.214653",
     "event_type": "DATA_LOADED",
     "message": "Dataset loaded with shape (313022, 2)",
     "metadata": {
@@ -15,145 +15,175 @@
     }
   },
   {
-    "timestamp": "2025-03-24T08:38:01.294959",
+    "timestamp": "2025-03-28T16:26:02.215068",
     "event_type": "TIMING",
-    "message": "Data loading completed in 1.54 seconds",
+    "message": "Data loading completed in 1.68 seconds",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T08:38:05.884738",
+    "timestamp": "2025-03-28T16:27:04.112179",
     "event_type": "FEATURE_EXTRACTION_FUNCTIONS",
     "message": "Extracting functions for chatbot deep analysis",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T08:38:23.363244",
+    "timestamp": "2025-03-28T16:27:25.089364",
     "event_type": "FEATURE_EXTRACTION",
     "message": "Starting comprehensive feature extraction for chatbot model",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T08:38:30.931157",
+    "timestamp": "2025-03-28T16:28:12.178278",
     "event_type": "FEATURE_EXTRACTION",
-    "message": "Processing 4000 URLs in 4049 batches",
+    "message": "Processing 313022 URLs in 313071 batches",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:03:21.629420",
+    "timestamp": "2025-04-27T02:51:58.042489",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T02:51:59.110325",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-27T02:51:59.110508",
     "event_type": "TIMING",
-    "message": "Feature extraction completed in 1490.70 seconds",
+    "message": "Data loading completed in 1.07 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T02:52:03.579756",
+    "event_type": "FEATURE_EXTRACTION_FUNCTIONS",
+    "message": "Extracting functions for chatbot deep analysis",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T02:52:25.932330",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Starting comprehensive feature extraction for chatbot model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T02:52:36.799976",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Processing 20000 URLs in batches of 50",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T05:06:15.135835",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 8051.56 seconds",
     "metadata": {
       "num_features": 30
     }
   },
   {
-    "timestamp": "2025-03-24T09:03:23.926396",
+    "timestamp": "2025-04-27T05:06:18.318236",
     "event_type": "DATA_SAVED",
-    "message": "Saved processed features to /content/drive/MyDrive/PUSL3190/data/processed/chatbot_features.csv",
+    "message": "Saved processed features to /content/drive/MyDrive/PUSL3190/data/processed/chatbot_features_v2.csv",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:03:50.375189",
+    "timestamp": "2025-04-27T05:06:43.159508",
     "event_type": "MODEL_TRAINING",
     "message": "Starting model training with Gradient Boosting",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:04:03.957530",
+    "timestamp": "2025-04-27T05:06:59.772645",
     "event_type": "DATA_SPLIT",
     "message": "Data split into training and testing sets",
     "metadata": {
-      "train_samples": 38,
-      "test_samples": 10
+      "train_samples": 16000,
+      "test_samples": 4000
     }
   },
   {
-    "timestamp": "2025-03-24T09:05:31.708695",
-    "event_type": "DATA_SPLIT",
-    "message": "Data split into training and testing sets",
-    "metadata": {
-      "train_samples": 38,
-      "test_samples": 10
-    }
-  },
-  {
-    "timestamp": "2025-03-24T09:23:30.805609",
+    "timestamp": "2025-04-27T05:07:21.189446",
     "event_type": "TIMING",
-    "message": "Model training completed in 1180.43 seconds",
+    "message": "Model training completed in 38.03 seconds",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:23:33.498900",
+    "timestamp": "2025-04-27T05:07:27.806724",
     "event_type": "MODEL_EVALUATION",
     "message": "Evaluating Gradient Boosting model",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:23:52.841845",
+    "timestamp": "2025-04-27T05:07:36.700520",
     "event_type": "EVALUATION_METRICS",
     "message": "Model performance metrics",
     "metadata": {
-      "accuracy": 0.5,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1_score": 0.0,
-      "auc": 0.5
+      "accuracy": 0.95725,
+      "precision": 0.9597787833081951,
+      "recall": 0.9545,
+      "f1_score": 0.957132113311607,
+      "auc": 0.99101325
     }
   },
   {
-    "timestamp": "2025-03-24T09:26:33.053717",
+    "timestamp": "2025-04-27T05:08:07.723005",
     "event_type": "TIMING",
-    "message": "Model evaluation completed in 179.55 seconds",
+    "message": "Model evaluation completed in 39.92 seconds",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:26:35.124714",
+    "timestamp": "2025-04-27T05:08:08.861142",
     "event_type": "MODEL_SAVING",
     "message": "Saving model",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:29:05.810216",
+    "timestamp": "2025-04-27T05:08:24.869791",
     "event_type": "HYPERPARAMETER_TUNING",
     "message": "Starting hyperparameter tuning",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:36:35.735060",
+    "timestamp": "2025-04-27T05:11:32.657058",
     "event_type": "TIMING",
-    "message": "Hyperparameter tuning completed in 449.92 seconds",
+    "message": "Hyperparameter tuning completed in 187.79 seconds",
     "metadata": {}
   },
   {
-    "timestamp": "2025-03-24T09:36:39.260948",
+    "timestamp": "2025-04-27T05:11:35.206544",
     "event_type": "HYPERPARAMETER_TUNING",
     "message": "Best parameters found",
     "metadata": {
       "parameters": {
-        "learning_rate": 0.05,
-        "max_depth": 3,
+        "learning_rate": 0.2,
+        "max_depth": 7,
         "min_samples_leaf": 30,
-        "min_samples_split": 100,
-        "subsample": 0.7
+        "min_samples_split": 300,
+        "subsample": 0.9
       },
-      "f1_score": 0.4384384384384384
+      "f1_score": 0.9600399250710722
     }
   },
   {
-    "timestamp": "2025-03-24T09:36:58.585705",
+    "timestamp": "2025-04-27T05:11:52.694363",
     "event_type": "FINAL_MODEL_EVALUATION",
     "message": "Final model performance after tuning",
     "metadata": {
-      "accuracy": 0.5,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1_score": 0.0
+      "accuracy": 0.9585,
+      "precision": 0.9608040201005025,
+      "recall": 0.956,
+      "f1_score": 0.9583959899749374
     }
   },
   {
-    "timestamp": "2025-03-24T09:37:04.941693",
+    "timestamp": "2025-04-27T05:11:58.586177",
     "event_type": "TIMING",
-    "message": "Model saving completed in 479.13 seconds",
+    "message": "Model saving completed in 213.72 seconds",
     "metadata": {}
   }
 ]
