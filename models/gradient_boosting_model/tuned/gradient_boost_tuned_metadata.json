@@ -2,20 +2,20 @@
   "name": "gradient_boost_tuned_v1",
   "type": "gradient_boost",
   "version": "1.0",
-  "trained_at": "2025-04-27T05:12:07.930924",
-  "accuracy": 0.9585,
-  "precision": 0.9608040201005025,
-  "recall": 0.956,
-  "f1_score": 0.9583959899749374,
+  "trained_at": "2025-04-28T17:06:00.098854",
+  "accuracy": 0.98625,
+  "precision": 0.9874686716791979,
+  "recall": 0.985,
+  "f1_score": 0.986232790988736,
   "parameters": {
     "n_estimators": 100,
     "learning_rate": 0.2,
-    "max_depth": 7,
+    "max_depth": 5,
     "min_samples_leaf": 30,
     "min_samples_split": 300,
-    "subsample": 0.9
+    "subsample": 0.8
   },
-  "dataset_size": 20000,
-  "training_samples": 16000,
-  "test_samples": 4000
+  "dataset_size": 4000,
+  "training_samples": 3200,
+  "test_samples": 800
 }

@@ -185,5 +185,153 @@
     "event_type": "TIMING",
     "message": "Model saving completed in 213.72 seconds",
     "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T16:28:07.445590",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T16:28:09.392996",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (4000, 2)",
+    "metadata": {
+      "rows": 4000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-28T16:28:09.393318",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 1.95 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T16:28:14.767550",
+    "event_type": "FEATURE_EXTRACTION_FUNCTIONS",
+    "message": "Extracting functions for chatbot deep analysis",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T16:28:52.244648",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Starting comprehensive feature extraction for chatbot model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T16:28:59.878134",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Processing 4000 URLs in batches of 50",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T16:59:20.672046",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 1865.90 seconds",
+    "metadata": {
+      "num_features": 30
+    }
+  },
+  {
+    "timestamp": "2025-04-28T16:59:22.652237",
+    "event_type": "DATA_SAVED",
+    "message": "Saved processed features to /content/drive/MyDrive/PUSL3190/data/processed/chatbot_features_v2.csv",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:00:10.754875",
+    "event_type": "MODEL_TRAINING",
+    "message": "Starting model training with Gradient Boosting",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:00:50.214888",
+    "event_type": "DATA_SPLIT",
+    "message": "Data split into training and testing sets",
+    "metadata": {
+      "train_samples": 3200,
+      "test_samples": 800
+    }
+  },
+  {
+    "timestamp": "2025-04-28T17:01:21.341472",
+    "event_type": "TIMING",
+    "message": "Model training completed in 70.59 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:01:24.813719",
+    "event_type": "MODEL_EVALUATION",
+    "message": "Evaluating Gradient Boosting model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:01:31.652263",
+    "event_type": "EVALUATION_METRICS",
+    "message": "Model performance metrics",
+    "metadata": {
+      "accuracy": 0.98625,
+      "precision": 0.9850374064837906,
+      "recall": 0.9875,
+      "f1_score": 0.9862671660424469,
+      "auc": 0.998975
+    }
+  },
+  {
+    "timestamp": "2025-04-28T17:01:49.854447",
+    "event_type": "TIMING",
+    "message": "Model evaluation completed in 25.04 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:01:51.133120",
+    "event_type": "MODEL_SAVING",
+    "message": "Saving model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:02:03.286238",
+    "event_type": "HYPERPARAMETER_TUNING",
+    "message": "Starting hyperparameter tuning",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:05:17.081574",
+    "event_type": "TIMING",
+    "message": "Hyperparameter tuning completed in 193.80 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T17:05:21.007370",
+    "event_type": "HYPERPARAMETER_TUNING",
+    "message": "Best parameters found",
+    "metadata": {
+      "parameters": {
+        "learning_rate": 0.2,
+        "max_depth": 5,
+        "min_samples_leaf": 30,
+        "min_samples_split": 300,
+        "subsample": 0.8
+      },
+      "f1_score": 0.9839295179178483
+    }
+  },
+  {
+    "timestamp": "2025-04-28T17:05:39.862276",
+    "event_type": "FINAL_MODEL_EVALUATION",
+    "message": "Final model performance after tuning",
+    "metadata": {
+      "accuracy": 0.98625,
+      "precision": 0.9874686716791979,
+      "recall": 0.985,
+      "f1_score": 0.986232790988736
+    }
+  },
+  {
+    "timestamp": "2025-04-28T17:05:47.445973",
+    "event_type": "TIMING",
+    "message": "Model saving completed in 224.16 seconds",
+    "metadata": {}
   }
 ]
