@@ -9,7 +9,6 @@ import SearchIcon from '@mui/icons-material/Search'
 import LinkIcon from '@mui/icons-material/Link'
 import WarningIcon from '@mui/icons-material/Warning'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import { FormControlLabel, Checkbox } from '@mui/material'
 import urlAnalysisService from '../services/urlAnalysisService'
 
 const Home = () => {
@@ -18,7 +17,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [quickResult, setQuickResult] = useState(null)
-  const [deepAnalysis, setDeepAnalysis] = useState(false)
+  const [deepAnalysis] = useState(true)
 
   const handleAnalyzeUrl = async () => {
     if (!url) {
@@ -133,19 +132,6 @@ const Home = () => {
             }}
             sx={{ mb: 2 }}
           />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={deepAnalysis}
-                onChange={(e) => setDeepAnalysis(e.target.checked)}
-                name="deepAnalysis"
-                color="primary"
-              />
-            }
-            label="Use deep analysis (slower but more accurate)"
-            sx={{ mb: 2 }}
-          />
           
           <Button
             variant="contained"
@@ -156,7 +142,7 @@ const Home = () => {
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SearchIcon />}
             sx={{ py: 1.5 }}
           >
-            {loading ? `${deepAnalysis ? 'Deep ' : ''}Analyzing...` : `${deepAnalysis ? 'Deep ' : ''}Analyze URL`}
+            {loading ? 'Analyzing...' : 'Analyze URL'}
           </Button>
 
           {quickResult && (
