@@ -89,36 +89,8 @@ class ModelService:
         except Exception as e:
             logger.error(f"Error loading model: {str(e)}", exc_info=True)
     
-    def is_well_known_domain(self, url):
-        """check if URL belongs to a well-known legitimate site"""
-        well_known = [
-            "google.com", "youtube.com", "facebook.com", "twitter.com", 
-            "instagram.com", "linkedin.com", "github.com", "microsoft.com",
-            "apple.com", "amazon.com", "netflix.com", "yahoo.com", "bing.com",
-            "wikipedia.org", "ebay.com", "reddit.com", "twitch.tv", "nytimes.com",
-            "bloomberg.com", "cnn.com", "bbc.com", "nsbm.ac.lk", "medium.com", "whatsapp.com", "chatgpt.com"
-        ]
-        
-        try:
-            domain = url.split("//")[1].split("/")[0].lower()
-            for known in well_known:
-                if domain.endswith(known):
-                    return True
-            return False
-        except:
-            return False
-    
     def predict(self, url: str, features: Dict[str, Any] = None) -> Dict[str, Any]:
         try:
-            if self.is_well_known_domain(url):
-                return {
-                    "url": url,
-                    "is_phishing": False,
-                    "threat_score": 5,
-                    "probability": 0.05,
-                    "details": "This is a well-known legitimate website."
-                }
-            
             # check if model is loaded
             if self.model is None:
                 logger.error("Model not loaded")
