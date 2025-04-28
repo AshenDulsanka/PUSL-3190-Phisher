@@ -2,12 +2,12 @@
   "name": "random_forest_model",
   "type": "random_forest",
   "version": "2.0",
-  "trained_at": "2025-04-27T15:20:38.817931",
-  "accuracy": 0.991,
-  "precision": 0.9895314057826521,
-  "recall": 0.9925,
-  "f1_score": 0.9910134797803295,
-  "auc": 0.9963385,
+  "trained_at": "2025-04-28T02:26:45.574487",
+  "accuracy": 0.9966666666666667,
+  "precision": 0.9950248756218906,
+  "recall": 1.0,
+  "f1_score": 0.9975062344139651,
+  "auc": 0.9957062500000001,
   "parameters": {
     "n_estimators": 100,
     "max_depth": 20,
@@ -31,18 +31,18 @@
   },
   "feature_importances": {
     "importance": {
-      "url_length": 0.09138590751105691,
-      "num_dots": 0.01283943191153256,
-      "num_special_chars": 0.2501309298694563,
-      "has_ip": 2.1080461063726508e-07,
-      "has_at_symbol": 0.0001230602141632321,
-      "num_subdomains": 0.014283127344856934,
-      "has_https": 0.5824684774427176,
-      "has_hyphen": 0.048533123921558195,
-      "is_shortened": 0.0002357309800477328
+      "url_length": 0.10099933136512966,
+      "num_dots": 0.009592308288487603,
+      "num_special_chars": 0.3325778592760348,
+      "has_ip": 0.0,
+      "has_at_symbol": 3.647375830817527e-05,
+      "num_subdomains": 0.014969221575289737,
+      "has_https": 0.5021013105006745,
+      "has_hyphen": 0.03799666374006864,
+      "is_shortened": 0.0017268314960069684
     }
   },
-  "dataset_size": 20000,
-  "training_samples": 16000,
-  "test_samples": 4000
+  "dataset_size": 3000,
+  "training_samples": 2400,
+  "test_samples": 600
 }

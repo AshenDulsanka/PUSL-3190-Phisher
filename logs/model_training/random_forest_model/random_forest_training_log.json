@@ -564,5 +564,353 @@
     "event_type": "TIMING",
     "message": "Model saving completed in 234.85 seconds",
     "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.518999",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.543381",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.543532",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 0.02 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.555504",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Extracting lightweight features for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.762665",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 0.21 seconds",
+    "metadata": {
+      "num_features": 9
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.766547",
+    "event_type": "MODEL_TRAINING",
+    "message": "Starting model training with Random Forest",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:37.791409",
+    "event_type": "DATA_SPLIT",
+    "message": "Data split into training and testing sets",
+    "metadata": {
+      "train_samples": 16000,
+      "test_samples": 4000
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.079304",
+    "event_type": "TIMING",
+    "message": "Model training completed in 0.31 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.083813",
+    "event_type": "MODEL_EVALUATION",
+    "message": "Evaluating Random Forest model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.181579",
+    "event_type": "EVALUATION_METRICS",
+    "message": "Model performance metrics",
+    "metadata": {
+      "accuracy": 0.991,
+      "precision": 0.9895314057826521,
+      "recall": 0.9925,
+      "f1_score": 0.9910134797803295,
+      "auc": 0.9963385
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.641719",
+    "event_type": "TIMING",
+    "message": "Model evaluation completed in 0.56 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.649461",
+    "event_type": "MODEL_SAVING",
+    "message": "Saving model and artifacts",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.850538",
+    "event_type": "MODEL_EXPORT",
+    "message": "Exporting lightweight model for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.965886",
+    "event_type": "SMALL_MODEL_EVALUATION",
+    "message": "Lightweight model performance",
+    "metadata": {
+      "accuracy": 0.99025,
+      "precision": 0.9895157264103844,
+      "recall": 0.991,
+      "f1_score": 0.9902573070197352,
+      "features_used": [
+        "has_https",
+        "num_special_chars",
+        "url_length",
+        "has_hyphen",
+        "num_subdomains"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:20:38.988565",
+    "event_type": "TIMING",
+    "message": "Model saving completed in 0.34 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:27:36.485933",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:27:36.509216",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:27:36.509367",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 0.02 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:27:40.938669",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Extracting lightweight features for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:27:48.563859",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 7.62 seconds",
+    "metadata": {
+      "num_features": 9
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:27:50.185084",
+    "event_type": "MODEL_TRAINING",
+    "message": "Starting model training with Random Forest",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:27:54.058060",
+    "event_type": "DATA_SPLIT",
+    "message": "Data split into training and testing sets",
+    "metadata": {
+      "train_samples": 16000,
+      "test_samples": 4000
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:27:56.927841",
+    "event_type": "TIMING",
+    "message": "Model training completed in 6.74 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:28:02.955405",
+    "event_type": "MODEL_EVALUATION",
+    "message": "Evaluating Random Forest model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:28:11.530884",
+    "event_type": "EVALUATION_METRICS",
+    "message": "Model performance metrics",
+    "metadata": {
+      "accuracy": 0.991,
+      "precision": 0.9895314057826521,
+      "recall": 0.9925,
+      "f1_score": 0.9910134797803295,
+      "auc": 0.9963385
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:28:24.549024",
+    "event_type": "TIMING",
+    "message": "Model evaluation completed in 21.59 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:28:29.642050",
+    "event_type": "MODEL_SAVING",
+    "message": "Saving model and artifacts",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:28:42.717192",
+    "event_type": "MODEL_EXPORT",
+    "message": "Exporting lightweight model for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-27T15:28:50.449216",
+    "event_type": "SMALL_MODEL_EVALUATION",
+    "message": "Lightweight model performance",
+    "metadata": {
+      "accuracy": 0.99025,
+      "precision": 0.9895157264103844,
+      "recall": 0.991,
+      "f1_score": 0.9902573070197352,
+      "features_used": [
+        "has_https",
+        "num_special_chars",
+        "url_length",
+        "has_hyphen",
+        "num_subdomains"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-04-27T15:28:56.216237",
+    "event_type": "TIMING",
+    "message": "Model saving completed in 26.57 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:24:44.090087",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:24:44.487780",
+    "event_type": "DATA_LOADED",
+    "message": "Dataset loaded with shape (20000, 2)",
+    "metadata": {
+      "rows": 20000,
+      "columns": 2
+    }
+  },
+  {
+    "timestamp": "2025-04-28T02:24:44.488132",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 0.40 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:25:29.551733",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Extracting lightweight features for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:25:37.294504",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 7.74 seconds",
+    "metadata": {
+      "num_features": 9
+    }
+  },
+  {
+    "timestamp": "2025-04-28T02:25:39.073549",
+    "event_type": "MODEL_TRAINING",
+    "message": "Starting model training with Random Forest",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:25:42.619175",
+    "event_type": "DATA_SPLIT",
+    "message": "Data split into training and testing sets",
+    "metadata": {
+      "train_samples": 2400,
+      "test_samples": 600
+    }
+  },
+  {
+    "timestamp": "2025-04-28T02:25:45.272856",
+    "event_type": "TIMING",
+    "message": "Model training completed in 6.20 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:25:47.680306",
+    "event_type": "MODEL_EVALUATION",
+    "message": "Evaluating Random Forest model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:25:52.813517",
+    "event_type": "EVALUATION_METRICS",
+    "message": "Model performance metrics",
+    "metadata": {
+      "accuracy": 0.9966666666666667,
+      "precision": 0.9950248756218906,
+      "recall": 1.0,
+      "f1_score": 0.9975062344139651,
+      "auc": 0.9957062500000001
+    }
+  },
+  {
+    "timestamp": "2025-04-28T02:26:16.301680",
+    "event_type": "TIMING",
+    "message": "Model evaluation completed in 28.62 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:26:23.118529",
+    "event_type": "MODEL_SAVING",
+    "message": "Saving model and artifacts",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:26:55.199307",
+    "event_type": "MODEL_EXPORT",
+    "message": "Exporting lightweight model for browser extension",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-04-28T02:27:06.235192",
+    "event_type": "SMALL_MODEL_EVALUATION",
+    "message": "Lightweight model performance",
+    "metadata": {
+      "accuracy": 0.9933333333333333,
+      "precision": 0.9925373134328358,
+      "recall": 0.9975,
+      "f1_score": 0.9950124688279302,
+      "features_used": [
+        "has_https",
+        "num_special_chars",
+        "url_length",
+        "has_hyphen",
+        "num_subdomains"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-04-28T02:27:16.132394",
+    "event_type": "TIMING",
+    "message": "Model saving completed in 53.01 seconds",
+    "metadata": {}
   }
 ]
