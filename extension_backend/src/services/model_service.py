@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple
 import os
 
-from ..config import RANDOM_FOREST_MODEL_PATH, RANDOM_FOREST_SCALER_PATH, FEATURE_LIST_PATH
+from ..config import BROWSER_EXTENSION_MODEL_PATH, BROWSER_EXTENSION_SCALER_PATH, FEATURE_LIST_PATH
 from ..logging_config import get_logger
 from ..utils.feature_extraction import FeatureExtractor
 
@@ -44,18 +44,18 @@ class ModelService:
     def _load_model(self):
         try:
             # check if model file exists
-            if not os.path.exists(RANDOM_FOREST_MODEL_PATH):
-                logger.error(f"Model file not found: {RANDOM_FOREST_MODEL_PATH}")
+            if not os.path.exists(BROWSER_EXTENSION_MODEL_PATH):
+                logger.error(f"Model file not found: {BROWSER_EXTENSION_MODEL_PATH}")
                 return
                 
             # load model
-            logger.info(f"Loading model from {RANDOM_FOREST_MODEL_PATH}")
-            self.model = joblib.load(RANDOM_FOREST_MODEL_PATH)
+            logger.info(f"Loading model from {BROWSER_EXTENSION_MODEL_PATH}")
+            self.model = joblib.load(BROWSER_EXTENSION_MODEL_PATH)
             
             # load scaler if available
-            if os.path.exists(RANDOM_FOREST_SCALER_PATH):
-                logger.info(f"Loading scaler from {RANDOM_FOREST_SCALER_PATH}")
-                self.scaler = joblib.load(RANDOM_FOREST_SCALER_PATH)
+            if os.path.exists(BROWSER_EXTENSION_SCALER_PATH):
+                logger.info(f"Loading scaler from {BROWSER_EXTENSION_SCALER_PATH}")
+                self.scaler = joblib.load(BROWSER_EXTENSION_SCALER_PATH)
             
             # load feature list if available
             if os.path.exists(FEATURE_LIST_PATH):

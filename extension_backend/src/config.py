@@ -27,9 +27,9 @@ except Exception as e:
     print(f"WARNING: Cannot write to logs directory: {e}")
 
 # model paths
-RANDOM_FOREST_MODEL_PATH = MODELS_DIR / "random_forest_model" / "random_forest_model.pkl"
-RANDOM_FOREST_SCALER_PATH = MODELS_DIR / "random_forest_model" / "random_forest_scaler.pkl"
-FEATURE_LIST_PATH = MODELS_DIR / "random_forest_model" / "random_forest_metadata.json"
+BROWSER_EXTENSION_MODEL_PATH = MODELS_DIR / "browser_extension" / "browser_extension_model.pkl"
+BROWSER_EXTENSION_SCALER_PATH = MODELS_DIR / "browser_extension" / "browser_extension_scaler.pkl"
+FEATURE_LIST_PATH = MODELS_DIR / "browser_extension" / "browser_extension_metadata.json"
 
 # API settings
 API_PREFIX = os.getenv("API_PREFIX_BE")

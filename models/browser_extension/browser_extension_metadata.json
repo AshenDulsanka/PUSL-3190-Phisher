@@ -1,8 +1,8 @@
 {
-  "name": "random_forest_model_lite",
+  "name": "browser_extension_random_forest_model",
   "type": "random_forest",
   "version": "1.0",
-  "trained_at": "2025-04-28T12:07:52.679237",
+  "trained_at": "2025-04-29T13:16:47.216053",
   "accuracy": 0.9825,
   "precision": 0.9948717948717949,
   "recall": 0.97,

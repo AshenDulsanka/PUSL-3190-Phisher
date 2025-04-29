@@ -10,7 +10,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # create directory structure
-RUN mkdir -p /app/models/random_forest_model /app/logs/extension_backend && \
+RUN mkdir -p /app/models/browser_extension /app/logs/extension_backend && \
     chmod -R 777 /app/logs
 
 # copy requirements first to leverage Docker caching
