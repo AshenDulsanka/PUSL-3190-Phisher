@@ -1,0 +1,51 @@
+{
+  "name": "browser_extension_random_forest_model",
+  "type": "random_forest",
+  "version": "1.0",
+  "trained_at": "2025-04-30T09:46:52.376827",
+  "accuracy": 0.9825,
+  "precision": 0.9948717948717949,
+  "recall": 0.97,
+  "f1_score": 0.9822784810126582,
+  "auc": 0.996828125,
+  "parameters": {
+    "n_estimators": 20,
+    "max_depth": 8,
+    "min_samples_split": 10,
+    "min_samples_leaf": 4
+  },
+  "feature_list": [
+    "url_length",
+    "num_dots",
+    "num_special_chars",
+    "uses_http",
+    "has_ip",
+    "has_at_symbol",
+    "has_hyphen",
+    "is_shortened",
+    "num_subdomains"
+  ],
+  "model_size_bytes": 95689,
+  "label_encoding": {
+    "0": "legitimate",
+    "1": "phishing"
+  },
+  "feature_importances": {
+    "importance": {
+      "url_length": 0.02122787412792018,
+      "num_dots": 0.21596975044297884,
+      "num_special_chars": 0.034503586670433184,
+      "uses_http": 0.358001414702715,
+      "has_ip": 0.00047553734325798844,
+      "has_at_symbol": 0.0055582209479806514,
+      "has_hyphen": 0.2657630716941913,
+      "is_shortened": 0.0004646101075848083,
+      "num_subdomains": 0.09803593396293814
+    }
+  },
+  "dataset_info": {
+    "total_samples": 4000,
+    "legitimate_samples": 2000,
+    "phishing_samples": 2000
+  }
+}
