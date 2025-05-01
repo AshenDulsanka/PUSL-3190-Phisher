@@ -10,7 +10,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # create directory structure
-RUN mkdir -p /app/models/gradient_boosting_model /app/logs/chatbot && \
+RUN mkdir -p /app/models/chatbot /app/logs/chatbot && \
     chmod -R 777 /app/logs
 
 # copy requirements first to leverage Docker caching
