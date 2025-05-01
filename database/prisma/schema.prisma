@@ -7,118 +7,147 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Stores information about analyzed URLs
 model URL {
-  id                Int            @id @default(autoincrement())
-  url               String         @unique
-  isPhishing        Boolean
-  suspiciousScore   Float          // Score between 0-100
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  id                  Int                @id @default(autoincrement())
+  url                 String             @unique
+  isPhishing          Boolean
+  suspiciousScore     Float
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
   
-  // URL features for analysis
-  usingIP           Boolean?
-  urlLength         Int?
-  domainAge         Int?           // Age in days
-  hasHTTPS          Boolean?
-  numDots           Int?
-  numHyphens        Int?
-  numSubdomains     Int?
-  hasAtSymbol       Boolean?
-  isShortened       Boolean?
-  hasSpecialChars   Boolean?
-  hasIframe         Boolean?
-  disablesRightClick Boolean?
-  hasPopup          Boolean?
+  // Basic features
+  usingIP             Boolean?
+  urlLength           Int?
+  domainAge           Int?
+  hasHTTPS            Boolean?
+  numDots             Int?
+  numHyphens          Int?
+  numSubdomains       Int?
+  hasAtSymbol         Boolean?
+  isShortened         Boolean?
+  hasSpecialChars     Boolean?
   
-  // Relations
-  detectionSessions DetectionSession[]
-  modelEvaluations  ModelEvaluation[]
-  reports           URLReport[]
+  // content features
+  hasIframe           Boolean?
+  disablesRightClick  Boolean?
+  hasPopup            Boolean?
+  
+  // additional fields for better tracking
+  lastAnalyzed        DateTime           @default(now())
+  analysisSources     String[]           // e.g. ["browser_extension", "chatbot"]
+  analyzeCount        Int                @default(1)
+  detectedPhishingCount Int              @default(0)
+
+  // relationships
+  detectionSessions   DetectionSession[]
+  reports             URLReport[]
+  modelEvaluations    ModelEvaluation[]
 }
 
-// Public URL scanning sessions
 model DetectionSession {
-  id                Int      @id @default(autoincrement())
-  sessionId         String   @unique // Generated unique ID for each scan session
-  browserInfo       String?  // Browser info like version, etc.
-  detectedAt        DateTime @default(now())
-  ipAddress         String?  // Optional IP tracking
+  id             Int      @id @default(autoincrement())
+  sessionId      String   @unique
+  detectedAt     DateTime @default(now())
+  browserInfo    String?
+  ipAddress      String?
   
-  // Relations
-  urlId             Int
-  url               URL      @relation(fields: [urlId], references: [id])
+  // reference to the URL
+  urlId          Int
+  url            URL      @relation(fields: [urlId], references: [id])
 }
 
-// ML model information
+model URLReport {
+  id           Int      @id @default(autoincrement())
+  reportedUrl  String
+  reportType   String   // false_positive, false_negative, confirm_phishing, confirm_legitimate
+  comments     String?
+  reportedAt   DateTime @default(now())
+  reporterEmail String?
+  source       String?  // browser_extension, chatbot
+  
+  // optional relation to URL if it exists in the database
+  urlId        Int?
+  url          URL?     @relation(fields: [urlId], references: [id])
+}
+
 model MLModel {
-  id                Int      @id @default(autoincrement())
-  name              String   @unique // e.g., "random_forest_v1", "gradient_boost_v2"
-  type              String   // "random_forest" or "gradient_boost"
-  version           String   
-  trainedAt         DateTime @default(now())
-  accuracy          Float?
-  precision         Float?
-  recall            Float?
-  f1Score           Float?
-  areaUnderROC      Float?
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  type          String   // random_forest, gradient_boosting, etc.
+  version       String
+  trainedAt     DateTime @default(now())
   
-  // Model parameters as JSON
-  parameters        String?  // JSON string of parameters
+  // Model metrics
+  accuracy      Float?
+  precision     Float?
+  recall        Float?
+  f1Score       Float?
+  areaUnderROC  Float?
+  parameters    String?  // JSON string with model parameters
   
-  // Relations
-  evaluations       ModelEvaluation[]
+  // For continuous learning
+  feedbackIncorporated Boolean @default(false)
+  lastUpdated     DateTime?
+  
+  // Relationships
+  evaluations     ModelEvaluation[]
+  trainingLogs    ModelTrainingLog[]
 }
 
-// Evaluations of model performance on specific URLs
 model ModelEvaluation {
-  id                Int      @id @default(autoincrement())
-  predictedScore    Float
-  actualLabel       Boolean?  // True if was actually phishing, null if unknown
-  evaluatedAt       DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  predictedScore Float
+  actualLabel    Boolean?
+  evaluatedAt    DateTime @default(now())
   
-  // Relations
-  modelId           Int
-  model             MLModel  @relation(fields: [modelId], references: [id])
-  urlId             Int
-  url               URL      @relation(fields: [urlId], references: [id])
+  // References
+  modelId        Int
+  model          MLModel  @relation(fields: [modelId], references: [id])
+  
+  urlId          Int
+  url            URL      @relation(fields: [urlId], references: [id])
 }
 
-// System logs for research paper
+model ModelTrainingLog {
+  id             Int      @id @default(autoincrement())
+  logType        String   // training, validation, testing
+  message        String
+  metrics        String?  // JSON string with metrics
+  timestamp      DateTime @default(now())
+  
+  // References
+  modelId        Int
+  model          MLModel  @relation(fields: [modelId], references: [id])
+}
+
 model SystemLog {
-  id                Int      @id @default(autoincrement())
-  component         String   // e.g., "extension", "chatbot", "model_training"
-  logLevel          String   // "INFO", "WARNING", "ERROR", etc.
-  message           String
-  timestamp         DateTime @default(now())
-  metadata          String?  // Additional JSON data if needed
+  id        Int      @id @default(autoincrement())
+  component String   // chatbot, extension, web_client, web_server
+  logLevel  String   // info, warning, error, debug
+  message   String
+  timestamp DateTime @default(now())
+  metadata  String?  // JSON string with additional info
 }
 
-// Admin user model (simplified)
 model Admin {
-  id                Int       @id @default(autoincrement())
-  username          String    @unique
-  email             String    @unique
-  password          String    
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  lastLoginAt       DateTime?
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  email       String   @unique
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastLoginAt DateTime?
   
   @@map("admins")
 }
 
-// Public URL reporting
-model URLReport {
-  id                Int      @id @default(autoincrement())
-  reportedUrl       String
-  reportType        String   // "phishing", "malware", "scam", etc.
-  comments          String?
-  reportedAt        DateTime @default(now())
-  reporterEmail     String?  // Optional email for feedback
-  
-  // Relations
-  urlId             Int?
-  url               URL?     @relation(fields: [urlId], references: [id])
-  
-  @@map("url_reports")
+// for redis backup/sync (continuous learning data)
+model FeedbackQueue {
+  id          Int      @id @default(autoincrement())
+  url         String
+  isPhishing  Boolean
+  feedbackType String
+  timestamp   DateTime @default(now())
+  processed   Boolean  @default(false)
+  processedAt DateTime?
 }

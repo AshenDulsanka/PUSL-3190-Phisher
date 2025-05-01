@@ -50,3 +50,7 @@ API_KEY = os.getenv("API_KEY_BE")
 
 # rate limiting
 RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE_BE"))
+
+# Web server connection for database operations
+WEB_SERVER_URL = os.getenv("WEB_SERVER_URL")
+DB_SYNC_ENABLED = os.getenv("DB_SYNC_ENABLED").lower() in ("true", "1", "t")

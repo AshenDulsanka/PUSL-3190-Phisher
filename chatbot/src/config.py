@@ -71,3 +71,7 @@ WARNING_THRESHOLD_CB = float(os.getenv("WARNING_THRESHOLD_CB"))
 
 # chatbot specific settings
 CHATBOT_SESSION_EXPIRE_MINUTES = int(os.getenv("CHATBOT_SESSION_EXPIRE_MINUTES"))
+
+# Web server connection for database operations
+WEB_SERVER_URL = os.getenv("WEB_SERVER_URL")
+DB_SYNC_ENABLED = os.getenv("DB_SYNC_ENABLED").lower() in ("true", "1", "t")

@@ -8,11 +8,15 @@ from ..models.schemas import ChatbotURLRequest, ChatbotURLResponse, ErrorRespons
 from ..services.model_service import ModelService
 from ..utils.feature_extraction import FeatureExtractor
 from ..models.schemas import FeedbackRequest
-from ..config import RATE_LIMIT_PER_MINUTE
+from ..services.database_integration_service import DatabaseIntegrationService
+from ..config import RATE_LIMIT_PER_MINUTE, DB_SYNC_ENABLED
 
 logger = get_logger(__name__)
 
 router = APIRouter(tags=["Chatbot Analysis"])
+
+# initialize the service
+db_integration = DatabaseIntegrationService()
 
 # rate limiting tracker
 request_counters: Dict[str, Dict[str, int]] = {}
@@ -70,6 +74,10 @@ async def analyze_url(
         
         # get comprehensive analysis
         response = model_service.predict(url)
+
+        # save to database
+        if DB_SYNC_ENABLED:
+            db_integration.save_url_analysis(response.dict())
         
         # log the result
         elapsed = time.time() - start_time

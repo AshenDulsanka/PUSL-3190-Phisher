@@ -10,6 +10,7 @@ from .config import API_PREFIX, API_DEBUG, API_HOST, API_PORT, CORS_ORIGINS
 from .logging_config import get_logger
 from .routers import url_analyzer
 from .services.model_service import ModelService
+from .services.background_tasks import BackgroundTasks
 
 # get logger
 logger = get_logger(__name__)
@@ -77,6 +78,20 @@ if __name__ == "__main__":
     # initialize model service
     logger.info("Initializing chatbot model service...")
     ModelService()
+
+    @app.on_event("startup")
+    async def startup_event():
+        """Run on application startup"""
+        logger.info("Starting background tasks")
+        background_tasks = BackgroundTasks()
+        background_tasks.start()
+
+    @app.on_event("shutdown")
+    async def shutdown_event():
+        """Run on application shutdown"""
+        logger.info("Stopping background tasks")
+        background_tasks = BackgroundTasks()
+        background_tasks.stop()
     
     # run the API server
     logger.info(f"Starting Chatbot API server at {API_HOST}:{API_PORT}")
