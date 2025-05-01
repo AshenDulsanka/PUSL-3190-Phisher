@@ -10,6 +10,7 @@ from ..config import CHATBOT_MODEL_PATH, CHATBOT_SCALER_PATH, CHATBOT_FEATURES_P
 from ..logging_config import get_logger
 from ..utils.feature_extraction import FeatureExtractor
 from ..models.schemas import ChatbotURLResponse, DeepAnalysisResult
+from .redis_service import RedisService
 
 logger = get_logger(__name__)
 
@@ -39,7 +40,8 @@ class ModelService:
             "type": "random_forest",
             "version": "2.0"
         }
-        
+        self.redis = RedisService()
+
         # load the model and related artifacts
         self._load_model()
     
@@ -186,6 +188,13 @@ class ModelService:
     
     def predict(self, url: str, features: Optional[Dict[str, Any]] = None) -> ChatbotURLResponse:
         try:
+            # check if we have cached results for this URL
+            if self.redis.is_connected():
+                cached_result = self.redis.get_cached_analysis(url)
+                if cached_result:
+                    logger.info(f"Using cached analysis result for URL: {url[:50]}...")
+                    return ChatbotURLResponse(**cached_result)
+                
             # check if model is loaded
             if self.model is None:
                 logger.error("Chatbot model not loaded")
@@ -219,10 +228,10 @@ class ModelService:
             logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
             
             # for the chatbot, we can use a slightly lower threshold to be more cautious
-            PHISHING_THRESHOLD = float(os.getenv("PHISHING_THRESHOLD_CB"))
+            phishing_threshold = float(os.getenv("PHISHING_THRESHOLD_CB"))
             
             # apply the threshold to determine if it's phishing
-            is_phishing = raw_probability >= PHISHING_THRESHOLD
+            is_phishing = raw_probability >= phishing_threshold
             
             # calculate threat score based on raw probability
             threat_score = int(raw_probability * 100)
@@ -265,9 +274,32 @@ class ModelService:
                 recommendations=recommendations,
                 explanation=explanation
             )
+
+            # cache the result if Redis is connected
+            if self.redis.is_connected():
+                self.redis.cache_url_analysis(url, response.dict())
             
             return response
             
         except Exception as e:
             logger.error(f"Error making prediction: {str(e)}", exc_info=True)
             raise
+    
+    def process_feedback(self, url: str, feedback_type: str, reported_by: Optional[str] = None) -> bool:
+        """process user feedback about an analysis for continuous learning"""
+        try:
+            # determine actual phishing status based on feedback type
+            is_phishing = feedback_type in ['false_negative', 'confirm_phishing']
+            
+            # store in redis for later processing if redis is connected
+            if self.redis.is_connected():
+                self.redis.store_feedback(url, is_phishing, feedback_type)
+                logger.info(f"Stored {feedback_type} feedback for {url[:30]}...")
+                return True
+            else:
+                logger.warning("Redis not connected, feedback not stored")
+                return False
+                
+        except Exception as e:
+            logger.error(f"Error processing feedback: {str(e)}")
+            return False
