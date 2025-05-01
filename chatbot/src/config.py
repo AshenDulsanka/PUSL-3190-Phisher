@@ -30,6 +30,7 @@ except Exception as e:
 CHATBOT_MODEL_PATH = MODELS_DIR / "chatbot" / "chatbot_model.pkl"
 CHATBOT_SCALER_PATH = MODELS_DIR / "chatbot" / "chatbot_scaler.pkl"
 CHATBOT_METADATA_PATH = MODELS_DIR / "chatbot" / "chatbot_metadata.json"
+CHATBOT_FEATURES_PATH = MODELS_DIR / "chatbot" / "chatbot_features.json"
 
 # API configuration
 API_PREFIX = os.getenv("API_PREFIX_CB")

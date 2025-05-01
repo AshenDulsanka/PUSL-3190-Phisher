@@ -42,7 +42,7 @@ async def check_rate_limit(request: Request, limit: int = RATE_LIMIT_PER_MINUTE)
         )
 
 @router.post(
-    "/analyze",
+    "/deep-analyze-url",
     response_model=ChatbotURLResponse,
     responses={
         status.HTTP_429_TOO_MANY_REQUESTS: {"model": ErrorResponse},
