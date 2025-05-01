@@ -7,6 +7,7 @@ from ..logging_config import get_logger
 from ..models.schemas import ChatbotURLRequest, ChatbotURLResponse, ErrorResponse
 from ..services.model_service import ModelService
 from ..utils.feature_extraction import FeatureExtractor
+from ..models.schemas import FeedbackRequest
 from ..config import RATE_LIMIT_PER_MINUTE
 
 logger = get_logger(__name__)

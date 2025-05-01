@@ -4,7 +4,7 @@ import validators
 from datetime import datetime
 
 class ChatbotURLRequest(BaseModel):
-    """Request model for URL analysis by the chatbot"""
+    """request model for URL analysis by the chatbot"""
     url: str
     client_info: Optional[Dict[str, Any]] = None
     session_id: Optional[str] = None
@@ -34,7 +34,7 @@ class ChatbotURLRequest(BaseModel):
         }
 
 class DeepAnalysisResult(BaseModel):
-    """Model for detailed URL analysis results"""
+    """model for detailed URL analysis results"""
     domain_age_days: Optional[int] = None
     registration_details: Optional[Dict[str, Any]] = None
     dns_records: Optional[Dict[str, Any]] = None
@@ -44,7 +44,7 @@ class DeepAnalysisResult(BaseModel):
     brand_impersonation: Optional[Dict[str, Any]] = None
 
 class ChatbotURLResponse(BaseModel):
-    """Response model for detailed URL analysis"""
+    """response model for detailed URL analysis"""
     url: str
     is_phishing: bool
     threat_score: int = Field(..., ge=0, le=100)
@@ -133,3 +133,43 @@ class HealthCheckResponse(BaseModel):
     status: str
     version: str
     timestamp: datetime = Field(default_factory=datetime.now)
+
+class FeedbackRequest(BaseModel):
+    """request model for submitting feedback on URL analysis"""
+    url: str
+    feedback_type: str = Field(
+        ..., 
+        description="Type of feedback",
+        example="false_positive"
+    )
+    reported_by: Optional[str] = Field(
+        None, 
+        description="Identifier of who reported it"
+    )
+    comments: Optional[str] = Field(
+        None,
+        description="Additional comments about this URL"
+    )
+    
+    @validator('feedback_type')
+    def validate_feedback_type(cls, v):
+        valid_types = ['false_positive', 'false_negative', 'confirm_phishing', 'confirm_legitimate']
+        if v not in valid_types:
+            raise ValueError(f"Feedback type must be one of: {', '.join(valid_types)}")
+        return v
+        
+    @validator('url')
+    def validate_url(cls, v):
+        if not validators.url(v):
+            raise ValueError('Invalid URL format')
+        return v
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "url": "https://example.com",
+                "feedback_type": "false_positive",
+                "reported_by": "user@example.com",
+                "comments": "This is actually a legitimate website"
+            }
+        }

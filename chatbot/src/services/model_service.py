@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
 from datetime import datetime
 
-from ..config import CHATBOT_MODEL_PATH, CHATBOT_SCALER_PATH, CHATBOT_FEATURES_PATH, CHATBOT_METADATA_PATH
+from ..config import CHATBOT_MODEL_PATH, CHATBOT_SCALER_PATH, CHATBOT_FEATURES_PATH, CHATBOT_METADATA_PATH, PHISHING_THRESHOLD_CB
 from ..logging_config import get_logger
 from ..utils.feature_extraction import FeatureExtractor
 from ..models.schemas import ChatbotURLResponse, DeepAnalysisResult
@@ -228,7 +228,7 @@ class ModelService:
             logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
             
             # for the chatbot, we can use a slightly lower threshold to be more cautious
-            phishing_threshold = float(os.getenv("PHISHING_THRESHOLD_CB"))
+            phishing_threshold = float(PHISHING_THRESHOLD_CB) if PHISHING_THRESHOLD_CB else 0.5
             
             # apply the threshold to determine if it's phishing
             is_phishing = raw_probability >= phishing_threshold
