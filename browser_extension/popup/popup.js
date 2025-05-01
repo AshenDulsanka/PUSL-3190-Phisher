@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   const detailsText = document.getElementById('details-text');
   const analyzeBtn = document.getElementById('analyze-btn');
   const reportBtn = document.getElementById('report-btn');
-  const learnBtn = document.getElementById('learn-btn');
   const retryBtn = document.getElementById('retry-btn');
   const realTimeToggle = document.getElementById('real-time-toggle');
   const notificationLevel = document.getElementById('notification-level');
@@ -57,10 +56,6 @@ document.addEventListener('DOMContentLoaded', async function() {
   reportBtn.addEventListener('click', function() {
     const reportUrl = 'https://phisher-chatbot.com/report?url=' + encodeURIComponent(activeTab.url);
     chrome.tabs.create({ url: reportUrl });
-  });
-  
-  learnBtn.addEventListener('click', function() {
-    chrome.tabs.create({ url: 'https://phisher-chatbot.com/learn' });
   });
   
   chatbotBtn.addEventListener('click', function() {
