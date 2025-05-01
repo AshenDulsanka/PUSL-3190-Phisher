@@ -18,7 +18,12 @@ services:
       - API_PORT=${API_PORT_BE}
       - API_KEY=${API_KEY_BE}
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE_BE}
+      # web server API for database operations
+      - WEB_SERVER_URL=${WEB_SERVER_URL}
+      - DB_SYNC_ENABLED=${DB_SYNC_ENABLED}
     restart: unless-stopped
+    depends_on:
+      - web_server
     healthcheck:
       test: ["CMD", "sh", "-c", "curl -f  $EXTENSION_HEALTH_CHECK_URL"]
       interval: 30s
@@ -45,7 +50,19 @@ services:
       - API_PORT=${API_PORT_CB}
       - API_KEY=${API_KEY_CB}
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE_CB}
+      # redis config
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=${REDIS_DB}
+      - REDIS_ENABLED=${REDIS_ENABLED}
+      # web server API for database operations
+      - WEB_SERVER_URL=${WEB_SERVER_URL}
+      - DB_SYNC_ENABLED=${DB_SYNC_ENABLED}
     restart: unless-stopped
+    depends_on:
+      - redis
+      - web_server
     healthcheck:
       test: ["CMD", "sh", "-c", "curl -f $CHATBOT_HEALTH_CHECK_URL"]
       interval: 30s
@@ -103,5 +120,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # redis (cache)
+  redis:
+    container_name: redis
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    command: redis-server --appendonly yes
+
 volumes:
   postgres_data:
+  redis_data:
