@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
 from datetime import datetime
 
-from ..config import CHATBOT_MODEL_PATH, CHATBOT_SCALER_PATH, CHATBOT_FEATURES_PATH, CHATBOT_METADATA_PATH, PHISHING_THRESHOLD_CB
+from ..config import CHATBOT_MODEL_PATH, CHATBOT_SCALER_PATH, CHATBOT_FEATURES_PATH, CHATBOT_METADATA_PATH, PHISHING_THRESHOLD_CB, WARNING_THRESHOLD_CB
 from ..logging_config import get_logger
 from ..utils.feature_extraction import FeatureExtractor
 from ..models.schemas import ChatbotURLResponse, DeepAnalysisResult
@@ -153,10 +153,13 @@ class ModelService:
                 recommendations.append("The website may be attempting to impersonate a brand using subdomains.")
             if features.get('uses_http', 1) == 1:
                 recommendations.append("The website doesn't use secure HTTPS protocol, which is unusual for legitimate sites collecting information.")
+        elif threat_score >= 30:  # Suspicious but not phishing
+            recommendations.append("This website shows some suspicious patterns. Exercise caution when sharing information.")
+            if features.get('uses_http', 1) == 1:
+                recommendations.append("The website doesn't use secure HTTPS protocol, which increases risk.")
+            recommendations.append("Verify the domain carefully before proceeding.")
         else:
             recommendations.append("The website appears legitimate based on our analysis.")
-            if 30 < threat_score < 60:
-                recommendations.append("Exercise caution when sharing sensitive information.")
             if features.get('AgeofDomain', 0) == 1:
                 recommendations.append("The domain has been registered for a significant period, which is a positive signal.")
             if features.get('DNSRecording', 0) == 1 and features.get('PageRank', 0) == 1:
@@ -174,17 +177,15 @@ class ModelService:
         if is_phishing:
             if threat_score > 85:
                 return f"This URL has been identified as a high-risk phishing website with {threat_score}% confidence. It uses {protocol} and has an {domain_age} domain age. Multiple phishing indicators were detected including {'typosquatting' if features.get('IsTyposquatting', 0) == 1 else 'suspicious URL patterns'} and {'brand impersonation in the subdomain' if features.get('BrandInSubdomain', 0) == 1 else 'suspicious content patterns'}."
-            elif threat_score > 70:
-                return f"This URL appears to be a phishing website with {threat_score}% confidence. It uses {protocol} and shows several concerning patterns including {'typosquatting' if features.get('IsTyposquatting', 0) == 1 else 'suspicious URL structure'}."
             else:
-                return f"This URL shows some characteristics of phishing websites with {threat_score}% confidence. While not conclusively malicious, it uses {protocol} and has some concerning patterns."
+                return f"This URL appears to be a phishing website with {threat_score}% confidence. It uses {protocol} and shows several concerning patterns including {'typosquatting' if features.get('IsTyposquatting', 0) == 1 else 'suspicious URL structure'}."
+        elif threat_score >= 30:
+            return f"This URL shows suspicious characteristics with {threat_score}% risk score. While not conclusively malicious, it uses {protocol} and has some concerning patterns that warrant caution."
         else:
             if threat_score < 15:
                 return f"This URL appears to be entirely legitimate with very low phishing probability ({threat_score}%). It uses {protocol}, has an {domain_age} domain age, and shows no suspicious patterns."
-            elif threat_score < 30:
-                return f"This URL appears to be legitimate with low phishing probability ({threat_score}%). It uses {protocol} and shows minimal suspicious patterns."
             else:
-                return f"This URL is likely legitimate but shows some suspicious patterns ({threat_score}% risk score). It uses {protocol} and has an {domain_age} domain age. Exercise normal caution."
+                return f"This URL appears to be legitimate with low phishing probability ({threat_score}%). It uses {protocol} and shows minimal suspicious patterns."
     
     def predict(self, url: str, features: Optional[Dict[str, Any]] = None) -> ChatbotURLResponse:
         try:
@@ -227,11 +228,13 @@ class ModelService:
             
             logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
             
-            # for the chatbot, we can use a slightly lower threshold to be more cautious
+            # threashold settings
             phishing_threshold = float(PHISHING_THRESHOLD_CB) if PHISHING_THRESHOLD_CB else 0.5
+            warning_threshold = float(WARNING_THRESHOLD_CB) if WARNING_THRESHOLD_CB else 0.3
             
             # apply the threshold to determine if it's phishing
             is_phishing = raw_probability >= phishing_threshold
+            is_suspicious = raw_probability >= warning_threshold
             
             # calculate threat score based on raw probability
             threat_score = int(raw_probability * 100)

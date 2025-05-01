@@ -67,6 +67,7 @@ RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE_CB"))
 
 # model threshold settings
 PHISHING_THRESHOLD_CB = float(os.getenv("PHISHING_THRESHOLD_CB"))
+WARNING_THRESHOLD_CB = float(os.getenv("WARNING_THRESHOLD_CB"))
 
 # chatbot specific settings
 CHATBOT_SESSION_EXPIRE_MINUTES = int(os.getenv("CHATBOT_SESSION_EXPIRE_MINUTES"))

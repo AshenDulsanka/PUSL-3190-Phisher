@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(() => {
   // set default settings
   chrome.storage.local.set({
     enableRealTimeScanning: true,
-    notificationLevel: 'medium', // low, medium, high
+    notificationLevel: 'low', // low, high
     redirectThreshold: 30
   })
 })
@@ -206,10 +206,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       }).catch(err => console.log('Error sending message to content script:', err))
       
       // update badge based on risk level
-      if (analysis.score > 70) {
+      if (analysis.score > 30) {
         chrome.action.setBadgeBackgroundColor({ color: '#FF0000' })
         chrome.action.setBadgeText({ text: '!' })
-      } else if (analysis.score > 40) {
+      } else if (analysis.score > 20) {
         chrome.action.setBadgeBackgroundColor({ color: '#FFA500' })
         chrome.action.setBadgeText({ text: '?' })
       } else {
@@ -228,12 +228,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       
       // show warning based on notification level setting
       const notificationThresholds = {
-        'low': 80, // only show for very high risk
-        'medium': 60, // show for medium and high risk
-        'high': 40 // show for low, medium, and high risk
+        'low': 30, // only show for very high risk
+        'high': 20 // show for low, and high risk
       }
       
-      const threshold = notificationThresholds[settings.notificationLevel] || 60
+      const threshold = notificationThresholds[settings.notificationLevel] || 20
       
       // if score exceeds the threshold, notify the user
       if (analysis.score >= threshold) {
@@ -243,7 +242,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             score: analysis.score,
             url: tab.url,
             details: analysis.details,
-            is_phishing: analysis.is_phishing
+            is_phishing: analysis.is_phishing >= 30
           }
         }).catch(err => console.log('Error sending warning to content script:', err))
       }

@@ -126,10 +126,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Update risk level
     let riskText, riskClass;
-    if (score >= 70) {
+    if (score >= 30) {
       riskText = 'Dangerous';
       riskClass = 'dangerous';
-    } else if (score >= 40) {
+    } else if (score >= 20) {
       riskText = 'Suspicious';
       riskClass = 'suspicious';
     } else {
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     detailsText.textContent = result.details || 'No additional details available.';
     
     // If it's a dangerous URL, make the report button more prominent
-    if (score >= 70) {
+    if (score >= 30) {
       reportBtn.classList.add('primary');
       reportBtn.classList.remove('secondary');
     } else {
@@ -174,6 +174,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     ]);
     
     realTimeToggle.checked = settings.enableRealTimeScanning !== false;
-    notificationLevel.value = settings.notificationLevel || 'medium';
+    notificationLevel.value = settings.notificationLevel || 'low';
   }
 });

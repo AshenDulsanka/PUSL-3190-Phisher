@@ -215,12 +215,12 @@
     
     // Determine status colors
     let color, icon, text;
-    if (data.score >= 70) {
+    if (data.score >= 30) {
       color = '#D32F2F'; // Red
       icon = '⚠️';
       text = 'Dangerous';
-    } else if (data.score >= 40) {
-      color = '#FFA000'; // Orange/Amber
+    } else if (data.score >= 20) {
+      color = '#FFA000'; // Orange
       icon = '⚠️';
       text = 'Suspicious';
     } else {
