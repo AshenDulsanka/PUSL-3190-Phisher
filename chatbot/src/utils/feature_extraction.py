@@ -39,11 +39,23 @@ class FeatureExtractor:
             domain = parsed_url.netloc
             if ':' in domain:  # remove port if present
                 domain = domain.split(':')[0]
+            
+            # check for valid domain format
+            if not domain or '.' not in domain:
+                logger.warning(f"Rejected URL with invalid domain: {url}")
+                return False
                 
             # check domain against whitelist (if exact match allowed)
             from ..config import HTTP_WHITELIST
             if domain in HTTP_WHITELIST:
                 return True
+            
+            # check for dangerous internal hostnames
+            dangerous_hostnames = ['localhost', '127.0.0.1', '0.0.0.0', 
+                                  'internal', 'intranet', 'admin']
+            if any(h in domain for h in dangerous_hostnames):
+                logger.warning(f"Rejected URL with dangerous hostname: {url}")
+                return False
                 
             # resolve domain to IP
             try:
@@ -60,6 +72,25 @@ class FeatureExtractor:
                     if ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_link_local or ip.is_multicast:
                         logger.warning(f"Rejected URL resolving to private/internal IP: {url} -> {ip_str}")
                         return False
+                    
+                    # check for specific CIDR blocks explicitly
+                    forbidden_cidrs = [
+                        '10.0.0.0/8',      # private network
+                        '172.16.0.0/12',   # private network
+                        '192.168.0.0/16',  # private network
+                        '127.0.0.0/8',     # localhost
+                        '169.254.0.0/16',  # link-local
+                        '192.0.2.0/24',    # test-net
+                        '224.0.0.0/4',     # multicast
+                        '240.0.0.0/4'      # reserved
+                    ]
+                    
+                    for cidr in forbidden_cidrs:
+                        network = ipaddress.ip_network(cidr)
+                        if ip in network:
+                            logger.warning(f"Rejected URL with IP in forbidden CIDR: {url} -> {ip_str} in {cidr}")
+                            return False
+                        
                 except ValueError:
                     logger.warning(f"Invalid IP address: {ip_str}")
                     return False
@@ -199,11 +230,20 @@ class FeatureExtractor:
             if not FeatureExtractor.is_url_safe(url):
                 logger.warning(f"Skipping unsafe URL: {url}")
                 return FeatureExtractor.get_default_html_features()
+
+             # ensures no redirection to internal resources
+            parsed_url = urlparse(url)
+            domain = parsed_url.netloc
+            
+            # create a session with restrictive settings
+            session = requests.Session()
+            session.max_redirects = 2  # limit redirects
                 
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
             }
-            response = requests.get(url, headers=headers, timeout=3)
+
+            response = session.get(url, headers=headers, timeout=3, allow_redirects=True, verify=True)
 
             if response.status_code != 200:
                 return FeatureExtractor.get_default_html_features()
