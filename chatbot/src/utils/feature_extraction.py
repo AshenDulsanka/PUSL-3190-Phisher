@@ -249,7 +249,7 @@ class FeatureExtractor:
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
             }
 
-            response = session.get(url, headers=headers, timeout=3, allow_redirects=True, verify=True)
+            response = session.get(url, headers=headers, timeout=3, allow_redirects=False, verify=True)
 
             if response.status_code != 200:
                 return FeatureExtractor.get_default_html_features()
