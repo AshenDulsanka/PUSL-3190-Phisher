@@ -79,24 +79,24 @@ function extractUrlFeatures(url) {
 
 // helper function to calculate entropy (randomness) of URL
 function calculateEntropy(text) {
-  if (!text) return 0;
+  if (!text) return 0
   
   // count character frequencies
-  const charFreq = {};
+  const charFreq = {}
   for (let i = 0; i < text.length; i++) {
-    const char = text[i].toLowerCase();
-    charFreq[char] = (charFreq[char] || 0) + 1;
+    const char = text[i].toLowerCase()
+    charFreq[char] = (charFreq[char] || 0) + 1
   }
   
   // calculate entropy
-  let entropy = 0;
-  const len = text.length;
+  let entropy = 0
+  const len = text.length
   Object.values(charFreq).forEach(count => {
-    const p = count / len;
-    entropy -= p * Math.log2(p);
-  });
+    const p = count / len
+    entropy -= p * Math.log2(p)
+  })
   
-  return entropy;
+  return entropy
 }
 
 // function to make prediction using the ML model via API
@@ -206,10 +206,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       }).catch(err => console.log('Error sending message to content script:', err))
       
       // update badge based on risk level
-      if (analysis.score > 30) {
+      if (analysis.score >= 30) {
         chrome.action.setBadgeBackgroundColor({ color: '#FF0000' })
         chrome.action.setBadgeText({ text: '!' })
-      } else if (analysis.score > 20) {
+      } else if (analysis.score >= 20) {
         chrome.action.setBadgeBackgroundColor({ color: '#FFA500' })
         chrome.action.setBadgeText({ text: '?' })
       } else {
@@ -267,5 +267,43 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse(data.lastAnalysis || null)
     })
     return true
+  }
+})
+
+// listen for tab activation to update the badge
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  try {
+    // get the active tab
+    const tab = await chrome.tabs.get(activeInfo.tabId)
+    
+    // skip if not an HTTP URL
+    if (!tab.url || !tab.url.startsWith('http')) {
+      chrome.action.setBadgeText({ text: '' })  // clear badge for non-HTTP pages
+      return
+    }
+    
+    // get last analysis for this URL
+    const data = await chrome.storage.local.get('lastAnalysis')
+    if (data.lastAnalysis && data.lastAnalysis.url === tab.url) {
+      // cached analysis for this URL
+      const analysis = data.lastAnalysis.result
+      
+      // update badge based on risk level
+      if (analysis.score >= 30) {
+        chrome.action.setBadgeBackgroundColor({ color: '#FF0000' })
+        chrome.action.setBadgeText({ text: '!' })
+      } else if (analysis.score >= 20) {
+        chrome.action.setBadgeBackgroundColor({ color: '#FFA500' })
+        chrome.action.setBadgeText({ text: '?' })
+      } else {
+        chrome.action.setBadgeBackgroundColor({ color: '#00C853' })
+        chrome.action.setBadgeText({ text: '✓' })
+      }
+    } else {
+      // no cached analysis, clear badge until analysis completes
+      chrome.action.setBadgeText({ text: '' })
+    }
+  } catch (error) {
+    console.error('Error updating badge on tab activation:', error)
   }
 })
