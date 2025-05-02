@@ -151,8 +151,8 @@ async function analyzeSuspiciousUrl(url) {
 
     return {
       score: heuristicScore,
-      is_phishing: heuristicScore > 60,
-      status: heuristicScore > 60 ? 'Warning' : heuristicScore > 30 ? 'Suspicious' : 'Safe',
+      is_phishing: heuristicScore > 30,
+      status: heuristicScore > 30 ? 'Warning' : heuristicScore > 20 ? 'Suspicious' : 'Safe',
       details: 'Analyzed using offline heuristics (API unavailable)',
       confidence: 0.5
     }
@@ -164,16 +164,16 @@ function calculateHeuristicScore(features) {
   let score = 0
   
   // add points for each suspicious feature
-  if (features.has_ip) score += 20
-  if (features.url_length > 75) score += 10
-  if (features.is_shortened) score += 15
-  if (features.has_at_symbol) score += 20
-  if (features._redirecting_slashes) score += 10
-  if (features.has_hyphen) score += 10
-  if (features.num_subdomains > 2) score += 10
-  if (!features.has_https) score += 15
-  if (features._abnormal_url) score += 15
-  if (features._url_entropy > 4) score += 10
+  if (features.has_ip) score += 10
+  if (features.url_length > 75) score += 5
+  if (features.is_shortened) score += 7
+  if (features.has_at_symbol) score += 10
+  if (features._redirecting_slashes) score += 5
+  if (features.has_hyphen) score += 5
+  if (features.num_subdomains > 2) score += 5
+  if (!features.has_https) score += 7
+  if (features._abnormal_url) score += 7
+  if (features._url_entropy > 4) score += 5
   
   // cap the score at 100
   return Math.min(score, 100)
