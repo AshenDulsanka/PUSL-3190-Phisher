@@ -25,7 +25,7 @@
       <div class="url-container">
         <h3>Current URL</h3>
         <div class="url-box">
-          <p id="url-text" class="truncate"></p>
+          <p id="url-text"></p>
         </div>
       </div>
       
@@ -49,7 +49,7 @@
       
       <div class="actions">
         <button id="analyze-btn" class="btn primary">Re-analyze</button>
-        <button id="report-btn" class="btn secondary">Report URL</button>
+        <button id="deep-analysis-btn" class="btn secondary">Deep Analysis</button>
       </div>
     </div>
     
@@ -71,23 +71,15 @@
       </div>
       
       <div class="setting-item">
-        <label for="notification-level">Notification level:</label>
-        <select id="notification-level">
-          <option value="low">Low</option>
-          <option value="high">High</option>
-        </select>
+        <div class="notification-container">
+          <span class="notification-level-label">Notification level:</span>
+          <select id="notification-level">
+            <option value="low">Low</option>
+            <option value="high">High</option>
+          </select>
+        </div>
       </div>
     </div>
-    
-    <div class="deep-scan-container">
-      <h3>Need deeper analysis?</h3>
-      <p>Our AI chatbot can provide comprehensive analysis of suspicious URLs.</p>
-      <button id="chatbot-btn" class="btn primary">Go to Chatbot</button>
-    </div>
-    
-    <footer>
-      <p>AI-Powered Phishing Detection System</p>
-    </footer>
   </div>
   
   <script src="popup.js"></script>

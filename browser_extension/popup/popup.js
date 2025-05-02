@@ -9,16 +9,16 @@ document.addEventListener('DOMContentLoaded', async function() {
   const riskLevel = document.getElementById('risk-level')
   const detailsText = document.getElementById('details-text')
   const analyzeBtn = document.getElementById('analyze-btn')
-  const reportBtn = document.getElementById('report-btn')
+  const deepAnalysisBtn = document.getElementById('deep-analysis-btn')
   const retryBtn = document.getElementById('retry-btn')
   const realTimeToggle = document.getElementById('real-time-toggle')
   const notificationLevel = document.getElementById('notification-level')
-  const chatbotBtn = document.getElementById('chatbot-btn')
   
   // get the active tab URL
   let activeTab
   try {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+    
     activeTab = tabs[0]
     
     // check if URL is valid for analysis
@@ -53,13 +53,8 @@ document.addEventListener('DOMContentLoaded', async function() {
   analyzeBtn.addEventListener('click', analyzeCurrentUrl)
   retryBtn.addEventListener('click', analyzeCurrentUrl)
   
-  reportBtn.addEventListener('click', function() {
-    const reportUrl = 'https://phisher-chatbot.com/report?url=' + encodeURIComponent(activeTab.url)
-    chrome.tabs.create({ url: reportUrl })
-  })
-  
-  chatbotBtn.addEventListener('click', function() {
-    const chatbotUrl = 'https://phisher-chatbot.com/?url=' + encodeURIComponent(activeTab.url)
+  deepAnalysisBtn.addEventListener('click', function() {
+    const chatbotUrl = 'https://phisher.live/?url=' + encodeURIComponent(activeTab.url)
     chrome.tabs.create({ url: chatbotUrl })
   })
   
@@ -137,15 +132,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // update details
     detailsText.textContent = result.details || 'No additional details available.'
-    
-    // if it's a dangerous URL, make the report button more prominent
-    if (score >= 30) {
-      reportBtn.classList.add('primary')
-      reportBtn.classList.remove('secondary')
-    } else {
-      reportBtn.classList.add('secondary')
-      reportBtn.classList.remove('primary')
-    }
   }
   
   function showLoading() {
