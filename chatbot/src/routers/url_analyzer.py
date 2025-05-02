@@ -94,5 +94,5 @@ async def analyze_url(
         logger.error(f"Error analyzing URL: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred during analysis: {str(e)}"
+            detail="An internal error occurred during analysis. Please try again later."
         )
