@@ -242,7 +242,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
             score: analysis.score,
             url: tab.url,
             details: analysis.details,
-            is_phishing: analysis.is_phishing >= 30
+            is_phishing: analysis.is_phishing >= 30,
+            notificationLevel: settings.notificationLevel
           }
         }).catch(err => console.log('Error sending warning to content script:', err))
       }

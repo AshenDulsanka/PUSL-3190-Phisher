@@ -301,7 +301,12 @@
   // Listen for messages from background script
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'showWarning') {
-      createWarningOverlay(request.data);
+      if (request.data.notificationLevel === 'high') {
+        createWarningOverlay(request.data);
+      } else {
+        // For medium and low levels, we can show a notification instead of an overlay
+        createResultNotification(request.data);
+      }
     }
     
     if (request.action === 'analysisResult') {
