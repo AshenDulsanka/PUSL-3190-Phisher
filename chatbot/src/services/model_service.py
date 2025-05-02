@@ -11,6 +11,7 @@ from ..logging_config import get_logger
 from ..utils.feature_extraction import FeatureExtractor
 from ..models.schemas import ChatbotURLResponse, DeepAnalysisResult
 from .redis_service import RedisService
+from .database_integration_service import DatabaseIntegrationService
 
 logger = get_logger(__name__)
 
@@ -94,9 +95,34 @@ class ModelService:
                         self.model_info["version"] = metadata["version"]
             
             logger.info("Chatbot model and related artifacts loaded successfully")
+            self._register_model_in_database()
             
         except Exception as e:
             logger.error(f"Error loading chatbot model: {str(e)}", exc_info=True)
+
+    def _register_model_in_database(self):
+        """register or update the model in the database"""
+        try:
+            if not hasattr(self, 'db_integration'):
+                self.db_integration = DatabaseIntegrationService()
+                
+            # create model metadata if we have a model loaded
+            if self.model is not None:
+                model_data = {
+                    "name": self.model_info["name"],
+                    "type": self.model_info["type"],
+                    "version": self.model_info["version"],
+                    "parameters": json.dumps({
+                        "feature_count": len(self.feature_list) if self.feature_list else 0,
+                        "has_scaler": self.scaler is not None
+                    })
+                }
+                
+                # try to register
+                self.db_integration.register_model(model_data)
+                logger.info(f"Registered model {self.model_info['name']} in database")
+        except Exception as e:
+            logger.error(f"Error registering model in database: {str(e)}")
     
     def _get_deep_analysis(self, url: str, features: Dict[str, Any], raw_probability: float) -> DeepAnalysisResult:
         try:

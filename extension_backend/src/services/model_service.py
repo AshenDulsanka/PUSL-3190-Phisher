@@ -8,6 +8,7 @@ import os
 from ..config import BROWSER_EXTENSION_MODEL_PATH, BROWSER_EXTENSION_SCALER_PATH, FEATURE_LIST_PATH
 from ..logging_config import get_logger
 from ..utils.feature_extraction import FeatureExtractor
+from .database_integration_service import DatabaseIntegrationService
 
 logger = get_logger(__name__)
 
@@ -85,9 +86,34 @@ class ModelService:
                 ]
             
             logger.info("Model and related artifacts loaded successfully")
+            self._register_lightweight_model_in_database()
             
         except Exception as e:
             logger.error(f"Error loading model: {str(e)}", exc_info=True)
+
+    def _register_lightweight_model_in_database(self):
+        """register or update the model in the database"""
+        try:
+            if not hasattr(self, 'db_integration'):
+                self.db_integration = DatabaseIntegrationService()
+                
+            # create model metadata if we have a model loaded
+            if self.model is not None:
+                model_data = {
+                    "name": self.model_info["name"],
+                    "type": self.model_info["type"],
+                    "version": self.model_info["version"],
+                    "parameters": json.dumps({
+                        "feature_count": len(self.feature_list) if self.feature_list else 0,
+                        "has_scaler": self.scaler is not None
+                    })
+                }
+                
+                # try to register
+                self.db_integration.register_lightweight_model(model_data)
+                logger.info(f"Registered lightweight model {self.model_info['name']} in database")
+        except Exception as e:
+            logger.error(f"Error registering lightweight model in database: {str(e)}")
     
     def predict(self, url: str, features: Dict[str, Any] = None) -> Dict[str, Any]:
         try:

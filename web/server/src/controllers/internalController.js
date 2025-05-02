@@ -94,3 +94,49 @@ export const getModelMetrics = async (req, res) => {
     res.status(500).json({ error: 'Failed to get model metrics' })
   }
 }
+
+// register or update ML model
+export const registerModel = async (req, res) => {
+  try {
+    const { name, type, version, parameters } = req.body
+    
+    if (!name) {
+      return res.status(400).json({ error: 'Model name is required' })
+    }
+    
+    // Check if model exists
+    let model = await databaseService.prisma.mLModel.findUnique({
+      where: { name }
+    })
+    
+    // Create or update
+    if (model) {
+      model = await databaseService.prisma.mLModel.update({
+        where: { id: model.id },
+        data: {
+          type: type || model.type,
+          version: version || model.version,
+          parameters: parameters || model.parameters
+        }
+      })
+    } else {
+      model = await databaseService.prisma.mLModel.create({
+        data: {
+          name,
+          type: type || 'unknown',
+          version: version || '1.0',
+          parameters: parameters || null
+        }
+      })
+    }
+    
+    res.status(200).json({
+      success: true,
+      model: model
+    })
+  } catch (error) {
+    console.error('Error registering model:', error)
+    res.status(500).json({ error: 'Failed to register model' })
+  }
+}
+

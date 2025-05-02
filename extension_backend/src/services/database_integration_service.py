@@ -98,3 +98,29 @@ class DatabaseIntegrationService:
         except Exception as e:
             logger.error(f"Error logging system event to database: {str(e)}")
             return False
+    
+    def register_lightweight_model(self, model_data: Dict[str, Any]) -> bool:
+        """register or update a model in the database"""
+        try:
+            data = {
+                "name": model_data.get("name"),
+                "type": model_data.get("type", "unknown"),
+                "version": model_data.get("version", "1.0"),
+                "parameters": model_data.get("parameters")
+            }
+            
+            response = requests.post(
+                f"{WEB_SERVER_URL}/api/model/register",
+                json=data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                logger.info(f"Registered model {data['name']} in database")
+                return True
+            else:
+                logger.error(f"Failed to register model: {response.status_code}")
+                return False
+        except Exception as e:
+            logger.error(f"Error registering model: {str(e)}")
+            return False
