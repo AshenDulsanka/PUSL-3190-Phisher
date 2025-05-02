@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 import Levenshtein
 import ssl
 from typing import Dict, Any, List, Optional, Tuple
+import ipaddress
 
 from ..logging_config import get_logger
 
@@ -22,6 +23,51 @@ HTTP_WHITELIST = ['example.com', 'info.cern.ch', 'localhost']
 
 class FeatureExtractor:
     """service for extracting comprehensive features for deep URL analysis"""
+
+    @staticmethod
+    def is_url_safe(url):
+        """check if a URL is safe to request (not pointing to internal/private network)"""
+        try:
+            parsed_url = urlparse(url)
+            
+            # make sure it's HTTP or HTTPS
+            if parsed_url.scheme not in ['http', 'https']:
+                logger.warning(f"Rejected URL with invalid scheme: {url}")
+                return False
+            
+            # get the domain
+            domain = parsed_url.netloc
+            if ':' in domain:  # remove port if present
+                domain = domain.split(':')[0]
+                
+            # check domain against whitelist (if exact match allowed)
+            from ..config import HTTP_WHITELIST
+            if domain in HTTP_WHITELIST:
+                return True
+                
+            # resolve domain to IP
+            try:
+                ip_addresses = socket.getaddrinfo(domain, None)
+            except socket.gaierror:
+                logger.warning(f"Could not resolve domain: {domain}")
+                return False
+                
+            # check if any resolved IP is private/internal
+            for addr_info in ip_addresses:
+                ip_str = addr_info[4][0]
+                try:
+                    ip = ipaddress.ip_address(ip_str)
+                    if ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_link_local or ip.is_multicast:
+                        logger.warning(f"Rejected URL resolving to private/internal IP: {url} -> {ip_str}")
+                        return False
+                except ValueError:
+                    logger.warning(f"Invalid IP address: {ip_str}")
+                    return False
+                    
+            return True
+        except Exception as e:
+            logger.error(f"Error checking URL safety: {str(e)}")
+            return False
     
     @staticmethod
     def extract_features(url: str) -> Dict[str, Any]:
@@ -149,6 +195,11 @@ class FeatureExtractor:
     @staticmethod
     def analyze_html_content(url):
         try:
+            # validate the URL first
+            if not FeatureExtractor.is_url_safe(url):
+                logger.warning(f"Skipping unsafe URL: {url}")
+                return FeatureExtractor.get_default_html_features()
+                
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
             }
