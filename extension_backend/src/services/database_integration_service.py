@@ -124,3 +124,24 @@ class DatabaseIntegrationService:
         except Exception as e:
             logger.error(f"Error registering model: {str(e)}")
             return False
+    
+    def track_lightweight_model_evaluation(self, eval_data: Dict[str, Any]) -> bool:
+        """track a model evaluation"""
+        try:
+            data = {
+                "model_name": eval_data.get("model_name"),
+                "url": eval_data.get("url"),
+                "predicted_score": eval_data.get("score"),
+                "actual_label": eval_data.get("actual_label", None)
+            }
+            
+            response = requests.post(
+                f"{WEB_SERVER_URL}/api/model/evaluation",
+                json=data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            return response.status_code == 200
+        except Exception as e:
+            logger.error(f"Error tracking model evaluation: {str(e)}")
+            return False

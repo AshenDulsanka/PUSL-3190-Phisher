@@ -195,6 +195,16 @@ class ModelService:
                 else:
                     details = "This URL appears to be legitimate."
             
+            # track the model evaluation in the database if available
+            if hasattr(self, 'db_integration'):
+                # Track this evaluation
+                self.db_integration.track_lightweight_model_evaluation({
+                    "model_name": self.model_info["name"],
+                    "url": url,
+                    "is_phishing": is_phishing,
+                    "score": threat_score / 100.0  # Convert to 0-1 range
+                })
+            
             # Return the result
             return {
                 "url": url,

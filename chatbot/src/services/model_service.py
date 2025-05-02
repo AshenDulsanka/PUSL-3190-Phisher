@@ -307,6 +307,16 @@ class ModelService:
             # cache the result if Redis is connected
             if self.redis.is_connected():
                 self.redis.cache_url_analysis(url, response.dict())
+
+            # track the model evaluation in the database if available
+            if hasattr(self, 'db_integration'):
+                # Track this evaluation
+                self.db_integration.track_model_evaluation({
+                    "model_name": self.model_info["name"],
+                    "url": url,
+                    "is_phishing": is_phishing,
+                    "score": threat_score / 100.0  # Convert to 0-1 range
+                })
             
             return response
             

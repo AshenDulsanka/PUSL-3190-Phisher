@@ -104,12 +104,12 @@ export const registerModel = async (req, res) => {
       return res.status(400).json({ error: 'Model name is required' })
     }
     
-    // Check if model exists
+    // check if model exists
     let model = await databaseService.prisma.mLModel.findUnique({
       where: { name }
     })
     
-    // Create or update
+    // create or update
     if (model) {
       model = await databaseService.prisma.mLModel.update({
         where: { id: model.id },
@@ -140,3 +140,54 @@ export const registerModel = async (req, res) => {
   }
 }
 
+// track model evaluation
+export const trackModelEvaluation = async (req, res) => {
+  try {
+    const { model_name, url, predicted_score, actual_label } = req.body
+    
+    if (!model_name || !url || predicted_score === undefined) {
+      return res.status(400).json({ error: 'Missing required fields' })
+    }
+    
+    // find the model
+    const model = await databaseService.prisma.mLModel.findUnique({
+      where: { name: model_name }
+    })
+    
+    if (!model) {
+      return res.status(404).json({ error: 'Model not found' })
+    }
+    
+    // find the URL
+    let urlRecord = await databaseService.prisma.uRL.findUnique({
+      where: { url }
+    })
+    
+    // create the URL if it doesn't exist
+    if (!urlRecord) {
+      urlRecord = await databaseService.prisma.uRL.create({
+        data: {
+          url,
+          isPhishing: Boolean(actual_label),
+          suspiciousScore: predicted_score * 100, // 0-1 to 0-100
+          analysisSources: ["evaluation"]
+        }
+      })
+    }
+    
+    // record the evaluation
+    const evaluation = await databaseService.prisma.modelEvaluation.create({
+      data: {
+        predictedScore: predicted_score,
+        actualLabel: actual_label === null ? undefined : Boolean(actual_label),
+        modelId: model.id,
+        urlId: urlRecord.id
+      }
+    })
+    
+    res.status(200).json({ success: true, evaluation })
+  } catch (error) {
+    console.error('Error tracking model evaluation:', error)
+    res.status(500).json({ error: 'Failed to track model evaluation' })
+  }
+}

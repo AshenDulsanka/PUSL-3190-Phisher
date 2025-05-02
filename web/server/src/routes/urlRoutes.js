@@ -1,6 +1,6 @@
 import express from 'express'
 import { analyzeUrl, reportUrl, getRecentAnalyses } from '../controllers/urlController.js'
-import { saveURLAnalysis, processFeedbackBatch, logSystemEvent, getModelMetrics, registerModel } from '../controllers/internalController.js'
+import { saveURLAnalysis, processFeedbackBatch, logSystemEvent, getModelMetrics, registerModel, trackModelEvaluation } from '../controllers/internalController.js'
 
 const router = express.Router()
 
@@ -14,5 +14,6 @@ router.post('/process-feedback-batch', processFeedbackBatch)
 router.post('/log/system', logSystemEvent)
 router.get('/model-metrics/:modelName', getModelMetrics)
 router.post('/model/register', registerModel)
+router.post('/model/evaluation', trackModelEvaluation)
 
 export default router
