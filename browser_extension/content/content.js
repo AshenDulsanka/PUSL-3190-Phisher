@@ -300,18 +300,21 @@
   
   // listen for messages from background script
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // handle warning messages (triggered when threshold is exceeded)
     if (request.action === 'showWarning') {
-      if (request.data.notificationLevel === 'high') {
+      // for high notification level AND phishing URLs, show the full overlay
+      if (request.data.notificationLevel === 'high' && request.data.score >= 30) {
         createWarningOverlay(request.data)
       } else {
-        // for low levels, show a notification instead of an overlay
+        // for all other cases, show small notification instead of an overlay
         createResultNotification(request.data)
       }
     }
     
+    // handle analysis result messages
     if (request.action === 'analysisResult') {
-      // only show a notification if the score is notable
-      if (request.data.score >= 30) {
+      // show small notification for suspicious URLs (20-29 score)
+      if (request.data.score >= 20 && request.data.score < 30) {
         createResultNotification(request.data)
       }
     }
