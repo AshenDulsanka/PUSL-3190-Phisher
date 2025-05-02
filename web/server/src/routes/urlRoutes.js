@@ -11,7 +11,7 @@ router.get('/recent', getRecentAnalyses)
 
 router.post('/save-analysis', saveURLAnalysis)
 router.post('/process-feedback-batch', processFeedbackBatch)
-router.post('/system-log', logSystemEvent)
+router.post('/log/system', logSystemEvent)
 router.get('/model-metrics/:modelName', getModelMetrics)
 
 export default router
