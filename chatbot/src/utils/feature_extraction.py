@@ -231,7 +231,13 @@ class FeatureExtractor:
                 logger.warning(f"Skipping unsafe URL: {url}")
                 return FeatureExtractor.get_default_html_features()
 
-             # ensures no redirection to internal resources
+            # resolve the URL to ensure it does not point to private/internal IPs
+            resolved_ip = FeatureExtractor.resolve_url_to_ip(url)
+            if not FeatureExtractor.is_ip_safe(resolved_ip):
+                logger.warning(f"Skipping URL with unsafe IP: {url} (resolved to {resolved_ip})")
+                return FeatureExtractor.get_default_html_features()
+            
+            # ensures no redirection to internal resources
             parsed_url = urlparse(url)
             domain = parsed_url.netloc
             
@@ -307,6 +313,25 @@ class FeatureExtractor:
             logger.debug(f"HTML analysis failed for {url}: {str(e)}")
             return FeatureExtractor.get_default_html_features()
     
+    @staticmethod
+    def resolve_url_to_ip(url: str) -> str:
+        try:
+            parsed_url = urlparse(url)
+            hostname = parsed_url.hostname
+            return socket.gethostbyname(hostname)
+        except Exception as e:
+            logger.error(f"Failed to resolve URL to IP: {url}, error: {str(e)}")
+            return ""
+
+    @staticmethod
+    def is_ip_safe(ip: str) -> bool:
+        try:
+            ip_obj = ipaddress.ip_address(ip)
+            return not (ip_obj.is_private or ip_obj.is_reserved or ip_obj.is_loopback)
+        except ValueError:
+            logger.error(f"Invalid IP address: {ip}")
+            return False
+
     @staticmethod
     def get_popular_brand_domains():
         return {
