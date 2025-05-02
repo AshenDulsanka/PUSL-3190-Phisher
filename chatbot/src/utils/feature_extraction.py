@@ -481,7 +481,7 @@ class FeatureExtractor:
             features = FeatureExtractor.get_default_features()
 
             # URL STRUCTURE FEATURES
-            features['UsingIP'] = 1 if bool(re.search(r'\d+\.\d+\.\d+\.\d+', url)) else 0
+            features['UsingIP'] = 1 if bool(re.search(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b', url)) else 0
             features['Symbol@'] = 1 if '@' in url else 0
             features['PrefixSuffix-'] = 1 if '-' in urlparse(url).netloc else 0
 
