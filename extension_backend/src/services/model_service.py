@@ -220,6 +220,6 @@ class ModelService:
                 "is_phishing": False,
                 "threat_score": 0,
                 "probability": 0.0,
-                "details": f"Error analyzing URL: {str(e)}",
+                "details": "An error occurred while analyzing the URL. Please try again later.",
                 "model_version": self.model_info["version"]
             }
