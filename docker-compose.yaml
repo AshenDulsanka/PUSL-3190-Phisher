@@ -19,7 +19,7 @@ services:
       - API_KEY=${API_KEY_BE}
       - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE_BE}
       # web server API for database operations
-      - WEB_SERVER_URL=${WEB_SERVER_URL}
+      - WEB_SERVER_API=${WEB_SERVER_API}
       - DB_SYNC_ENABLED=${DB_SYNC_ENABLED}
     restart: unless-stopped
     depends_on:
@@ -57,7 +57,7 @@ services:
       - REDIS_DB=${REDIS_DB}
       - REDIS_ENABLED=${REDIS_ENABLED}
       # web server API for database operations
-      - WEB_SERVER_URL=${WEB_SERVER_URL}
+      - WEB_SERVER_API=${WEB_SERVER_API}
       - DB_SYNC_ENABLED=${DB_SYNC_ENABLED}
     restart: unless-stopped
     depends_on:
