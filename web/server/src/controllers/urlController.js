@@ -52,7 +52,6 @@ export const analyzeUrl = async (req, res) => {
 
     // choose appropriate API endpoint based on analysis depth
     const apiEndpoint = deepAnalysis ? CHATBOT_API_ENDPOINT : EXTENSION_API_ENDPOINT
-    console.log(`Using API endpoint: ${apiEndpoint} for ${deepAnalysis ? 'deep' : 'standard'} analysis`)
 
     // call the ML API to analyze the URL
     const response = await axios.post(apiEndpoint, {
