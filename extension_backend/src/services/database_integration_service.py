@@ -5,7 +5,7 @@ from typing import Dict, Any, List
 import logging
 
 from ..logging_config import get_logger
-from ..config import WEB_SERVER_API
+from ..config import WEB_SERVER_DOCKER_API
 
 logger = get_logger(__name__)
 
@@ -39,7 +39,7 @@ class DatabaseIntegrationService:
             
             # make API call to save the data
             response = requests.post(
-                f"{WEB_SERVER_API}/url/internal/save-analysis",
+                f"{WEB_SERVER_DOCKER_API}/url/save-analysis",
                 json=data,
                 headers={"Content-Type": "application/json"}
             )
@@ -68,7 +68,7 @@ class DatabaseIntegrationService:
             
             # make API call to save the data
             response = requests.post(
-                f"{WEB_SERVER_API}/url/report",
+                f"{WEB_SERVER_DOCKER_API}/url/report",
                 json=data,
                 headers={"Content-Type": "application/json"}
             )
@@ -89,7 +89,7 @@ class DatabaseIntegrationService:
             }
             
             response = requests.post(
-                f"{WEB_SERVER_API}/log/system",
+                f"{WEB_SERVER_DOCKER_API}/url/log/system",
                 json=data,
                 headers={"Content-Type": "application/json"}
             )
@@ -110,7 +110,7 @@ class DatabaseIntegrationService:
             }
             
             response = requests.post(
-                f"{WEB_SERVER_API}/model/register",
+                f"{WEB_SERVER_DOCKER_API}/url/model/register",
                 json=data,
                 headers={"Content-Type": "application/json"}
             )
@@ -136,7 +136,7 @@ class DatabaseIntegrationService:
             }
             
             response = requests.post(
-                f"{WEB_SERVER_API}/model/evaluation",
+                f"{WEB_SERVER_DOCKER_API}/url/evaluation",
                 json=data,
                 headers={"Content-Type": "application/json"}
             )

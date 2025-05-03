@@ -34,7 +34,7 @@ class ModelService:
         self.scaler = None
         self.feature_list = []
         self.model_info = {
-            "name": "random_forest_v1",
+            "name": "browser_extension_random_forest",
             "type": "random_forest",
             "version": "1.0"
         }

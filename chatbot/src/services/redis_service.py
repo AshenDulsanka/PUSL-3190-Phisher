@@ -1,5 +1,6 @@
 import json
 import time
+from datetime import datetime
 from typing import Dict, Any, Optional, List
 import redis
 
@@ -7,6 +8,13 @@ from ..config import REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_ENA
 from ..logging_config import get_logger
 
 logger = get_logger(__name__)
+
+class DateTimeEncoder(json.JSONEncoder):
+    """JSON encoder that handles datetime objects by converting to ISO format"""
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
 
 class RedisService:
     """service for Redis caching and continuous learning data storage"""
@@ -71,7 +79,7 @@ class RedisService:
             
         try:
             key = f"{self.URL_CACHE_PREFIX}{url}"
-            value = json.dumps(analysis_result)
+            value = json.dumps(analysis_result, cls=DateTimeEncoder)
             
             self.client.set(key, value, ex=self.URL_CACHE_TTL)
             logger.debug(f"Cached analysis for URL: {url[:30]}...")

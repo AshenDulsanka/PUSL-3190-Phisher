@@ -9,18 +9,42 @@ import './App.css'
 // Custom theme
 const theme = createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: '#2BBE89', 
+      main: '#3f83f8',
     },
     secondary: {
-      main: '#FF5722', 
+      main: '#10b981',
+    },
+    error: {
+      main: '#ef4444',
+    },
+    warning: {
+      main: '#f59e0b',
+    },
+    success: {
+      main: '#10b981',
     },
     background: {
-      default: '#F5F5F5',
+      default: '#111827',
+      paper: '#1f2937',
     },
   },
   typography: {
-    fontFamily: "'Inter', 'Roboto', sans-serif",
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
+  shape: {
+    borderRadius: 10,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 600,
+        },
+      },
+    },
   },
 })
 

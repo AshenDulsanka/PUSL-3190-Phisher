@@ -14,6 +14,6 @@ router.post('/process-feedback-batch', processFeedbackBatch)
 router.post('/log/system', logSystemEvent)
 router.get('/model-metrics/:modelName', getModelMetrics)
 router.post('/model/register', registerModel)
-router.post('/model/evaluation', trackModelEvaluation)
+router.post('/evaluation', trackModelEvaluation)
 
 export default router
