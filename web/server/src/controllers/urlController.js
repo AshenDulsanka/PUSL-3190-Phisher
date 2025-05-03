@@ -132,19 +132,15 @@ export const analyzeUrl = async (req, res) => {
         hasAtSymbol: analysisResult.features?.Symbol === 1 || analysisResult.features?.has_at_symbol === 1 || false,
         hasDash: analysisResult.features?.['PrefixSuffix-'] === 1 || false,
         numSubdomains: analysisResult.features?.SubDomains || analysisResult.features?.num_subdomains || 0,
-        urlLength: analysisResult.features?.url_length || 
-                  analysisResult.deep_analysis?.content_analysis?.url_length || 0,
-        hasHTTPS: !(analysisResult.features?.uses_http === 1),
-        domainAge: analysisResult.features?.AgeofDomain === 1 || 
-                  (analysisResult.deep_analysis?.domain_age_days < 180) || false,
+        urlLength: analysisResult.features?.url_length || analysisResult.deep_analysis?.content_analysis?.url_length || 0,
+        hasHTTPS: url.startsWith('https://') || analysisResult.features?.uses_https === true || false,
+        domainAge: analysisResult.features?.AgeofDomain === 1 || (analysisResult.deep_analysis?.domain_age_days < 180) || false,
         hasSpecialChars: analysisResult.features?.AbnormalURL === 1 || false,
-        isTyposquatting: analysisResult.features?.IsTyposquatting === 1 || 
-                         analysisResult.deep_analysis?.typosquatting_info?.is_typosquatting || false,
+        isTyposquatting: analysisResult.features?.IsTyposquatting === 1 || analysisResult.deep_analysis?.typosquatting_info?.is_typosquatting || false,
         hasSuspiciousRedirect: analysisResult.features?.RequestURL === 1 || false,
         hasIframe: analysisResult.deep_analysis?.content_analysis?.iframe_count > 0 || false,
         suspiciousURL: analysisResult.features?.suspiciousURL || analysisResult.threat_score > 50,
-        suspiciousDomain: analysisResult.features?.BrandInSubdomain === 1 || 
-                          analysisResult.deep_analysis?.brand_impersonation?.detected || false
+        suspiciousDomain: analysisResult.features?.BrandInSubdomain === 1 || analysisResult.deep_analysis?.brand_impersonation?.detected || false
       }
     })
   } catch (error) {

@@ -93,7 +93,7 @@ const Results = () => {
     hasAtSymbol: 'Contains @ symbol in URL',
     hasDash: 'Contains dashes in domain name',
     numSubdomains: 'Multiple subdomains',
-    hasHTTPS: 'Missing secure HTTPS connection',
+    hasHTTPS: 'Secure HTTPS connection',
     domainAge: 'Recently registered domain',
     hasIframe: 'Contains hidden iframe elements',
     hasPopup: 'Uses popup windows',
@@ -250,15 +250,24 @@ const Results = () => {
                 <ListItem key={key} sx={{ py: 0.5 }}>
                   <ListItemIcon sx={{ minWidth: 36 }}>
                     {typeof value === 'boolean' ? (
-                      value ? 
-                        <CheckIcon color={key === 'hasHTTPS' ? 'success' : 'error'} /> : 
-                        <CloseIcon color={key === 'hasHTTPS' ? 'error' : 'inherit'} />
+                      key === 'hasHTTPS' ? (
+                        value ? 
+                          <CheckIcon color="success" /> : 
+                          <CloseIcon color="error" />
+                      ) : (
+                        value ? 
+                          <CheckIcon color="error" /> : 
+                          <CloseIcon color="success" />
+                      )
                     ) : (
                       <HelpOutlineIcon color="warning" />
                     )}
                   </ListItemIcon>
                   <ListItemText 
-                    primary={featureExplanations[key] || key}
+                    // update display text for hasHTTPS to show correct meaning based on value
+                    primary={key === 'hasHTTPS' && !value ? 
+                      'Missing secure HTTPS connection' : 
+                      featureExplanations[key] || key}
                     secondary={typeof value === 'number' ? `Value: ${value}` : null}
                   />
                 </ListItem>
@@ -276,7 +285,7 @@ const Results = () => {
 
         <Divider sx={{ my: 4 }} />
 
-        {/* iser Education */}
+        {/* user education */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
             How to Protect Yourself from Phishing
