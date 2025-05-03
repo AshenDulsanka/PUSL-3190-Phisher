@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 })
 
 // global error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack)
   res.status(500).json({
     error: 'Server error',
@@ -53,12 +53,12 @@ app.use((err, req, res, next) => {
 
 // start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  console.info(`Server running on port ${PORT}`)
 })
 
 // handle shutdown
 process.on('SIGINT', async () => {
   await prisma.$disconnect()
-  console.log('Database connection closed')
+  console.info('Database connection closed')
   process.exit(0)
 })

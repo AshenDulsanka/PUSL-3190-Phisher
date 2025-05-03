@@ -170,7 +170,7 @@ export const trackModelEvaluation = async (req, res) => {
           url,
           isPhishing: Boolean(actual_label),
           suspiciousScore: predicted_score * 100, // 0-1 to 0-100
-          analysisSources: ["evaluation"]
+          analysisSources: ['evaluation']
         }
       })
     }

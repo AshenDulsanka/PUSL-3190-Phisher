@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import databaseService from '../services/databaseService.js'
 
 export const requireAdmin = async (req, res, next) => {
   try {
