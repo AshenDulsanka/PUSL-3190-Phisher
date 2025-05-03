@@ -10,11 +10,12 @@ import AdminLogin from './pages/admin/Login'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/Dashboard'
 import SystemLogs from './pages/admin/SystemLogs'
+import Detections from './pages/admin/Detections'
 import ModelStats from './pages/admin/ModelStats'
 
 import './App.css'
 
-// Custom theme
+// custom theme
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -65,15 +66,16 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          {/* Public routes */}
+          {/* public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/results" element={<Results />} />
           
-          {/* Admin routes */}
+          {/* admin routes */}
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="logs" element={<SystemLogs />} />
+            <Route path="detections" element={<Detections />} />
             <Route path="models" element={<ModelStats />} />
           </Route>
           

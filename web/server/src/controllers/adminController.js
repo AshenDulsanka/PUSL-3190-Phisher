@@ -163,7 +163,7 @@ export const getModelEvaluations = async (req, res) => {
     const evaluations = await prisma.modelEvaluation.findMany({
       where: { modelId: parseInt(modelId) },
       orderBy: { evaluatedAt: 'desc' },
-      take: 20,
+      take: 50,
       include: {
         url: {
           select: {
@@ -178,5 +178,70 @@ export const getModelEvaluations = async (req, res) => {
   } catch (error) {
     console.error('Model evaluations error:', error)
     res.status(500).json({ message: 'Error retrieving model evaluations' })
+  }
+}
+
+export const updateModel = async (req, res) => {
+  try {
+    const { modelId } = req.params
+    const { accuracy, precision, recall, f1Score, areaUnderROC, feedbackIncorporated } = req.body
+    
+    if (!modelId || isNaN(parseInt(modelId))) {
+      return res.status(400).json({ message: 'Valid model ID is required' })
+    }
+    
+    const updatedModel = await prisma.mLModel.update({
+      where: { id: parseInt(modelId) },
+      data: {
+        accuracy,
+        precision,
+        recall,
+        f1Score,
+        areaUnderROC,
+        feedbackIncorporated,
+        lastUpdated: new Date()
+      }
+    })
+    
+    // log model update
+    await prisma.systemLog.create({
+      data: {
+        component: 'admin',
+        logLevel: 'info',
+        message: `Model ${updatedModel.name} metrics updated by admin`,
+        timestamp: new Date(),
+        metadata: JSON.stringify({
+          modelId: updatedModel.id,
+          changes: {
+            accuracy,
+            precision,
+            recall,
+            f1Score,
+            areaUnderROC,
+            feedbackIncorporated
+          }
+        })
+      }
+    })
+    
+    res.status(200).json(updatedModel)
+  } catch (error) {
+    console.error('Model update error:', error)
+    res.status(500).json({ message: 'Error updating model' })
+  }
+}
+
+export const getPhishingUrls = async (req, res) => {
+  try {
+    const phishingUrls = await prisma.uRL.findMany({
+      where: { isPhishing: true },
+      orderBy: { createdAt: 'desc' },
+      take: 100
+    })
+    
+    res.status(200).json(phishingUrls)
+  } catch (error) {
+    console.error('Phishing URLs error:', error)
+    res.status(500).json({ message: 'Error retrieving phishing URLs' })
   }
 }

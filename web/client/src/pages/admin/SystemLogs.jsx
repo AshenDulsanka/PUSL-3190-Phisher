@@ -18,11 +18,17 @@ import {
   MenuItem,
   TextField,
   Grid,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton
 } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import ClearIcon from '@mui/icons-material/Clear'
+import CloseIcon from '@mui/icons-material/Close'
 
 const SystemLogs = () => {
   const [logs, setLogs] = useState([])
@@ -35,6 +41,10 @@ const SystemLogs = () => {
     logLevel: '',
     search: ''
   })
+  
+  // Add state for the metadata dialog
+  const [metadataDialogOpen, setMetadataDialogOpen] = useState(false)
+  const [selectedMetadata, setSelectedMetadata] = useState(null)
   
   const fetchLogs = async () => {
     try {
@@ -104,6 +114,25 @@ const SystemLogs = () => {
     }
   }
   
+  // Handle showing metadata in dialog
+  const handleViewMetadata = (metadata) => {
+    try {
+      // Attempt to parse the metadata if it's a JSON string
+      const parsedMetadata = typeof metadata === 'string' ? JSON.parse(metadata) : metadata;
+      setSelectedMetadata(parsedMetadata);
+    } catch {
+      // If parsing fails, just use the original string
+      setSelectedMetadata(metadata);
+    }
+    setMetadataDialogOpen(true);
+  };
+  
+  // Handle closing metadata dialog
+  const handleCloseMetadataDialog = () => {
+    setMetadataDialogOpen(false);
+    setSelectedMetadata(null);
+  };
+  
   if (loading && logs.length === 0) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
@@ -124,95 +153,79 @@ const SystemLogs = () => {
   
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
         System Logs
       </Typography>
       
       {/* filter controls */}
-      <Paper sx={{ mb: 3, p: 2, borderRadius: 2 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} md={3}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="component-filter-label">Component</InputLabel>
-              <Select
-                labelId="component-filter-label"
-                id="component-filter"
-                name="component"
-                value={filters.component}
-                onChange={handleFilterChange}
-                label="Component"
-              >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="chatbot">Chatbot</MenuItem>
-                <MenuItem value="extension_backend">Extension Backend</MenuItem>
-                <MenuItem value="web_server">Web Server</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <FormControl fullWidth size="small">
-              <InputLabel id="level-filter-label">Log Level</InputLabel>
-              <Select
-                labelId="level-filter-label"
-                id="level-filter"
-                name="logLevel"
-                value={filters.logLevel}
-                onChange={handleFilterChange}
-                label="Log Level"
-              >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="info">Info</MenuItem>
-                <MenuItem value="warning">Warning</MenuItem>
-                <MenuItem value="error">Error</MenuItem>
-                <MenuItem value="debug">Debug</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <TextField
-              fullWidth
-              size="small"
-              name="search"
-              label="Search Messages"
-              value={filters.search}
-              onChange={handleFilterChange}
-            />
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button
-                variant="contained"
-                startIcon={<FilterAltIcon />}
-                onClick={applyFilters}
-                sx={{ flex: 1 }}
-              >
-                Filter
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<ClearIcon />}
-                onClick={clearFilters}
-              >
-                Clear
-              </Button>
-              <Button
-                variant="outlined"
-                startIcon={<RefreshIcon />}
-                onClick={fetchLogs}
-              >
-                Refresh
-              </Button>
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
+      <Box sx={{ 
+        mb: 3, 
+        p: 1.5,
+        borderRadius: 2, 
+        bgcolor: 'background.paper',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1
+      }}>
+        <FormControl size="small" sx={{ width: 118 }}>
+          <InputLabel id="level-filter-label">Log Level</InputLabel>
+          <Select
+            labelId="level-filter-label"
+            id="level-filter"
+            name="logLevel"
+            value={filters.logLevel}
+            onChange={handleFilterChange}
+            label="Log Level"
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="info">Info</MenuItem>
+            <MenuItem value="warning">Warning</MenuItem>
+            <MenuItem value="error">Error</MenuItem>
+            <MenuItem value="debug">Debug</MenuItem>
+          </Select>
+        </FormControl>
+        
+        <TextField
+          size="small"
+          name="search"
+          placeholder="Search Messages"
+          value={filters.search}
+          onChange={handleFilterChange}
+          sx={{ flex: 1 }}
+          InputProps={{ sx: { bgcolor: 'background.default' } }}
+        />
+        
+        <Button
+          variant="contained"
+          startIcon={<FilterAltIcon />}
+          onClick={applyFilters}
+          sx={{ height: 40 }}
+        >
+          FILTER
+        </Button>
+        
+        <Button
+          variant="outlined"
+          startIcon={<ClearIcon />}
+          onClick={clearFilters}
+          sx={{ height: 40 }}
+        >
+          CLEAR
+        </Button>
+        
+        <Button
+          variant="outlined"
+          startIcon={<RefreshIcon />}
+          onClick={fetchLogs}
+          sx={{ height: 40 }}
+        >
+          REFRESH
+        </Button>
+      </Box>
       
-      {/* logs table */}
+      {/* logs table - removed maxHeight to match other tables */}
       <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
-        <TableContainer sx={{ maxHeight: 600 }}>
+        <TableContainer>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -247,7 +260,7 @@ const SystemLogs = () => {
                         <Button 
                           size="small" 
                           variant="outlined" 
-                          onClick={() => alert(log.metadata)}
+                          onClick={() => handleViewMetadata(log.metadata)}
                         >
                           View
                         </Button>
@@ -272,7 +285,7 @@ const SystemLogs = () => {
         </TableContainer>
         
         <TablePagination
-          rowsPerPageOptions={[10, 25, 50, 100]}
+          rowsPerPageOptions={[10, 25]}
           component="div"
           count={logs.length}
           rowsPerPage={rowsPerPage}
@@ -281,6 +294,44 @@ const SystemLogs = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      
+      {/* Metadata dialog */}
+      <Dialog 
+        open={metadataDialogOpen} 
+        onClose={handleCloseMetadataDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          Log Metadata
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseMetadataDialog}
+            sx={{ position: 'absolute', right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          {selectedMetadata && (
+            <Box sx={{ 
+              backgroundColor: 'background.paper', 
+              p: 2, 
+              borderRadius: 1,
+              fontFamily: 'monospace',
+              whiteSpace: 'pre-wrap',
+              overflowX: 'auto'
+            }}>
+              {typeof selectedMetadata === 'object' 
+                ? JSON.stringify(selectedMetadata, null, 2)
+                : selectedMetadata}
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseMetadataDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   )
 }

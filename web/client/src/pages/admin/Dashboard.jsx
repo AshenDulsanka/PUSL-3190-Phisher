@@ -6,14 +6,13 @@ import {
   Typography,
   CircularProgress,
   Card,
-  CardContent,
-  Divider
+  CardContent
 } from '@mui/material'
 import LanguageIcon from '@mui/icons-material/Language'
 import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import { Line } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -41,11 +40,11 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [recentPhishing, setRecentPhishing] = useState([])
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
+        setLoading(true)
         const token = localStorage.getItem('adminToken')
         if (!token) throw new Error('Authentication required')
 
@@ -57,16 +56,7 @@ const AdminDashboard = () => {
         if (!statsResponse.ok) throw new Error('Failed to fetch stats')
         const statsData = await statsResponse.json()
         
-        // fetch recent phishing URLs
-        const recentResponse = await fetch('/api/url/admin/recent-phishing', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        
-        if (!recentResponse.ok) throw new Error('Failed to fetch recent data')
-        const recentData = await recentResponse.json()
-        
         setStats(statsData)
-        setRecentPhishing(recentData)
       } catch (err) {
         console.error('Dashboard data error:', err)
         setError(err.message)
@@ -96,20 +86,20 @@ const AdminDashboard = () => {
     )
   }
   
-  // mock data for chart
+  // chart data and options
   const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: ['January', 'February', 'March', 'April', 'May'],
     datasets: [
       {
         label: 'URLs Scanned',
-        data: [650, 590, 800, 810, 760, 830, 900],
+        data: [650, 590, 800, 810, 900],
         borderColor: '#3f83f8',
         backgroundColor: 'rgba(63, 131, 248, 0.1)',
         tension: 0.4
       },
       {
         label: 'Phishing URLs',
-        data: [230, 190, 300, 410, 260, 230, 400],
+        data: [230, 190, 300, 410, 400],
         borderColor: '#ef4444',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
         tension: 0.4
@@ -119,6 +109,7 @@ const AdminDashboard = () => {
   
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'top',
@@ -144,13 +135,13 @@ const AdminDashboard = () => {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center' }}>
         Admin Dashboard
       </Typography>
       
-      {/* Stats summary cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={4} lg={2.4}>
+      {/* stats summary cards */}
+      <Grid container spacing={2} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={2.4}>
           <StatCard 
             title="Total URLs" 
             value={stats?.totalUrls || 0} 
@@ -158,7 +149,7 @@ const AdminDashboard = () => {
             color="#3f83f8"
           />
         </Grid>
-        <Grid item xs={12} sm={6} lg={2.4}>
+        <Grid item xs={12} md={2.4}>
           <StatCard 
             title="Phishing Detected" 
             value={stats?.phishingUrls || 0} 
@@ -166,7 +157,7 @@ const AdminDashboard = () => {
             color="#f59e0b"
           />
         </Grid>
-        <Grid item xs={12} sm={6} lg={2.4}>
+        <Grid item xs={12} md={2.4}>
           <StatCard 
             title="False Positives" 
             value={stats?.falsePositives || 0} 
@@ -174,7 +165,7 @@ const AdminDashboard = () => {
             color="#ef4444"
           />
         </Grid>
-        <Grid item xs={12} sm={6} lg={2.4}>
+        <Grid item xs={12} md={2.4}>
           <StatCard 
             title="False Negatives" 
             value={stats?.falseNegatives || 0} 
@@ -182,7 +173,7 @@ const AdminDashboard = () => {
             color="#9333ea"
           />
         </Grid>
-        <Grid item xs={12} sm={6} lg={2.4}>
+        <Grid item xs={12} md={2.4}>
           <StatCard 
             title="Accuracy" 
             value={`${stats?.accuracy || 0}%`} 
@@ -192,58 +183,13 @@ const AdminDashboard = () => {
         </Grid>
       </Grid>
       
-      {/* charts */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>Detection Trends</Typography>
-            <Line data={chartData} options={chartOptions} height={80} />
-          </Paper>
-        </Grid>
-      </Grid>
-      
-      {/* recent phishing URLs */}
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>Recent Phishing Detections</Typography>
-            <Box sx={{ width: '100%', overflow: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                  <tr>
-                    <th style={{ textAlign: 'left', padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>URL</th>
-                    <th style={{ textAlign: 'left', padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Detection Time</th>
-                    <th style={{ textAlign: 'right', padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentPhishing.map((item, index) => (
-                    <tr key={index}>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.05)', maxWidth: '350px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {item.url}
-                      </td>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                        {new Date(item.createdAt).toLocaleString()}
-                      </td>
-                      <td style={{ padding: '12px 8px', borderBottom: '1px solid rgba(255,255,255,0.05)', textAlign: 'right' }}>
-                        <span style={{ 
-                          backgroundColor: getScoreColor(item.suspiciousScore), 
-                          padding: '4px 8px', 
-                          borderRadius: '12px',
-                          color: '#fff',
-                          fontSize: '0.875rem'
-                        }}>
-                          {item.suspiciousScore}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
+      {/* detection trends chart */}
+      <Paper sx={{ p: 4, borderRadius: 2, mb: 4 }}>
+        <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>Detection Trends</Typography>
+        <Box sx={{ height: 400 }}>
+          <Line data={chartData} options={chartOptions} />
+        </Box>
+      </Paper>
     </Box>
   )
 }
@@ -275,13 +221,6 @@ const StatCard = ({ title, value, icon, color }) => {
       </CardContent>
     </Card>
   )
-}
-
-// helper function to get color based on score
-const getScoreColor = (score) => {
-  if (score >= 80) return '#ef4444'  // red
-  if (score >= 50) return '#f59e0b'  // orange
-  return '#10b981' // green
 }
 
 export default AdminDashboard

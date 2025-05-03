@@ -1,5 +1,7 @@
 import express from 'express'
-import { login, getStats, getRecentPhishing, getLogs, getModels, getModelEvaluations } from '../controllers/adminController.js'
+import { 
+    login, getStats, getRecentPhishing, getLogs, getModels, getModelEvaluations, updateModel, getPhishingUrls 
+} from '../controllers/adminController.js'
 import { requireAdmin } from '../middleware/auth.js'
 
 const router = express.Router()
@@ -13,5 +15,7 @@ router.get('/recent-phishing', requireAdmin, getRecentPhishing)
 router.get('/logs', requireAdmin, getLogs)
 router.get('/models', requireAdmin, getModels)
 router.get('/model/:modelId/evaluations', requireAdmin, getModelEvaluations)
+router.put('/model/:modelId/update', requireAdmin, updateModel)
+router.get('/phishing-urls', requireAdmin, getPhishingUrls)
 
 export default router
