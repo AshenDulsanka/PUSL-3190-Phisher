@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client'
 
 // import routes
 import urlRoutes from './routes/urlRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 
 // initialize
 dotenv.config()
@@ -25,6 +26,7 @@ app.use(morgan('dev'))
 
 // routes
 app.use('/api/url', urlRoutes)
+app.use('/api/url/admin', adminRoutes)
 
 // health check endpoint
 app.get('/health', (req, res) => {
@@ -36,7 +38,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ 
     message: 'Phisher Chatbot API',
     version: '1.0.0',
-    endpoints: ['/health', '/api/auth']
+    endpoints: ['/health', '/api/url', '/api/url/admin']
   })
 })
 

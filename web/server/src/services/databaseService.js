@@ -114,17 +114,33 @@ class DatabaseService {
   // system logging
   async logSystemEvent(component, level, message, metadata = {}) {
     try {
-      return await this.prisma.systemLog.create({
+      console.log(`Logging system event: ${component} - ${level} - ${message}`)
+      
+      // ensure metadata is properly serialized if its an object
+      let metadataString = null
+      if (metadata) {
+        try {
+          metadataString = typeof metadata === 'string' ? metadata : JSON.stringify(metadata)
+        } catch (e) {
+          console.error('Error serializing metadata:', e)
+          metadataString = JSON.stringify({ error: 'Could not serialize original metadata' })
+        }
+      }
+  
+      const result = await this.prisma.systemLog.create({
         data: {
           component,
           logLevel: level,
           message,
-          metadata: metadata ? JSON.stringify(metadata) : null
+          metadata: metadataString
         }
       })
+      
+      console.log('Log saved with ID:', result.id)
+      return result
     } catch (error) {
       console.error('Error logging system event:', error)
-      // don't throw - this is a logging function
+      // dont throw because this is a logging function
       return null
     }
   }

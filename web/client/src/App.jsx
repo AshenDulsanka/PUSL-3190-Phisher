@@ -4,6 +4,13 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Home from './pages/Home'
 import Results from './pages/Results'
 import NotFound from './pages/NotFound'
+
+// admin pages
+import AdminLogin from './pages/admin/Login'
+import AdminLayout from './components/admin/AdminLayout'
+import AdminDashboard from './pages/admin/Dashboard'
+import SystemLogs from './pages/admin/SystemLogs'
+
 import './App.css'
 
 // Custom theme
@@ -33,15 +40,18 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
   },
-  shape: {
-    borderRadius: 10,
-  },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
-          fontWeight: 600,
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
         },
       },
     },
@@ -54,8 +64,18 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/results" element={<Results />} />
+          
+          {/* Admin routes */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="logs" element={<SystemLogs />} />
+          </Route>
+          
+          {/* 404 route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
