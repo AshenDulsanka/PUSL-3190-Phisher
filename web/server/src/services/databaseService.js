@@ -114,8 +114,6 @@ class DatabaseService {
   // system logging
   async logSystemEvent(component, level, message, metadata = {}) {
     try {
-      console.log(`Logging system event: ${component} - ${level} - ${message}`)
-      
       // ensure metadata is properly serialized
       let metadataString = null
       if (metadata) {
@@ -140,7 +138,6 @@ class DatabaseService {
         })
       })
       
-      console.log('Log saved with ID:', result.id)
       return result
     } catch (error) {
       console.error('Error logging system event:', error)

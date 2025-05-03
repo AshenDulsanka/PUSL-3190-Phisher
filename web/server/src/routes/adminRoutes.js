@@ -1,6 +1,14 @@
 import express from 'express'
 import { 
-    login, getStats, getRecentPhishing, getLogs, getModels, getModelEvaluations, updateModel, getPhishingUrls 
+    login, 
+    getStats, 
+    getRecentPhishing, 
+    getLogs, 
+    getModels, 
+    getModelEvaluations, 
+    updateModel, 
+    getPhishingUrls,
+    getTrends 
 } from '../controllers/adminController.js'
 import { requireAdmin } from '../middleware/auth.js'
 import rateLimit from 'express-rate-limit'
@@ -25,5 +33,6 @@ router.get('/models', adminRateLimiter, requireAdmin, getModels)
 router.get('/model/:modelId/evaluations', adminRateLimiter, requireAdmin, getModelEvaluations)
 router.put('/model/:modelId/update', adminRateLimiter, requireAdmin, updateModel)
 router.get('/phishing-urls', adminRateLimiter, requireAdmin, getPhishingUrls)
+router.get('/trends', adminRateLimiter, requireAdmin, getTrends)
 
 export default router

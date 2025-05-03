@@ -25,7 +25,7 @@ import {
   Legend
 } from 'chart.js'
 
-// register Chart.js components
+// register chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -38,8 +38,9 @@ ChartJS.register(
 
 const DashboardComp = () => {
   const [stats, setStats] = useState(null)
+  const [trendData, setTrendData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [, setError] = useState(null)
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -47,16 +48,31 @@ const DashboardComp = () => {
         setLoading(true)
         const token = localStorage.getItem('adminToken')
         if (!token) throw new Error('Authentication required')
-
-        // fetch stats
-        const statsResponse = await fetch('/api/url/admin/stats', {
-          headers: { Authorization: `Bearer ${token}` }
+  
+        // fetch general stats
+        const statsResponse = await fetch(`/api/url/admin/stats`, {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate' 
+          }
         })
         
         if (!statsResponse.ok) throw new Error('Failed to fetch stats')
         const statsData = await statsResponse.json()
-        
         setStats(statsData)
+        
+        // fetch trend data for chart
+        const trendsResponse = await fetch(`/api/url/admin/trends`, {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate' 
+          }
+        })
+        
+        if (!trendsResponse.ok) throw new Error('Failed to fetch trend data')
+        const trendsData = await trendsResponse.json()
+        setTrendData(trendsData)
+
       } catch (err) {
         console.error('Dashboard data error:', err)
         setError(err.message)
@@ -68,46 +84,53 @@ const DashboardComp = () => {
     fetchDashboardData()
   }, [])
   
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress />
-      </Box>
-    )
-  }
-  
-  if (error) {
-    return (
-      <Box sx={{ mt: 3 }}>
-        <Typography variant="h6" color="error" align="center">
-          {error}
-        </Typography>
-      </Box>
-    )
-  }
-  
-  // chart data and options
-  const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
-    datasets: [
-      {
-        label: 'URLs Scanned',
-        data: [650, 590, 800, 810, 900],
-        borderColor: '#3f83f8',
-        backgroundColor: 'rgba(63, 131, 248, 0.1)',
-        tension: 0.4
-      },
-      {
-        label: 'Phishing URLs',
-        data: [230, 190, 300, 410, 400],
-        borderColor: '#ef4444',
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-        tension: 0.4
+  // create chart data from the API trend data instead of hardcoded values
+  const chartData = React.useMemo(() => {
+    if (!trendData || !trendData.labels || !trendData.urlsScanned || !trendData.phishingUrls) {
+      return {
+        labels: [],
+        datasets: [
+          {
+            label: 'URLs Scanned',
+            data: [],
+            borderColor: '#3f83f8',
+            backgroundColor: 'rgba(63, 131, 248, 0.1)',
+            tension: 0.4
+          },
+          {
+            label: 'Phishing URLs',
+            data: [],
+            borderColor: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            tension: 0.4
+          }
+        ]
       }
-    ]
-  }
+    }
+    
+    return {
+      labels: trendData.labels,
+      datasets: [
+        {
+          label: 'URLs Scanned',
+          data: trendData.urlsScanned,
+          borderColor: '#3f83f8',
+          backgroundColor: 'rgba(63, 131, 248, 0.1)',
+          tension: 0.4
+        },
+        {
+          label: 'Phishing URLs',
+          data: trendData.phishingUrls,
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          tension: 0.4
+        }
+      ]
+    }
+  }, [trendData])
   
   const chartOptions = {
+    // Keep your existing options
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -116,6 +139,10 @@ const DashboardComp = () => {
       },
       title: {
         display: false
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false
       }
     },
     scales: {
@@ -185,10 +212,18 @@ const DashboardComp = () => {
       
       {/* detection trends chart */}
       <Paper sx={{ p: 4, borderRadius: 2, mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>Detection Trends</Typography>
-        <Box sx={{ height: 400 }}>
-          <Line data={chartData} options={chartOptions} />
-        </Box>
+          <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>Detection Trends</Typography>
+          <Box sx={{ height: 400 }}>
+              {trendData ? (
+              <Line data={chartData} options={chartOptions} />
+              ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <Typography variant="body1" color="text.secondary">
+                  {loading ? 'Loading trend data...' : 'No trend data available'}
+                  </Typography>
+              </Box>
+              )}
+          </Box>
       </Paper>
     </Box>
   )

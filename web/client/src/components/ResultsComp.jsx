@@ -31,8 +31,6 @@ const ResultsComp = () => {
     
     setResult(location.state.result)
     
-    console.log('Features received:', location.state.result.features)
-    
     // process features
     const significantFeatures = {}
     const result = location.state.result
@@ -71,7 +69,6 @@ const ResultsComp = () => {
     }
     
     setVisibleFeatures(significantFeatures)
-    console.log('Significant features after processing:', significantFeatures)
   }, [location, navigate])
 
   const handleReportUrl = async () => {

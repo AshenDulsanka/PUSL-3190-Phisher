@@ -49,7 +49,6 @@ const AdminLoginComp = () => {
       
       // debug response
       const responseText = await response.text()
-      console.log('Login response:', response.status, responseText)
       
       if (!response.ok) {
         throw new Error(responseText || 'Login failed')
