@@ -10,6 +10,7 @@ import AdminLogin from './pages/admin/Login'
 import AdminLayout from './components/admin/AdminLayout'
 import AdminDashboard from './pages/admin/Dashboard'
 import SystemLogs from './pages/admin/SystemLogs'
+import ModelStats from './pages/admin/ModelStats'
 
 import './App.css'
 
@@ -73,6 +74,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="logs" element={<SystemLogs />} />
+            <Route path="models" element={<ModelStats />} />
           </Route>
           
           {/* 404 route */}

@@ -114,8 +114,6 @@ class DatabaseService {
   // system logging
   async logSystemEvent(component, level, message, metadata = {}) {
     try {
-      console.log(`Logging system event: ${component} - ${level} - ${message}`)
-      
       // ensure metadata is properly serialized if its an object
       let metadataString = null
       if (metadata) {
@@ -127,20 +125,22 @@ class DatabaseService {
         }
       }
   
+      // make sure we're directly using the Prisma client correctly
       const result = await this.prisma.systemLog.create({
         data: {
           component,
           logLevel: level,
           message,
-          metadata: metadataString
+          metadata: metadataString,
+          timestamp: new Date() // explicitly set timestamp
         }
       })
       
-      console.log('Log saved with ID:', result.id)
       return result
     } catch (error) {
       console.error('Error logging system event:', error)
-      // dont throw because this is a logging function
+      console.error('Error details:', error.message)
+      // dont throw - this is a logging function
       return null
     }
   }

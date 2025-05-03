@@ -75,15 +75,22 @@ export const getStats = async (req, res) => {
       where: { reportType: 'false_positive' }
     })
     
-    // calculate accuracy 
-    const accuracy = totalUrls > 0 
-      ? Math.round(((totalUrls - falsePositives) / totalUrls) * 100) 
+    // get false negatives (reported as false negative or missed phishing)
+    const falseNegatives = await prisma.uRLReport.count({
+      where: { reportType: 'false_negative' }
+    })
+    
+    // calculate accuracy
+    const totalReports = falsePositives + falseNegatives
+    const accuracy = totalUrls > 0 && totalReports > 0
+      ? Math.round(((totalUrls - totalReports) / totalUrls) * 100)
       : 100
     
     res.status(200).json({
       totalUrls,
       phishingUrls,
       falsePositives,
+      falseNegatives,
       accuracy
     })
   } catch (error) {
@@ -129,5 +136,47 @@ export const getLogs = async (req, res) => {
   } catch (error) {
     console.error('Logs error:', error)
     res.status(500).json({ message: 'Error retrieving logs' })
+  }
+}
+
+export const getModels = async (req, res) => {
+  try {
+    const models = await prisma.mLModel.findMany({
+      orderBy: { trainedAt: 'desc' }
+    })
+    
+    res.status(200).json(models)
+  } catch (error) {
+    console.error('Models error:', error)
+    res.status(500).json({ message: 'Error retrieving models' })
+  }
+}
+
+export const getModelEvaluations = async (req, res) => {
+  try {
+    const { modelId } = req.params
+    
+    if (!modelId || isNaN(parseInt(modelId))) {
+      return res.status(400).json({ message: 'Valid model ID is required' })
+    }
+    
+    const evaluations = await prisma.modelEvaluation.findMany({
+      where: { modelId: parseInt(modelId) },
+      orderBy: { evaluatedAt: 'desc' },
+      take: 20,
+      include: {
+        url: {
+          select: {
+            url: true,
+            isPhishing: true
+          }
+        }
+      }
+    })
+    
+    res.status(200).json(evaluations)
+  } catch (error) {
+    console.error('Model evaluations error:', error)
+    res.status(500).json({ message: 'Error retrieving model evaluations' })
   }
 }

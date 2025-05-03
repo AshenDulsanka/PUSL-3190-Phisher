@@ -67,11 +67,8 @@ const AdminLayout = () => {
   
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
-    { text: 'URLs', icon: <LanguageIcon />, path: '/admin/urls' },
     { text: 'System Logs', icon: <WarningIcon />, path: '/admin/logs' },
     { text: 'Model Stats', icon: <AssessmentIcon />, path: '/admin/models' },
-    { text: 'User Management', icon: <PeopleIcon />, path: '/admin/users' },
-    { text: 'System Settings', icon: <SettingsIcon />, path: '/admin/settings' }
   ]
   
   return (
@@ -96,7 +93,16 @@ const AdminLayout = () => {
             <MenuIcon />
           </IconButton>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <SecurityIcon sx={{ mr: 1, color: 'primary.main' }} />
+            <img 
+              src="/logo-bg.png" 
+              alt="Phisher Logo" 
+              style={{ 
+                width: 32, 
+                height: 32, 
+                marginRight: '10px',
+                objectFit: 'contain'
+              }}
+            />
             <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold' }}>
               Phisher Admin
             </Typography>

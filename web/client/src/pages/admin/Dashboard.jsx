@@ -13,6 +13,7 @@ import LanguageIcon from '@mui/icons-material/Language'
 import WarningIcon from '@mui/icons-material/Warning'
 import ErrorIcon from '@mui/icons-material/Error'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import ReportProblemIcon from '@mui/icons-material/ReportProblem'
 import { Line } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
@@ -149,7 +150,7 @@ const AdminDashboard = () => {
       
       {/* Stats summary cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={4} lg={2.4}>
           <StatCard 
             title="Total URLs" 
             value={stats?.totalUrls || 0} 
@@ -157,7 +158,7 @@ const AdminDashboard = () => {
             color="#3f83f8"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={2.4}>
           <StatCard 
             title="Phishing Detected" 
             value={stats?.phishingUrls || 0} 
@@ -165,7 +166,7 @@ const AdminDashboard = () => {
             color="#f59e0b"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={2.4}>
           <StatCard 
             title="False Positives" 
             value={stats?.falsePositives || 0} 
@@ -173,7 +174,15 @@ const AdminDashboard = () => {
             color="#ef4444"
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} lg={2.4}>
+          <StatCard 
+            title="False Negatives" 
+            value={stats?.falseNegatives || 0} 
+            icon={<ReportProblemIcon />} 
+            color="#9333ea"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={2.4}>
           <StatCard 
             title="Accuracy" 
             value={`${stats?.accuracy || 0}%`} 
