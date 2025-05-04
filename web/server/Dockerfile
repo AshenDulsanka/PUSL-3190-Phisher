@@ -24,4 +24,4 @@ ENV NODE_ENV=production
 EXPOSE 8080
 
 # start the application
-CMD ["sh", "-c", "npx prisma generate --schema=/app/database/prisma/schema.prisma && npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
+CMD ["sh", "-c", "ls -la /app && ls -la /app/database && ls -la /app/database/prisma && echo 'Starting server...' && npx prisma generate --schema=/app/database/prisma/schema.prisma && npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
