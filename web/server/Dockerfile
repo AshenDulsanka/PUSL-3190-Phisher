@@ -6,17 +6,19 @@ WORKDIR /app
 COPY package*.json ./
 
 # install dependencies
-RUN npm ci --production
+RUN npm install --omit=dev
 
 # copy source code
 COPY . .
 
+# environment variables
 ENV NODE_ENV=production
 
 # generate Prisma client
 RUN npx prisma generate --schema=/app/database/prisma/schema.prisma
 
+# expose the application port
 EXPOSE 8080
 
-# use nodemon for development
+# start the application
 CMD ["sh", "-c", "npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
