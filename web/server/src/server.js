@@ -51,8 +51,22 @@ app.use((err, req, res) => {
   })
 })
 
+const connectToDatabase = async () => {
+  try {
+    // test the connection
+    await prisma.$connect()
+    console.info('Successfully connected to database')
+    return true
+  } catch (error) {
+    console.error('Failed to connect to database:', error)
+    return false
+  }
+}
+
 // start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  console.info(`Server attempting to start on port ${PORT}`)
+  await connectToDatabase()
   console.info(`Server running on port ${PORT}`)
 })
 
