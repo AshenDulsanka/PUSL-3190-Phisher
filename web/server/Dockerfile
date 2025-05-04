@@ -3,7 +3,7 @@ FROM node:23-alpine
 WORKDIR /app
 
 # copy package files
-COPY package*.json ./
+COPY web/server/package*.json ./
 
 # install dependencies
 RUN npm install --omit=dev
@@ -15,7 +15,7 @@ RUN mkdir -p database/prisma
 COPY ./database/prisma/ ./database/prisma/
 
 # copy source code
-COPY . .
+COPY web/server/ .
 
 # environment variables
 ENV NODE_ENV=production
@@ -24,4 +24,4 @@ ENV NODE_ENV=production
 EXPOSE 8080
 
 # start the application
-CMD ["sh", "-c", "ls -la /app && ls -la /app/database && ls -la /app/database/prisma && echo 'Starting server...' && npx prisma generate --schema=/app/database/prisma/schema.prisma && npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
+CMD ["sh", "-c", "echo 'Starting server...' && npx prisma generate --schema=/app/database/prisma/schema.prisma && npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
