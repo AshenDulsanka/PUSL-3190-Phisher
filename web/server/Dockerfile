@@ -8,6 +8,12 @@ COPY package*.json ./
 # install dependencies
 RUN npm install --omit=dev
 
+# create necessary directories
+RUN mkdir -p database/prisma
+
+# copy prisma schema and migrations
+COPY ./database/prisma/ ./database/prisma/
+
 # copy source code
 COPY . .
 

@@ -15,6 +15,10 @@ const app = express()
 const prisma = new PrismaClient()
 const PORT = process.env.PORT || process.env.WEB_SERVER_PORT
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+})
+
 // middleware
 app.use(helmet())
 app.use(cors({
@@ -65,9 +69,15 @@ const connectToDatabase = async () => {
 
 // start server
 app.listen(PORT, async () => {
-  console.info(`Server attempting to start on port ${PORT}`)
-  await connectToDatabase()
-  console.info(`Server running on port ${PORT}`)
+  console.info(`Server starting on port ${PORT} with NODE_ENV=${process.env.NODE_ENV}`)
+  console.info(`Database URL format check: ${process.env.DATABASE_URL ? 'Exists' : 'Missing'}`)
+  
+  try {
+    await connectToDatabase()
+    console.info(`Server successfully running on port ${PORT}`)
+  } catch (error) {
+    console.error(`Server started on port ${PORT} but database connection failed:`, error)
+  }
 })
 
 // handle shutdown

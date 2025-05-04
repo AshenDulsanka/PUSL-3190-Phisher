@@ -72,4 +72,5 @@ jobs:
           --set-env-vars="NODE_ENV=production" \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
           --set-env-vars="CLIENT_URL=https://phisher.live" \
+          --set-env-vars="PRISMA_SCHEMA_PATH=./database/prisma/schema.prisma" \
           --timeout=10m
