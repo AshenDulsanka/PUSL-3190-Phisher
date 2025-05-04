@@ -69,9 +69,13 @@ jobs:
           --allow-unauthenticated \
           --memory=512Mi \
           --cpu=1 \
+          --execution-environment=gen2 \
           --add-cloudsql-instances=pusl3190-phisher:asia-southeast1:phisher-postgres \
           --set-env-vars="NODE_ENV=production" \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
           --set-env-vars="CLIENT_URL=https://phisher.live" \
           --set-env-vars="PRISMA_SCHEMA_PATH=./database/prisma/schema.prisma" \
-          --timeout=10m
+          --timeout=15m \
+          --min-instances=0 \
+          --max-instances=1 \
+          --cpu-boost

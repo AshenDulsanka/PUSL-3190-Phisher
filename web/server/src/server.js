@@ -13,7 +13,7 @@ import adminRoutes from './routes/adminRoutes.js'
 dotenv.config()
 const app = express()
 const prisma = new PrismaClient()
-const PORT = process.env.PORT || process.env.WEB_SERVER_PORT
+const PORT = process.env.PORT || process.env.WEB_SERVER_PORT || 5000
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason)
@@ -66,6 +66,11 @@ const connectToDatabase = async () => {
     return false
   }
 }
+
+// debugging logs
+console.log(`PORT environment variable is set to: ${process.env.PORT}`)
+console.log(`WEB_SERVER_PORT environment variable is set to: ${process.env.WEB_SERVER_PORT}`)
+console.log(`Attempting to start server on port: ${PORT}`)
 
 // start server
 app.listen(PORT, async () => {
