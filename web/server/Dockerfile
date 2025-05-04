@@ -3,7 +3,7 @@ FROM node:23-alpine
 WORKDIR /app
 
 # copy package files
-COPY web/server/package*.json ./
+COPY package*.json ./
 
 # install dependencies
 RUN npm install --omit=dev
