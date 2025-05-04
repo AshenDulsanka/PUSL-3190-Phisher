@@ -73,7 +73,7 @@ console.log(`WEB_SERVER_PORT environment variable is set to: ${process.env.WEB_S
 console.log(`Attempting to start server on port: ${PORT}`)
 
 // start server
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
   console.info(`Server starting on port ${PORT} with NODE_ENV=${process.env.NODE_ENV}`)
   console.info(`Database URL format check: ${process.env.DATABASE_URL ? 'Exists' : 'Missing'}`)
   

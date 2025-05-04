@@ -35,12 +35,17 @@ jobs:
     - name: Configure Docker for Artifact Registry
       run: |
         gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+    
+    - name: Prepare web server build
+      run: |
+        mkdir -p ./web/server/prisma
+        cp ./database/prisma/schema.prisma ./web/server/prisma/
+        cp -r ./database/prisma/migrations ./web/server/prisma/ || true
 
     - name: Build and push web-server
       uses: docker/build-push-action@v5
       with:
-        context: .
-        file: ./web/server/Dockerfile
+        context: ./web/server
         push: true
         tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:${{ github.sha }},${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:latest
 
