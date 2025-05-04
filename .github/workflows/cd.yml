@@ -1,0 +1,111 @@
+name: Build and Deploy to GCP
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'web/**'
+      - 'extension_backend/**'
+      - 'chatbot/**'
+      - 'docker-compose.yaml'
+      - '.github/workflows/deploy.yml'
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  REGION: asia-southeast1
+  ARTIFACT_REGISTRY: ${{ secrets.GCP_PROJECT_ID }}/phisher-repo
+
+jobs:
+  setup-build-deploy:
+    name: Setup, Build, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      
+    - name: Configure Docker for Artifact Registry
+      run: |
+        gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+    - name: Build and push web client
+      uses: docker/build-push-action@v5
+      with:
+        context: ./web/client
+        push: true
+        tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/web-client:${{ github.sha }}, ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/web-client:latest
+
+    - name: Build and push web server
+      uses: docker/build-push-action@v5
+      with:
+        context: ./web/server
+        push: true
+        tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/web-server:${{ github.sha }}, ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/web-server:latest
+
+    - name: Build and push extension backend
+      uses: docker/build-push-action@v5
+      with:
+        context: ./extension_backend
+        push: true
+        tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/extension-backend:${{ github.sha }}, ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/extension-backend:latest
+
+    - name: Build and push chatbot
+      uses: docker/build-push-action@v5
+      with:
+        context: ./chatbot
+        push: true
+        tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/chatbot:${{ github.sha }}, ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/chatbot:latest
+
+    - name: Deploy web-server to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: web-server
+        region: ${{ env.REGION }}
+        image: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/web-server:${{ github.sha }}
+        env_vars: |
+          NODE_ENV=production
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          CLIENT_URL=https://phisher.live
+
+    - name: Deploy web-client to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: web-client
+        region: ${{ env.REGION }}
+        image: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/web-client:${{ github.sha }}
+        env_vars: |
+          VITE_API_URL=https://api.phisher.live
+
+    - name: Deploy extension-backend to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: extension-backend
+        region: ${{ env.REGION }}
+        image: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/extension-backend:${{ github.sha }}
+        env_vars: |
+          API_DEBUG=false
+          WEB_SERVER_DOCKER_API=https://api.phisher.live/api/url
+          DB_SYNC_ENABLED=true
+
+    - name: Deploy chatbot to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: chatbot
+        region: ${{ env.REGION }}
+        image: ${{ env.REGION }}-docker.pkg.dev/${{ env.ARTIFACT_REGISTRY }}/chatbot:${{ github.sha }}
+        env_vars: |
+          API_DEBUG=false
+          WEB_SERVER_DOCKER_API=https://api.phisher.live/api/url
+          DB_SYNC_ENABLED=true
+          REDIS_HOST=${{ secrets.REDIS_HOST }}
+          REDIS_PORT=${{ secrets.REDIS_PORT }}
+          REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
