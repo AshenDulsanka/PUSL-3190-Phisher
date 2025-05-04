@@ -39,7 +39,8 @@ jobs:
     - name: Build and push web-server
       uses: docker/build-push-action@v5
       with:
-        context: ./web/server
+        context: .
+        file: ./web/server/Dockerfile
         push: true
         tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:${{ github.sha }},${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:latest
 
