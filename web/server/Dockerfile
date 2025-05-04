@@ -14,11 +14,8 @@ COPY . .
 # environment variables
 ENV NODE_ENV=production
 
-# generate Prisma client
-RUN npx prisma generate --schema=/app/database/prisma/schema.prisma
-
 # expose the application port
 EXPOSE 8080
 
 # start the application
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
+CMD ["sh", "-c", "npx prisma generate --schema=/app/database/prisma/schema.prisma && npx prisma migrate deploy --schema=/app/database/prisma/schema.prisma && node src/server.js"]
