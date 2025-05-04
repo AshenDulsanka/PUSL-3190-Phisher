@@ -13,7 +13,7 @@ import adminRoutes from './routes/adminRoutes.js'
 dotenv.config()
 const app = express()
 const prisma = new PrismaClient()
-const PORT = process.env.WEB_SERVER_PORT
+const PORT = process.env.PORT || process.env.WEB_SERVER_PORT
 
 // middleware
 app.use(helmet())
