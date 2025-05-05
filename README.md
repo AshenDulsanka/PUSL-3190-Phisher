@@ -10,13 +10,17 @@ AI-Powered Phishing Detection System that combines browser extension and Web App
 - Educational feedback to users about potential threats
 - Admin dashboard with model metrics and system logs
 
-## Components
+## Project Architecture
 
-- **Browser Extension**: Provides real-time URL analysis
-- **Extension Backend**: Serves the browser extension with API endpoints
-- **Deep Analysis Backend**: Performs deep analysis of suspicious URLs
-- **Database**: Stores URLs, analysis results, and system logs
-- **Web Interface**: Provides URL analysis and educational content
+```
+rowser Extension ──► Extension Backend ──► Deep Analysis Backend ──► Database ──► Web Interface
+```
+
+- **Browser Extension**: Lightweight, real-time URL scanning
+- **Extension Backend**: Provides API endpoints for extension communication
+- **Deep Analysis**: Full analysis of suspicious URLs
+- **Database**: Stores URLs, analysis results, logs
+- **Web Interface**: User-facing app with results + educational content
 
 ## Tech Stack
 
