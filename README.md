@@ -13,7 +13,7 @@ AI-Powered Phishing Detection System that combines browser extension and Web App
 ## Project Architecture
 
 ```
-rowser Extension ──► Extension Backend ──► Deep Analysis Backend ──► Database ──► Web Interface
+Browser Extension ──► Extension Backend ──► Deep Analysis Backend ──► Database ──► Web Interface
 ```
 
 - **Browser Extension**: Lightweight, real-time URL scanning
