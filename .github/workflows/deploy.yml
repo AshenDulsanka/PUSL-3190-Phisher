@@ -79,5 +79,5 @@ jobs:
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
           --set-env-vars="CLIENT_URL=https://phisher.live" \
           --execution-environment=gen2 \
-          --startup-cpu-boost \
+          --cpu-boost \
           --timeout=15m
