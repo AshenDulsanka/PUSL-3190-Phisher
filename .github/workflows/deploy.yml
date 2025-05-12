@@ -68,16 +68,16 @@ jobs:
     - name: Deploy web-server using gcloud directly
       run: |
         gcloud run deploy web-server \
-          --image=asia-southeast1-docker.pkg.dev/pusl3190-phisher/phisher-repo/web-server:latest \
-          --region=asia-southeast1 \
+          --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:${{ github.sha }} \
+          --region=${{ env.REGION }} \
           --platform=managed \
           --allow-unauthenticated \
           --memory=512Mi \
           --cpu=1 \
-          --execution-environment=gen2 \
           --add-cloudsql-instances=pusl3190-phisher:asia-southeast1:phisher-postgres \
           --set-env-vars="NODE_ENV=production" \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
           --set-env-vars="CLIENT_URL=https://phisher.live" \
-          --timeout=600s \
-          --cpu-boost
+          --execution-environment=gen2 \
+          --startup-cpu-boost \
+          --timeout=15m

@@ -1,3 +1,11 @@
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err)
+})
+
+process.on('unhandledRejection', (reason) => {
+  console.error('UNHANDLED REJECTION:', reason)
+})
+
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -5,28 +13,24 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 
-// import routes
-import urlRoutes from './routes/urlRoutes.js'
-import adminRoutes from './routes/adminRoutes.js'
-
 // initialize
 dotenv.config()
 const app = express()
 const prisma = new PrismaClient()
 const PORT = parseInt(process.env.PORT || process.env.WEB_SERVER_PORT || '8080', 10)
 
-process.on('uncaughtException', (err) => {
-  console.error('UNCAUGHT EXCEPTION:', err)
-})
-
 // middleware
 app.use(helmet())
 app.use(cors({
-  origin: process.env.WEB_CLIENT_URL,
+  origin: process.env.WEB_CLIENT_URL || '*',
   credentials: true
 }))
 app.use(express.json())
 app.use(morgan('dev'))
+
+// import routes
+import urlRoutes from './routes/urlRoutes.js'
+import adminRoutes from './routes/adminRoutes.js'
 
 // routes
 app.use('/api/url', urlRoutes)
@@ -40,7 +44,7 @@ app.get('/health', (req, res) => {
 // root endpoint
 app.get('/', (req, res) => {
   res.status(200).json({ 
-    message: 'Phisher Chatbot API',
+    message: 'Phisher API',
     version: '1.0.0',
     endpoints: ['/health', '/api/url', '/api/url/admin']
   })
@@ -57,7 +61,6 @@ app.use((err, req, res) => {
 
 const connectToDatabase = async () => {
   try {
-    // test the connection
     await prisma.$connect()
     console.info('Successfully connected to database')
     return true
@@ -67,25 +70,31 @@ const connectToDatabase = async () => {
   }
 }
 
-// debugging logs
-console.info(`Current environment: ${process.env.NODE_ENV}`)
-console.info(`PORT environment variable: ${process.env.PORT}`)
-console.info(`Attempting to start server on port ${PORT} and host 0.0.0.0`)
+// detailed logging
+console.info('Starting server with:')
+console.info(`- Environment: ${process.env.NODE_ENV || 'development'}`)
+console.info(`- Port: ${PORT}`)
+console.info(`- Database URL format: ${process.env.DATABASE_URL ? 'Exists (correct format)' : 'MISSING!'}`)
 
-// start server
+// bind to 0.0.0.0 (all interfaces)
 app.listen(PORT, '0.0.0.0', async () => {
   console.info(`Server started and listening on http://0.0.0.0:${PORT}`)
   
   try {
-    await connectToDatabase()
-    console.info('Database connection successful')
+    const connected = await connectToDatabase()
+    if (connected) {
+      console.info('Database connection established successfully')
+    } else {
+      console.warn('Server running but database connection failed - will retry as needed')
+    }
   } catch (error) {
-    console.error('Database connection failed:', error)
+    console.error('Database initialization error:', error)
   }
 })
 
-// handle shutdown
+// handle graceful shutdown
 process.on('SIGINT', async () => {
+  console.info('Received SIGINT, shutting down gracefully...')
   await prisma.$disconnect()
   console.info('Database connection closed')
   process.exit(0)
