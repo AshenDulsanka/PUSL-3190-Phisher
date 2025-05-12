@@ -68,8 +68,8 @@ jobs:
     - name: Deploy web-server using gcloud directly
       run: |
         gcloud run deploy web-server \
-          --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:${{ github.sha }} \
-          --region=${{ env.REGION }} \
+          --image=asia-southeast1-docker.pkg.dev/pusl3190-phisher/phisher-repo/web-server:latest \
+          --region=asia-southeast1 \
           --platform=managed \
           --allow-unauthenticated \
           --memory=512Mi \
@@ -79,8 +79,5 @@ jobs:
           --set-env-vars="NODE_ENV=production" \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
           --set-env-vars="CLIENT_URL=https://phisher.live" \
-          --set-env-vars="PRISMA_SCHEMA_PATH=./database/prisma/schema.prisma" \
-          --timeout=15m \
-          --min-instances=0 \
-          --max-instances=1 \
+          --timeout=600s \
           --cpu-boost

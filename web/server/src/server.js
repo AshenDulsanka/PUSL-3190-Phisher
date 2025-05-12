@@ -13,10 +13,10 @@ import adminRoutes from './routes/adminRoutes.js'
 dotenv.config()
 const app = express()
 const prisma = new PrismaClient()
-const PORT = process.env.PORT || process.env.WEB_SERVER_PORT || 5000
+const PORT = parseInt(process.env.PORT || process.env.WEB_SERVER_PORT || '8080', 10)
 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err)
 })
 
 // middleware
@@ -68,20 +68,19 @@ const connectToDatabase = async () => {
 }
 
 // debugging logs
-console.log(`PORT environment variable is set to: ${process.env.PORT}`)
-console.log(`WEB_SERVER_PORT environment variable is set to: ${process.env.WEB_SERVER_PORT}`)
-console.log(`Attempting to start server on port: ${PORT}`)
+console.info(`Current environment: ${process.env.NODE_ENV}`)
+console.info(`PORT environment variable: ${process.env.PORT}`)
+console.info(`Attempting to start server on port ${PORT} and host 0.0.0.0`)
 
 // start server
 app.listen(PORT, '0.0.0.0', async () => {
-  console.info(`Server starting on port ${PORT} with NODE_ENV=${process.env.NODE_ENV}`)
-  console.info(`Database URL format check: ${process.env.DATABASE_URL ? 'Exists' : 'Missing'}`)
+  console.info(`Server started and listening on http://0.0.0.0:${PORT}`)
   
   try {
     await connectToDatabase()
-    console.info(`Server successfully running on port ${PORT}`)
+    console.info('Database connection successful')
   } catch (error) {
-    console.error(`Server started on port ${PORT} but database connection failed:`, error)
+    console.error('Database connection failed:', error)
   }
 })
 
