@@ -77,7 +77,7 @@ jobs:
           --add-cloudsql-instances=pusl3190-phisher:asia-southeast1:phisher-postgres \
           --set-env-vars="NODE_ENV=production" \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
-          --set-env-vars="CLIENT_URL=https://phisher.live" \
+          --set-env-vars="CLIENT_URL=${{ secrets.CLIENT_URL }}" \
           --execution-environment=gen2 \
           --cpu-boost \
           --timeout=15m
