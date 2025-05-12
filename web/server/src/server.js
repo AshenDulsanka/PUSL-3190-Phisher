@@ -76,7 +76,7 @@ console.info(`- Environment: ${process.env.NODE_ENV || 'development'}`)
 console.info(`- Port: ${PORT}`)
 console.info(`- Database URL format: ${process.env.DATABASE_URL ? 'Exists (correct format)' : 'MISSING!'}`)
 
-// bind to 0.0.0.0 (all interfaces)
+// bind to 0.0.0.0
 app.listen(PORT, '0.0.0.0', async () => {
   console.info(`Server started and listening on http://0.0.0.0:${PORT}`)
   
