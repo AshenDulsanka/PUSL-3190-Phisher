@@ -13,7 +13,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-  REGION: asia-southeast1
+  REGION: us-central1
   ARTIFACT_REGISTRY: ${{ secrets.ARTIFACT_REGISTRY }}
 
 jobs:
@@ -144,7 +144,7 @@ jobs:
           --region=${{ env.REGION }} \
           --platform=managed \
           --allow-unauthenticated \
-          --vpc-connector=phisher-connector \
+          --vpc-connector=phisher-conn-uc1 \
           --memory=1Gi \
           --cpu=1 \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
