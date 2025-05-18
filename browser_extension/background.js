@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 // API endpoint for ML model
-const API_ENDPOINT = "http://localhost:8000/api/analyze-url"
+const API_ENDPOINT = "https://extension.phisher.live/api/analyze-url"
 
 // function to extract features from URL
 function extractUrlFeatures(url) {

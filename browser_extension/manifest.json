@@ -12,7 +12,7 @@
     "notifications"
   ],
   "host_permissions": [
-    "http://localhost:8000/*"
+    "https://extension.phisher.live/*"
   ],
   "background": {
     "service_worker": "./background.js"
@@ -34,5 +34,8 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://extension.phisher.live https://chatbot.phisher.live https://phisher.live"
   }
 }
