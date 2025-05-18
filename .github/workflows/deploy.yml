@@ -99,6 +99,9 @@ jobs:
           --set-env-vars="NODE_ENV=production" \
           --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
           --set-env-vars="CLIENT_URL=${{ secrets.CLIENT_URL }}" \
+          --set-env-vars="JWT_SECRET=${{ secrets.JWT_SECRET }}" \
+          --set-env-vars="CHATBOT_API_ENDPOINT=${{ secrets.CHATBOT_API_ENDPOINT }}" \
+          --set-env-vars="EXTENSION_API_ENDPOINT=${{ secrets.EXTENSION_API_ENDPOINT }}" \
           --execution-environment=gen2 \
           --cpu-boost \
           --timeout=15m
