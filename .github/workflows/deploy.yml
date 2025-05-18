@@ -70,8 +70,8 @@ jobs:
         push: true
         tags: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/chatbot:${{ github.sha }},${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/chatbot:latest
 
-  deploy-web-server:
-    name: Deploy Web Server
+  deploy:
+    name: Deploy All Services
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -86,7 +86,7 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
       
-    - name: Deploy web-server using gcloud directly
+    - name: Deploy web-server
       run: |
         gcloud run deploy web-server \
           --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:${{ github.sha }} \
@@ -102,120 +102,72 @@ jobs:
           --execution-environment=gen2 \
           --cpu-boost \
           --timeout=15m
-  
-  deploy-web-client:
-    name: Deploy Web Client
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Deploy web-client
+      run: |
+        gcloud run deploy web-client \
+          --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-client:${{ github.sha }} \
+          --region=${{ env.REGION }} \
+          --platform=managed \
+          --allow-unauthenticated \
+          --memory=2Gi \
+          --cpu=1 \
+          --set-env-vars="VITE_API_URL=${{ secrets.API_URL }}" \
+          --execution-environment=gen2
           
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        
-      - name: Deploy web-client
-        run: |
-          gcloud run deploy web-client \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-client:${{ github.sha }} \
-            --region=${{ env.REGION }} \
-            --platform=managed \
-            --allow-unauthenticated \
-            --memory=2Gi \
-            --cpu=1 \
-            --set-env-vars="VITE_API_URL=${{ secrets.API_URL }}" \
-            --execution-environment=gen2
-
-  deploy-extension-backend:
-    name: Deploy Extension Backend
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+    - name: Deploy extension-backend
+      run: |
+        gcloud run deploy extension-backend \
+          --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/extension-backend:${{ github.sha }} \
+          --region=${{ env.REGION }} \
+          --platform=managed \
+          --allow-unauthenticated \
+          --memory=512Mi \
+          --cpu=1 \
+          --set-env-vars="WEB_CLIENT_URL=${{ secrets.CLIENT_URL }}" \
+          --set-env-vars="API_DEBUG_BE=${{ secrets.API_DEBUG_BE }}" \
+          --set-env-vars="API_HOST_BE=${{ secrets.API_HOST_BE }}" \
+          --set-env-vars="API_PORT_BE=${{ secrets.API_PORT_BE }}" \
+          --set-env-vars="API_PREFIX_BE=${{ secrets.API_PREFIX_BE }}" \
+          --set-env-vars="API_KEY_BE=${{ secrets.API_KEY_BE }}" \
+          --set-env-vars="CHROME_EXTENSION=${{ secrets.CHROME_EXTENSION }}" \
+          --set-env-vars="EXTENSION_BACKEND_URL=${{ secrets.EXTENSION_BACKEND_URL }}" \
+          --set-env-vars="RATE_LIMIT_PER_MINUTE_BE=${{ secrets.RATE_LIMIT_PER_MINUTE_BE }}" \
+          --set-env-vars="WEB_SERVER_DOCKER_API=${{ secrets.API_URL }}" \
+          --set-env-vars="DB_SYNC_ENABLED=${{ secrets.DB_SYNC_ENABLED }}" \
+          --execution-environment=gen2
           
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        
-      - name: Deploy extension-backend
-        run: |
-          gcloud run deploy extension-backend \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/extension-backend:${{ github.sha }} \
-            --region=${{ env.REGION }} \
-            --platform=managed \
-            --allow-unauthenticated \
-            --memory=512Mi \
-            --cpu=1 \
-            --set-env-vars="WEB_CLIENT_URL=${{ secrets.CLIENT_URL }}" \
-            --set-env-vars="API_DEBUG_BE=${{ secrets.API_DEBUG_BE }}" \
-            --set-env-vars="API_HOST_BE=${{ secrets.API_HOST_BE }}" \
-            --set-env-vars="API_PORT_BE=${{ secrets.API_PORT_BE }}" \
-            --set-env-vars="API_PREFIX_BE=${{ secrets.API_PREFIX_BE }}" \
-            --set-env-vars="API_KEY_BE=${{ secrets.API_KEY_BE }}" \
-            --set-env-vars="CHROME_EXTENSION=${{ secrets.CHROME_EXTENSION }}" \
-            --set-env-vars="EXTENSION_BACKEND_URL=${{ secrets.EXTENSION_BACKEND_URL }}" \
-            --set-env-vars="RATE_LIMIT_PER_MINUTE_BE=${{ secrets.RATE_LIMIT_PER_MINUTE_BE }}" \
-            --set-env-vars="WEB_SERVER_DOCKER_API=${{ secrets.API_URL }}" \
-            --set-env-vars="DB_SYNC_ENABLED=${{ secrets.DB_SYNC_ENABLED }}" \
-            --execution-environment=gen2
-
-  deploy-chatbot:
-    name: Deploy Chatbot
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-          
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-        
-      - name: Deploy chatbot
-        run: |
-          gcloud run deploy chatbot \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/chatbot:${{ github.sha }} \
-            --region=${{ env.REGION }} \
-            --platform=managed \
-            --allow-unauthenticated \
-            --vpc-connector=phisher-connector \
-            --memory=1Gi \
-            --cpu=1 \
-            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
-            --set-env-vars="API_DEBUG_CB=${{ secrets.API_DEBUG_CB }}" \
-            --set-env-vars="API_HOST_CB=${{ secrets.API_HOST_CB }}" \
-            --set-env-vars="API_PORT_CB=${{ secrets.API_PORT_CB }}" \
-            --set-env-vars="API_PREFIX_CB=${{ secrets.API_PREFIX_CB }}" \
-            --set-env-vars="API_KEY_CB=${{ secrets.API_KEY_CB }}" \
-            --set-env-vars="WEB_CLIENT_URL=${{ secrets.CLIENT_URL }}" \
-            --set-env-vars="WEB_SERVER_URL=${{ secrets.API_URL }}" \
-            --set-env-vars="WEB_CLIENT_DOCKER_URL=${{ secrets.CLIENT_URL }}" \
-            --set-env-vars="WEB_SERVER_DOCKER_API=${{ secrets.API_URL }}" \
-            --set-env-vars="ANALYSIS_TIMEOUT=${{ secrets.ANALYSIS_TIMEOUT }}" \
-            --set-env-vars="TYPOSQUATTING_DISTANCE_THRESHOLD=${{ secrets.TYPOSQUATTING_DISTANCE_THRESHOLD }}" \
-            --set-env-vars="PHISHING_THRESHOLD_CB=${{ secrets.PHISHING_THRESHOLD_CB }}" \
-            --set-env-vars="WARNING_THRESHOLD_CB=${{ secrets.WARNING_THRESHOLD_CB }}" \
-            --set-env-vars="CHATBOT_SESSION_EXPIRE_MINUTES=${{ secrets.CHATBOT_SESSION_EXPIRE_MINUTES }}" \
-            --set-env-vars="RATE_LIMIT_PER_MINUTE_CB=${{ secrets.RATE_LIMIT_PER_MINUTE_CB }}" \
-            --set-env-vars="REDIS_ENABLED=${{ secrets.REDIS_ENABLED }}" \
-            --set-env-vars="REDIS_HOST=${{ secrets.REDIS_HOST }}" \
-            --set-env-vars="REDIS_PORT=${{ secrets.REDIS_PORT }}" \
-            --set-env-vars="REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" \
-            --set-env-vars="REDIS_DB=${{ secrets.REDIS_DB }}" \
-            --set-env-vars="DB_SYNC_ENABLED=${{ secrets.DB_SYNC_ENABLED }}" \
-            --execution-environment=gen2 \
-            --timeout=15m
+    - name: Deploy chatbot
+      run: |
+        gcloud run deploy chatbot \
+          --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/chatbot:${{ github.sha }} \
+          --region=${{ env.REGION }} \
+          --platform=managed \
+          --allow-unauthenticated \
+          --vpc-connector=phisher-connector \
+          --memory=1Gi \
+          --cpu=1 \
+          --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
+          --set-env-vars="API_DEBUG_CB=${{ secrets.API_DEBUG_CB }}" \
+          --set-env-vars="API_HOST_CB=${{ secrets.API_HOST_CB }}" \
+          --set-env-vars="API_PORT_CB=${{ secrets.API_PORT_CB }}" \
+          --set-env-vars="API_PREFIX_CB=${{ secrets.API_PREFIX_CB }}" \
+          --set-env-vars="API_KEY_CB=${{ secrets.API_KEY_CB }}" \
+          --set-env-vars="WEB_CLIENT_URL=${{ secrets.CLIENT_URL }}" \
+          --set-env-vars="WEB_SERVER_URL=${{ secrets.API_URL }}" \
+          --set-env-vars="WEB_CLIENT_DOCKER_URL=${{ secrets.CLIENT_URL }}" \
+          --set-env-vars="WEB_SERVER_DOCKER_API=${{ secrets.API_URL }}" \
+          --set-env-vars="ANALYSIS_TIMEOUT=${{ secrets.ANALYSIS_TIMEOUT }}" \
+          --set-env-vars="TYPOSQUATTING_DISTANCE_THRESHOLD=${{ secrets.TYPOSQUATTING_DISTANCE_THRESHOLD }}" \
+          --set-env-vars="PHISHING_THRESHOLD_CB=${{ secrets.PHISHING_THRESHOLD_CB }}" \
+          --set-env-vars="WARNING_THRESHOLD_CB=${{ secrets.WARNING_THRESHOLD_CB }}" \
+          --set-env-vars="CHATBOT_SESSION_EXPIRE_MINUTES=${{ secrets.CHATBOT_SESSION_EXPIRE_MINUTES }}" \
+          --set-env-vars="RATE_LIMIT_PER_MINUTE_CB=${{ secrets.RATE_LIMIT_PER_MINUTE_CB }}" \
+          --set-env-vars="REDIS_ENABLED=${{ secrets.REDIS_ENABLED }}" \
+          --set-env-vars="REDIS_HOST=${{ secrets.REDIS_HOST }}" \
+          --set-env-vars="REDIS_PORT=${{ secrets.REDIS_PORT }}" \
+          --set-env-vars="REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" \
+          --set-env-vars="REDIS_DB=${{ secrets.REDIS_DB }}" \
+          --set-env-vars="DB_SYNC_ENABLED=${{ secrets.DB_SYNC_ENABLED }}" \
+          --execution-environment=gen2 \
+          --timeout=15m

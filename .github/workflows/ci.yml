@@ -7,97 +7,69 @@ on:
     branches: [ main ]
 
 jobs:
-  test-web-client:
+  test-all-components:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./web/client
-    
     steps:
       - uses: actions/checkout@v4
+      
+      # set up node for web components
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: './web/client/package-lock.json'
       
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run linting
-        run: npm run lint
-      
-      - name: Build client
-        run: npm run build
-
-  test-web-server:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./web/server
-    
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: './web/server/package-lock.json'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Run linting
-        run: npm run lint
-
-  test-extension-backend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./extension_backend
-    
-    steps:
-      - uses: actions/checkout@v4
+      # set up python for python components
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: './extension_backend/requirements.txt'
+          
+      # web client tests
+      - name: Install web client dependencies
+        working-directory: ./web/client
+        run: |
+          npm ci
+          
+      - name: Run web client linting
+        working-directory: ./web/client
+        run: npm run lint
+        
+      - name: Build web client
+        working-directory: ./web/client
+        run: npm run build
       
-      - name: Install dependencies
+      # web server tests
+      - name: Install web server dependencies
+        working-directory: ./web/server
+        run: |
+          npm ci
+          
+      - name: Run web server linting
+        working-directory: ./web/server
+        run: npm run lint
+      
+      # extension backend tests
+      - name: Install extension backend dependencies
+        working-directory: ./extension_backend
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      - name: Lint with flake8
+          
+      - name: Lint extension backend with flake8
+        working-directory: ./extension_backend
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
-  test-chatbot:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./chatbot
-    
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: './chatbot/requirements.txt'
       
-      - name: Install dependencies
+      # chatbot tests
+      - name: Install chatbot dependencies
+        working-directory: ./chatbot
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      
-      - name: Lint with flake8
+          
+      - name: Lint chatbot with flake8
+        working-directory: ./chatbot
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
