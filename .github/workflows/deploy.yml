@@ -14,7 +14,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
   REGION: asia-southeast1
-  ARTIFACT_REGISTRY: ${{ secrets.GCP_PROJECT_ID }}/phisher-repo
+  ARTIFACT_REGISTRY: ${{ secrets.ARTIFACT_REGISTRY }}
 
 jobs:
   build:
@@ -92,7 +92,7 @@ jobs:
           --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/phisher-repo/web-server:${{ github.sha }} \
           --region=${{ env.REGION }} \
           --platform=managed \
-          --allow-unauthenticated \
+          --no-allow-unauthenticated \
           --memory=512Mi \
           --cpu=1 \
           --add-cloudsql-instances=pusl3190-phisher:asia-southeast1:phisher-postgres \
@@ -126,7 +126,7 @@ jobs:
             --region=${{ env.REGION }} \
             --platform=managed \
             --allow-unauthenticated \
-            --memory=512Mi \
+            --memory=2Gi \
             --cpu=1 \
             --set-env-vars="VITE_API_URL=${{ secrets.API_URL }}" \
             --execution-environment=gen2
@@ -156,9 +156,17 @@ jobs:
             --allow-unauthenticated \
             --memory=512Mi \
             --cpu=1 \
-            --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
-            --set-env-vars="CLIENT_URL=${{ secrets.CLIENT_URL }}" \
-            --set-env-vars="API_URL=${{ secrets.API_URL }}" \
+            --set-env-vars="WEB_CLIENT_URL=${{ secrets.CLIENT_URL }}" \
+            --set-env-vars="API_DEBUG_BE=${{ secrets.API_DEBUG_BE }}" \
+            --set-env-vars="API_HOST_BE=${{ secrets.API_HOST_BE }}" \
+            --set-env-vars="API_PORT_BE=${{ secrets.API_PORT_BE }}" \
+            --set-env-vars="API_PREFIX_BE=${{ secrets.API_PREFIX_BE }}" \
+            --set-env-vars="API_KEY_BE=${{ secrets.API_KEY_BE }}" \
+            --set-env-vars="CHROME_EXTENSION=${{ secrets.CHROME_EXTENSION }}" \
+            --set-env-vars="EXTENSION_BACKEND_URL=${{ secrets.EXTENSION_BACKEND_URL }}" \
+            --set-env-vars="RATE_LIMIT_PER_MINUTE_BE=${{ secrets.RATE_LIMIT_PER_MINUTE_BE }}" \
+            --set-env-vars="WEB_SERVER_DOCKER_API=${{ secrets.API_URL }}" \
+            --set-env-vars="DB_SYNC_ENABLED=${{ secrets.DB_SYNC_ENABLED }}" \
             --execution-environment=gen2
 
   deploy-chatbot:
@@ -184,9 +192,30 @@ jobs:
             --region=${{ env.REGION }} \
             --platform=managed \
             --allow-unauthenticated \
+            --vpc-connector=phisher-connector \
             --memory=1Gi \
             --cpu=1 \
             --set-env-vars="DATABASE_URL=${{ secrets.DATABASE_URL }}" \
-            --set-env-vars="API_URL=${{ secrets.API_URL }}" \
+            --set-env-vars="API_DEBUG_CB=${{ secrets.API_DEBUG_CB }}" \
+            --set-env-vars="API_HOST_CB=${{ secrets.API_HOST_CB }}" \
+            --set-env-vars="API_PORT_CB=${{ secrets.API_PORT_CB }}" \
+            --set-env-vars="API_PREFIX_CB=${{ secrets.API_PREFIX_CB }}" \
+            --set-env-vars="API_KEY_CB=${{ secrets.API_KEY_CB }}" \
+            --set-env-vars="WEB_CLIENT_URL=${{ secrets.CLIENT_URL }}" \
+            --set-env-vars="WEB_SERVER_URL=${{ secrets.API_URL }}" \
+            --set-env-vars="WEB_CLIENT_DOCKER_URL=${{ secrets.CLIENT_URL }}" \
+            --set-env-vars="WEB_SERVER_DOCKER_API=${{ secrets.API_URL }}" \
+            --set-env-vars="ANALYSIS_TIMEOUT=${{ secrets.ANALYSIS_TIMEOUT }}" \
+            --set-env-vars="TYPOSQUATTING_DISTANCE_THRESHOLD=${{ secrets.TYPOSQUATTING_DISTANCE_THRESHOLD }}" \
+            --set-env-vars="PHISHING_THRESHOLD_CB=${{ secrets.PHISHING_THRESHOLD_CB }}" \
+            --set-env-vars="WARNING_THRESHOLD_CB=${{ secrets.WARNING_THRESHOLD_CB }}" \
+            --set-env-vars="CHATBOT_SESSION_EXPIRE_MINUTES=${{ secrets.CHATBOT_SESSION_EXPIRE_MINUTES }}" \
+            --set-env-vars="RATE_LIMIT_PER_MINUTE_CB=${{ secrets.RATE_LIMIT_PER_MINUTE_CB }}" \
+            --set-env-vars="REDIS_ENABLED=${{ secrets.REDIS_ENABLED }}" \
+            --set-env-vars="REDIS_HOST=${{ secrets.REDIS_HOST }}" \
+            --set-env-vars="REDIS_PORT=${{ secrets.REDIS_PORT }}" \
+            --set-env-vars="REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" \
+            --set-env-vars="REDIS_DB=${{ secrets.REDIS_DB }}" \
+            --set-env-vars="DB_SYNC_ENABLED=${{ secrets.DB_SYNC_ENABLED }}" \
             --execution-environment=gen2 \
             --timeout=15m
