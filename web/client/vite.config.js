@@ -8,7 +8,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
   
   // Use API URL from env or fallback to default
-  const apiUrl = env.VITE_API_URL || 'http://web_server:5000'
+  const apiUrl = env.VITE_API_URL
+  const chatApiUrl = env.VITE_LOCAL_API_URL
   
   return {
     plugins: [react()],
@@ -23,6 +24,11 @@ export default defineConfig(({ mode }) => {
         // proxy API requests to the backend server
         '/api': {
           target: apiUrl,
+          changeOrigin: true,
+          secure: false
+        },
+        '/url': {
+          target: chatApiUrl,
           changeOrigin: true,
           secure: false
         }

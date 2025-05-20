@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 // routes
-app.use('/api/url', urlRoutes)
+app.use('/url', urlRoutes)
 app.use('/api/url/admin', adminRoutes)
 
 // health check endpoint
