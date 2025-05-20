@@ -191,7 +191,7 @@
     })
     
     learnMoreButton.addEventListener('click', () => {
-      window.open('https://phisher-chatbot.com/learn', '_blank')
+      window.open('http://localhost:3000', '_blank')
     })
     
     // prevent scrolling on the page while the overlay is shown
