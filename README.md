@@ -29,14 +29,14 @@ Browser Extension ──► Extension Backend ──► Deep Analysis Backend �
 - **AI/ML**: Scikit-learn (Random Forest & Gradient Boosting Classifiers)
 - **Infrastructure**: Docker, Google Cloud Platform
 
-## Setup Instructions
+## Local Setup Instructions
 
 ### Prerequisites
 
 - Docker and Docker Compose
 - Node.js and npm
 - Python 3.13+
-- Chrome or compatible browser
+- Chrome or any Chromium-based browser
 
 ### Docker Setup
 
@@ -44,6 +44,7 @@ Browser Extension ──► Extension Backend ──► Deep Analysis Backend �
    ```bash
    https://github.com/AshenDulsanka/PUSL-3190-Phisher
    cd PUSL-3190-Phisher
+   git checkout localhost
    ```
 
 2. Build and start the container:
