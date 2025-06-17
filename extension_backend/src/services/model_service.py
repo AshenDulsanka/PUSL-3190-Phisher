@@ -117,109 +117,111 @@ class ModelService:
     
     def predict(self, url: str, features: Dict[str, Any] = None) -> Dict[str, Any]:
         try:
-            # check if model is loaded
-            if self.model is None:
-                logger.error("Model not loaded")
-                return {
-                    "is_phishing": False,
-                    "threat_score": 0,
-                    "probability": 0.0,
-                    "details": "Unable to make prediction: Model not loaded",
-                    "model_version": self.model_info["version"]
-                }
-            
-            # extract features if not provided
+            # Extract features if not provided
             if features is None:
                 features = FeatureExtractor.extract_features(url)
 
-            # debugging - print feature keys
-            logger.info(f"Features provided: {list(features.keys())}")
-            logger.info(f"Feature list expected: {self.feature_list}")
-
-            # filter features to only include those in the feature_list
-            filtered_features = {}
-            for feature in self.feature_list:
-                if feature in features:
-                    filtered_features[feature] = features[feature]
-                else:
-                    filtered_features[feature] = 0  # default value
-                    logger.warning(f"Missing feature: {feature}")
-            
-            # prepare features for the model
+            # Prepare features for the model
             if self.feature_list:
-                # use feature list to ensure correct order
                 X = FeatureExtractor.prepare_features_for_model(features, self.feature_list)
-                logger.info(f"Prepared feature array shape: {X.shape}")
             else:
-                # fallback if feature list is not available
                 X = np.array(list(features.values())).reshape(1, -1)
             
-            # After scaling the features and before making prediction, add debug logging:
-            logger.info(f"Making prediction for URL: {url[:50]}...")
-            
-            # Get the raw prediction and probability
+            # Scale features
             X_scaled = self.scaler.transform(X)
+            
+            # Get prediction
             raw_prediction = self.model.predict(X_scaled)[0]
-            
-            # Get the probability of the positive class (phishing)
-            # Ensure we're getting probability for class 1 (phishing)
             raw_probability = float(self.model.predict_proba(X_scaled)[0, 1])
-            logger.info(f"URL features for {url[:30]}: {features}")
             
-            logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
+            # Multi-threshold approach for better accuracy
+            high_confidence_threshold = 0.7    # Definitely phishing
+            medium_confidence_threshold = 0.4  # Suspicious
+            low_confidence_threshold = 0.2     # Probably legitimate
             
-            # Use a conservative threshold - URLs are considered phishing ONLY if 
-            # probability is high enough
-            PHISHING_THRESHOLD = 0.8 
-            
-            # Apply the threshold to determine if it's phishing
-            is_phishing = raw_probability >= PHISHING_THRESHOLD
-            
-            # Calculate threat score based on raw probability
-            threat_score = int(raw_probability * 100)
-            
-            logger.info(f"Final decision: is_phishing={is_phishing}, threat_score={threat_score}, threshold={PHISHING_THRESHOLD}")
-            
-            # Add more context to the result
-            details = ""
-            if is_phishing:
-                if threat_score > 85:
-                    details = "This URL has a very high probability of being a phishing website."
-                elif threat_score > 70:
-                    details = "This URL appears to be a phishing website."
-                else:
-                    details = "This URL shows some characteristics of a phishing website."
+            # Determine classification
+            if raw_probability >= high_confidence_threshold:
+                is_phishing = True
+                confidence = "High"
+                threat_score = int(85 + (raw_probability - high_confidence_threshold) * 50)
+            elif raw_probability >= medium_confidence_threshold:
+                is_phishing = True  # Err on the side of caution
+                confidence = "Medium"
+                threat_score = int(40 + (raw_probability - medium_confidence_threshold) * 45)
+            elif raw_probability >= low_confidence_threshold:
+                is_phishing = False
+                confidence = "Medium"
+                threat_score = int(20 + (raw_probability - low_confidence_threshold) * 20)
             else:
-                if threat_score > 50:
-                    details = "This URL has some suspicious characteristics but appears to be legitimate."
-                else:
-                    details = "This URL appears to be legitimate."
+                is_phishing = False
+                confidence = "High"
+                threat_score = int(raw_probability * 100)
             
-            # track the model evaluation in the database if available
-            if hasattr(self, 'db_integration'):
-                # Track this evaluation
-                self.db_integration.track_lightweight_model_evaluation({
-                    "model_name": self.model_info["name"],
-                    "url": url,
-                    "is_phishing": is_phishing,
-                    "score": threat_score / 100.0  # Convert to 0-1 range
-                })
+            # Additional heuristic checks for edge cases
+            if not is_phishing:
+                # Check for obvious phishing indicators
+                if (features.get('has_ip', 0) == 1 or 
+                    features.get('suspicious_keywords', 0) >= 3 or
+                    features.get('brand_keywords', 0) >= 2):
+                    is_phishing = True
+                    threat_score = max(threat_score, 60)
+                    confidence = "High"
             
-            # Return the result
+            # Generate detailed explanation
+            details = self._generate_detailed_explanation(
+                is_phishing, threat_score, raw_probability, features
+            )
+            
             return {
                 "url": url,
                 "is_phishing": is_phishing,
-                "threat_score": threat_score,
+                "threat_score": min(threat_score, 100),
                 "probability": raw_probability,
-                "details": details
+                "confidence": confidence,
+                "details": details,
+                "model_version": self.model_info["version"]
             }
             
         except Exception as e:
             logger.error(f"Error making prediction: {str(e)}", exc_info=True)
             return {
+                "url": url,
                 "is_phishing": False,
                 "threat_score": 0,
                 "probability": 0.0,
-                "details": "An error occurred while analyzing the URL. Please try again later.",
+                "confidence": "Low",
+                "details": "Error analyzing URL. Please verify manually.",
                 "model_version": self.model_info["version"]
             }
+    
+    def _generate_detailed_explanation(self, is_phishing, threat_score, probability, features):
+        explanations = []
+        
+        if features.get('has_ip', 0):
+            explanations.append("Uses IP address instead of domain name")
+        
+        if features.get('suspicious_tld', 0):
+            explanations.append("Uses suspicious top-level domain")
+        
+        if features.get('brand_keywords', 0) >= 2:
+            explanations.append("Contains multiple brand keywords (potential impersonation)")
+        
+        if features.get('homograph_attack', 0) > 0:
+            explanations.append("Contains characters that mimic legitimate domains")
+        
+        if features.get('domain_entropy', 0) > 4:
+            explanations.append("Domain name has high randomness")
+        
+        if features.get('suspicious_keywords', 0) >= 2:
+            explanations.append("Contains multiple suspicious keywords")
+        
+        if features.get('url_shortener', 0):
+            explanations.append("Uses URL shortening service")
+        
+        if not explanations:
+            if is_phishing:
+                explanations.append("Multiple subtle indicators suggest this may be malicious")
+            else:
+                explanations.append("No significant suspicious indicators detected")
+        
+        return "; ".join(explanations)

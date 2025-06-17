@@ -23,56 +23,51 @@ function extractUrlFeatures(url) {
     
     const features = {}
     
-    // url_length - actual URL length
+    // Basic features
     features.url_length = fullUrl.length
-    
-    // num_dots - count of dots in the URL
     features.num_dots = fullUrl.split('.').length - 1
-    
-    // num_special_chars - count of special characters
-    features.num_special_chars = (fullUrl.match(/[^a-zA-Z0-9.]/g) || []).length
-    
-    // has_ip - check if IP address is used as domain
-    features.has_ip = /\d+\.\d+\.\d+\.\d+/.test(domain) ? 1 : 0
-    
-    // has_at_symbol - check for @ symbol
+    features.has_https = urlObj.protocol === 'https:' ? 1 : 0
     features.has_at_symbol = fullUrl.includes('@') ? 1 : 0
     
-    // num_subdomains - count subdomains
-    features.num_subdomains = domain.split('.').length - 1
+    // IP detection
+    features.has_ip = /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/.test(domain) ? 1 : 0
     
-    // has_https - check if URL uses HTTPS
-    features.has_https = urlObj.protocol === 'https:' ? 1 : 0
-    
-    // has_hyphen - check for hyphens in domain
+    // Domain analysis
+    features.domain_length = domain.length
     features.has_hyphen = domain.includes('-') ? 1 : 0
     
-    // is_shortened - check for URL shortening services
-    const shorteners = ['bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'is.gd', 'cli.gs', 'ow.ly']
-    features.is_shortened = shorteners.some(shortener => domain.includes(shortener)) ? 1 : 0
+    // Subdomain count (approximate)
+    features.subdomain_count = Math.max(0, domain.split('.').length - 2)
     
-    // Keep some extra features for heuristic fallback
-    features._redirecting_slashes = (fullUrl.match(/\/\//g) || []).length > 1 ? 1 : 0
-    features._abnormal_url = ['login', 'signin', 'verify', 'account', 'security'].some(term => fullUrl.toLowerCase().includes(term)) ? 1 : 0
-    features._url_entropy = calculateEntropy(domain)
+    // Suspicious TLD
+    const suspiciousTlds = ['tk', 'ml', 'ga', 'cf', 'gq']
+    const tld = domain.split('.').pop()
+    features.suspicious_tld = suspiciousTlds.includes(tld) ? 1 : 0
+    
+    // URL shortener
+    const shorteners = ['bit.ly', 'tinyurl.com', 't.co']
+    features.url_shortener = shorteners.some(s => domain.includes(s)) ? 1 : 0
+    
+    // Special character ratio
+    const specialChars = fullUrl.replace(/[a-zA-Z0-9.]/g, '').length
+    features.special_char_ratio = specialChars / fullUrl.length
+    
+    // Suspicious keywords
+    const suspiciousKeywords = ['verify', 'secure', 'account', 'login']
+    features.suspicious_keywords = suspiciousKeywords.filter(kw => fullUrl.toLowerCase().includes(kw)).length
+    
+    // Brand keywords
+    const brandKeywords = ['paypal', 'amazon', 'google']
+    features.brand_keywords = brandKeywords.filter(brand => domain.toLowerCase().includes(brand)).length
     
     return features
   } catch (error) {
     console.error('Error extracting features:', error)
     return {
-      url_length: 0,
-      num_dots: 0,
-      num_special_chars: 0,
-      has_ip: 0,
-      has_at_symbol: 0,
-      num_subdomains: 0,
-      has_https: 0,
-      has_hyphen: 0,
-      is_shortened: 0,
-      // Fallback features
-      _redirecting_slashes: 0,
-      _abnormal_url: 0,
-      _url_entropy: 0
+      url_length: 0, num_dots: 0, has_https: 0, has_at_symbol: 0,
+      has_ip: 0, domain_length: 0, has_hyphen: 0, subdomain_count: 0,
+      suspicious_tld: 0, url_shortener: 0, special_char_ratio: 0,
+      suspicious_keywords: 0, brand_keywords: 0
     }
   }
 }
@@ -99,84 +94,91 @@ function calculateEntropy(text) {
   return entropy
 }
 
+// heuristic scoring as fallback when API is unavailable
+function calculateHeuristicScore(features, url) {
+  let score = 0;
+  
+  // High-risk indicators
+  if (features.has_ip) score += 25;
+  if (features.url_shortener) score += 20;
+  if (features.suspicious_keywords >= 2) score += 15;
+  if (features.brand_keywords >= 2) score += 20;
+  
+  // Medium-risk indicators
+  if (features.domain_entropy > 4) score += 10;
+  if (features.suspicious_tld) score += 15;
+  if (features.homograph_attack > 0) score += 10;
+  if (!features.has_https) score += 10;
+  
+  // Low-risk indicators
+  if (features.url_length > 100) score += 5;
+  if (features.subdomain_count > 3) score += 5;
+  if (features.special_char_ratio > 0.3) score += 5;
+  
+  // Additional context checks
+  const suspiciousPatterns = [
+    /secure.*verify/i,
+    /account.*suspended/i,
+    /urgent.*action/i,
+    /confirm.*identity/i,
+    /update.*payment/i
+  ];
+  
+  for (const pattern of suspiciousPatterns) {
+    if (pattern.test(url)) {
+      score += 10;
+      break;
+    }
+  }
+  
+  return Math.min(score, 100);
+}
+
 // function to make prediction using the ML model via API
 async function analyzeSuspiciousUrl(url) {
   try {
-    // extract features
-    const features = extractUrlFeatures(url)
-
-    // features debugging
-    console.log('Extracted features:', features)
+    // Extract enhanced features
+    const features = extractEnhancedUrlFeatures(url)
     
-    // call the API for real analysis
+    // Try ML API first
     const response = await fetch(API_ENDPOINT, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        url: url, 
-        client: 'browser_extension'
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url, client: 'browser_extension' })
     })
     
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('API Error:', errorText)
-      throw new Error(`API request failed: ${response.status}`)
-    }
-
-    const data = await response.json()
-    console.log('API response:', data)
-
-    // verify threat_score exists
-    if (data.threat_score === undefined) {
-      console.error('API response missing threat_score')
-      throw new Error('Invalid API response: missing threat_score')
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        score: data.threat_score || 0,
+        is_phishing: data.is_phishing || false,
+        status: data.is_phishing ? 'Warning' : 'Safe',
+        details: data.details || 'URL analyzed successfully',
+        confidence: data.confidence || 'Medium'
+      }
     }
     
-    return {
-      score: data.threat_score || data.score || 0,
-      is_phishing: data.is_phishing || false,
-      status: data.is_phishing ? 'Warning' : 'Safe',
-      details: data.details || 'URL analyzed successfully',
-      confidence: data.probability || 0
-    }
-  } catch (error) {
-    console.error('Error analyzing URL:', error)
-
-    // fallback to simple heuristics if API fails
-    const features = extractUrlFeatures(url)
-    const heuristicScore = calculateHeuristicScore(features)
-
+    // Fallback to enhanced heuristics
+    const heuristicScore = calculateHeuristicScore(features, url)
+    
     return {
       score: heuristicScore,
-      is_phishing: heuristicScore > 30,
-      status: heuristicScore > 30 ? 'Warning' : heuristicScore > 20 ? 'Suspicious' : 'Safe',
-      details: 'Analyzed using offline heuristics (API unavailable)',
-      confidence: 0.5
+      is_phishing: heuristicScore >= 40,
+      status: heuristicScore >= 40 ? 'Warning' : heuristicScore >= 25 ? 'Suspicious' : 'Safe',
+      details: 'Analyzed using offline detection (API unavailable)',
+      confidence: 'Medium'
+    }
+    
+  } catch (error) {
+    console.error('Error analyzing URL:', error);
+    return {
+      score: 0,
+      is_phishing: false,
+      status: 'Unknown',
+      details: 'Analysis failed',
+      confidence: 'Low'
     }
   }
-}
-
-// simple heuristic scoring as fallback when API is unavailable
-function calculateHeuristicScore(features) {
-  let score = 0
-  
-  // add points for each suspicious feature
-  if (features.has_ip) score += 10
-  if (features.url_length > 75) score += 5
-  if (features.is_shortened) score += 7
-  if (features.has_at_symbol) score += 10
-  if (features._redirecting_slashes) score += 5
-  if (features.has_hyphen) score += 5
-  if (features.num_subdomains > 2) score += 5
-  if (!features.has_https) score += 7
-  if (features._abnormal_url) score += 7
-  if (features._url_entropy > 4) score += 5
-  
-  // cap the score at 100
-  return Math.min(score, 100)
 }
 
 // listen for tab updates to check URLs
