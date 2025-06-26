@@ -232,3 +232,12 @@ class FeatureExtractor:
                 'high_special_char_density', 'homograph_risk', 'potential_typosquatting',
                 'risk_factor_count', 'multiple_critical_risks', 'ultra_high_risk'
             ]}
+        
+    @staticmethod
+    def prepare_features_for_model(features, feature_list):
+        # create an array with features in the correct order
+        feature_array = []
+        for feature_name in feature_list:
+            feature_array.append(features.get(feature_name, 0))
+            
+        return np.array(feature_array).reshape(1, -1)

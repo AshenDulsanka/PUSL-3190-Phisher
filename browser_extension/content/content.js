@@ -1,6 +1,4 @@
 (() => {
-  console.log('Phisher content script loaded')
-  
   // create and inject warning overlay
   function createWarningOverlay(data) {
     // remove any existing overlay
