@@ -53,12 +53,10 @@ app.use((err, req, res, next) => {
 
 // start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
 })
 
 // handle shutdown
 process.on('SIGINT', async () => {
   await prisma.$disconnect()
-  console.log('Database connection closed')
   process.exit(0)
 })
