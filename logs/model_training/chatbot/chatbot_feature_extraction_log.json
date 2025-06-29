@@ -1,4 +1,4 @@
-{
+[
     {
         "timestamp": "2025-06-29T13:17:35.733372",
         "event_type": "DEBUG",
@@ -24803,4 +24803,4 @@
         "message": "HTML analysis failed for https://faceit.eternalgamlng.com/: HTTPSConnectionPool(host='faceit.eternalgamlng.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d027c7a30d0>: Failed to resolve 'faceit.eternalgamlng.com' ([Errno -2] Name or service not known)\"))",
         "metadata": {}
     },
-}
+]
