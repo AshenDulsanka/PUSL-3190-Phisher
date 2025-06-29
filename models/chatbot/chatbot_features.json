@@ -1,1 +1,104 @@
-["uses_http", "LegitimacyScore", "PrefixSuffix-", "WebsiteTraffic", "DNSRecording", "PageRank", "GoogleIndex", "SubDomains", "DomainLength", "LinksPointingToPage", "StatsReport", "DomainRegLen", "RequestURL", "AbnormalURL", "Symbol@", "IsTyposquatting", "BrandInSubdomain", "UsingIP", "AgeofDomain"]
+{
+  "selected_features": [
+    "LegitimacyScore",
+    "PrefixSuffix-",
+    "has_https",
+    "uses_http",
+    "GoogleIndex",
+    "DNSRecording",
+    "has_hyphen_in_domain",
+    "WebsiteTraffic",
+    "PageRank",
+    "multiple_hyphens",
+    "StatsReport",
+    "domain_length",
+    "DomainLength",
+    "LinksPointingToPage",
+    "DomainRegLen",
+    "AgeofDomain",
+    "high_domain_entropy",
+    "has_phishing_keywords",
+    "AbnormalURL",
+    "SubDomains",
+    "subdomain_count",
+    "keyword_count",
+    "multiple_phishing_keywords",
+    "risk_factor_count",
+    "RequestURL",
+    "has_brand_impersonation",
+    "BrandInSubdomain",
+    "is_shortener",
+    "excessive_subdomains",
+    "query_length",
+    "long_query",
+    "UsingIP",
+    "has_ip",
+    "high_digit_ratio",
+    "ultra_excessive_subdomains"
+  ],
+  "feature_count": 35,
+  "top_features": [
+    {
+      "feature": "LegitimacyScore",
+      "importance": 0.1892947081379375
+    },
+    {
+      "feature": "PageRank",
+      "importance": 0.14589022201247698
+    },
+    {
+      "feature": "PrefixSuffix-",
+      "importance": 0.11690518128675184
+    },
+    {
+      "feature": "has_hyphen_in_domain",
+      "importance": 0.04696775858756004
+    },
+    {
+      "feature": "DomainRegLen",
+      "importance": 0.04639169432855708
+    },
+    {
+      "feature": "GoogleIndex",
+      "importance": 0.0424860308475717
+    },
+    {
+      "feature": "DNSRecording",
+      "importance": 0.04231138215648077
+    },
+    {
+      "feature": "has_https",
+      "importance": 0.04163106807638005
+    },
+    {
+      "feature": "uses_http",
+      "importance": 0.032441769387532536
+    },
+    {
+      "feature": "domain_length",
+      "importance": 0.030490201475787765
+    },
+    {
+      "feature": "StatsReport",
+      "importance": 0.030018482359427896
+    },
+    {
+      "feature": "DomainLength",
+      "importance": 0.02952175264869832
+    },
+    {
+      "feature": "SubDomains",
+      "importance": 0.027429564864342507
+    },
+    {
+      "feature": "subdomain_count",
+      "importance": 0.027400713172497516
+    },
+    {
+      "feature": "WebsiteTraffic",
+      "importance": 0.02733514947387985
+    }
+  ],
+  "preprocessing_required": true,
+  "scaling_required": true
+}

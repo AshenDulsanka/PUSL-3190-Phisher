@@ -1,0 +1,138 @@
+[
+  {
+    "session_id": "20250623_182039",
+    "model_version": "4.0_research_grade_optimized",
+    "session_summary": {
+      "total_events": 16,
+      "performance_achieved": false,
+      "enhanced_targets_met": false,
+      "key_metrics": {
+        "accuracy": 0.98,
+        "recall": 0.97,
+        "enhanced_real_world_accuracy": 0.75,
+        "phishing_detection_rate": 0.5714285714285714
+      },
+      "optimization_results": {
+        "feature_count_reduction": "Reduced to 25 optimized features",
+        "performance_improvement": "Enhanced real-world accuracy: 75.0%",
+        "false_negative_minimization": "FN rate: 0.030"
+      }
+    },
+    "events": [
+      {
+        "timestamp": "2025-06-23T18:17:07.905974",
+        "event_type": "DATA_LOADING",
+        "message": "Loading dataset for high-performance model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:17:10.224033",
+        "event_type": "DATA_LOADED",
+        "message": "Dataset loaded successfully with 4000 samples",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:17:12.586645",
+        "event_type": "TIMING",
+        "message": "Data loading completed in 4.68 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:17:15.183621",
+        "event_type": "FEATURE_ENGINEERING",
+        "message": "Extracting advanced features for real-world scenarios",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:17:30.324585",
+        "event_type": "TIMING",
+        "message": "Advanced feature extraction completed in 15.14 seconds",
+        "metadata": {
+          "num_features": 25
+        }
+      },
+      {
+        "timestamp": "2025-06-23T18:17:32.350607",
+        "event_type": "MODEL_TRAINING",
+        "message": "Training high-performance model with focus on recall",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:17:41.372131",
+        "event_type": "DATA_SPLIT",
+        "message": "Data split: 3200 train, 800 test",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:18:21.445441",
+        "event_type": "TIMING",
+        "message": "Model training completed in 49.09 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:18:22.778166",
+        "event_type": "MODEL_EVALUATION",
+        "message": "Evaluating high-performance model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:18:39.918361",
+        "event_type": "MODEL_PERFORMANCE",
+        "message": "Model evaluation completed",
+        "metadata": {
+          "accuracy": 0.98,
+          "precision": 0.9897959183673469,
+          "recall": 0.97,
+          "f1_score": 0.9797979797979798,
+          "auc": 0.9963250000000001,
+          "false_negative_rate": 0.03,
+          "false_negatives": 12,
+          "true_positives": 388
+        }
+      },
+      {
+        "timestamp": "2025-06-23T18:18:41.706076",
+        "event_type": "TIMING",
+        "message": "Model evaluation completed in 18.93 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:18:46.303038",
+        "event_type": "REAL_WORLD_TESTING",
+        "message": "Starting comprehensive real-world testing",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:19:26.293310",
+        "event_type": "REAL_WORLD_RESULTS",
+        "message": "Real-world testing completed",
+        "metadata": {
+          "legitimate_accuracy": 1.0,
+          "phishing_detection_rate": 0.5714285714285714,
+          "overall_accuracy": 0.75,
+          "meets_performance_targets": false,
+          "false_negatives_realworld": 9,
+          "false_positives_realworld": 0
+        }
+      },
+      {
+        "timestamp": "2025-06-23T18:19:31.189632",
+        "event_type": "TIMING",
+        "message": "Real-world testing completed in 44.89 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:20:08.393230",
+        "event_type": "MODEL_SAVING",
+        "message": "Saving high-performance model and metadata",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-23T18:20:18.577766",
+        "event_type": "TIMING",
+        "message": "Model saving completed in 10.18 seconds",
+        "metadata": {}
+      }
+    ]
+  }
+]

@@ -1,63 +1,36 @@
 {
-  "name": "chatbot_random_forest_model",
-  "type": "random_forest",
-  "version": "2.0",
-  "trained_at": "2025-04-29T19:23:15.265796",
-  "accuracy": 0.9825,
-  "precision": 0.9873737373737373,
-  "recall": 0.9775,
-  "f1_score": 0.9824120603015075,
-  "auc": 0.9990468749999999,
-  "parameters": {
-    "n_estimators": 200,
-    "max_depth": 12,
-    "min_samples_split": 10,
-    "min_samples_leaf": 4,
-    "max_features": "sqrt"
+  "model_info": {
+    "name": "advanced_random_forest_model",
+    "type": "random_forest",
+    "version": "3.0",
+    "training_date": "2025-06-29T14:13:31.296980",
+    "purpose": "chatbot_phishing_detection"
   },
-  "feature_importances": {
-    "uses_http": 0.22368590634061203,
-    "LegitimacyScore": 0.17750075255621722,
-    "PrefixSuffix-": 0.15991876718474268,
-    "GoogleIndex": 0.12378112361810523,
-    "PageRank": 0.09232006221628489,
-    "DNSRecording": 0.07559691579512558,
-    "WebsiteTraffic": 0.0606453850084441,
-    "DomainLength": 0.03162442127928524,
-    "SubDomains": 0.03154941334388315,
-    "AbnormalURL": 0.006423138591255046,
-    "LinksPointingToPage": 0.005394341398366495,
-    "DomainRegLen": 0.004300476465122368,
-    "RequestURL": 0.0036131245329955727,
-    "Symbol@": 0.0018468497493376568,
-    "StatsReport": 0.001033507050880219,
-    "AgeofDomain": 0.0005782235099144559,
-    "UsingIP": 0.00012665891849509712,
-    "BrandInSubdomain": 6.093244093312458e-05,
-    "IsTyposquatting": 0.0
+  "performance_metrics": {
+    "test_accuracy": 0.9765721331689272,
+    "test_precision": 0.9622641509433962,
+    "test_recall": 0.9927007299270073,
+    "test_f1_score": 0.9772455089820359,
+    "test_auc": 0.9989172749391727
   },
-  "dataset_size": 4000,
-  "training_samples": 3200,
-  "test_samples": 800,
-  "features_implemented": [
-    "uses_http",
-    "LegitimacyScore",
-    "PrefixSuffix-",
-    "WebsiteTraffic",
-    "DNSRecording",
-    "PageRank",
-    "GoogleIndex",
-    "SubDomains",
-    "DomainLength",
-    "LinksPointingToPage",
-    "StatsReport",
-    "DomainRegLen",
-    "RequestURL",
-    "AbnormalURL",
-    "Symbol@",
-    "IsTyposquatting",
-    "BrandInSubdomain",
-    "UsingIP",
-    "AgeofDomain"
-  ]
+  "model_config": {
+    "n_estimators": 150,
+    "max_depth": 15,
+    "features_used": 35,
+    "training_samples": 3240,
+    "test_samples": 811
+  },
+  "validation_results": {
+    "ready_for_integration": true,
+    "deployment_status": "READY FOR DEPLOYMENT",
+    "false_negatives": 0,
+    "false_positives": 2,
+    "phishing_detection_rate": 1.0
+  },
+  "file_paths": {
+    "model_file": "/content/drive/MyDrive/PUSL3190/models/chatbot/ultra_comprehensive_model.pkl",
+    "scaler_file": "/content/drive/MyDrive/PUSL3190/models/chatbot/ultra_comprehensive_scaler.pkl",
+    "features_file": "/content/drive/MyDrive/PUSL3190/models/chatbot/ultra_comprehensive_features.json",
+    "logs_file": "/content/drive/MyDrive/PUSL3190/logs/ultra_comprehensive_training_log.json"
+  }
 }

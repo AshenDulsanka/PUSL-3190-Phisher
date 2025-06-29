@@ -1,0 +1,131 @@
+[
+  {
+    "session_id": "20250622_185709",
+    "model_version": "3.0_high_performance",
+    "session_summary": {
+      "total_events": 16,
+      "performance_achieved": false,
+      "key_metrics": {
+        "accuracy": 0.99125,
+        "recall": 0.985,
+        "real_world_accuracy": 0.8333333333333334
+      }
+    },
+    "events": [
+      {
+        "timestamp": "2025-06-22T18:50:09.483633",
+        "event_type": "DATA_LOADING",
+        "message": "Loading dataset for high-performance model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:50:12.729732",
+        "event_type": "DATA_LOADED",
+        "message": "Dataset loaded successfully with 4000 samples",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:50:20.441510",
+        "event_type": "TIMING",
+        "message": "Data loading completed in 10.96 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:50:22.919376",
+        "event_type": "FEATURE_ENGINEERING",
+        "message": "Extracting advanced features for real-world scenarios",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:50:53.381434",
+        "event_type": "TIMING",
+        "message": "Advanced feature extraction completed in 30.46 seconds",
+        "metadata": {
+          "num_features": 27
+        }
+      },
+      {
+        "timestamp": "2025-06-22T18:50:55.912989",
+        "event_type": "MODEL_TRAINING",
+        "message": "Training high-performance model with focus on recall",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:51:07.604675",
+        "event_type": "DATA_SPLIT",
+        "message": "Data split: 3200 train, 800 test",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:51:25.117728",
+        "event_type": "TIMING",
+        "message": "Model training completed in 29.20 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:51:27.278597",
+        "event_type": "MODEL_EVALUATION",
+        "message": "Evaluating high-performance model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:52:24.717825",
+        "event_type": "MODEL_PERFORMANCE",
+        "message": "Model evaluation completed",
+        "metadata": {
+          "accuracy": 0.99125,
+          "precision": 0.9974683544303797,
+          "recall": 0.985,
+          "f1_score": 0.9911949685534591,
+          "auc": 0.9998437499999999,
+          "false_negative_rate": 0.015,
+          "false_negatives": 6,
+          "true_positives": 394
+        }
+      },
+      {
+        "timestamp": "2025-06-22T18:52:26.888299",
+        "event_type": "TIMING",
+        "message": "Model evaluation completed in 59.61 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:52:31.832681",
+        "event_type": "REAL_WORLD_TESTING",
+        "message": "Starting comprehensive real-world testing",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:54:28.143168",
+        "event_type": "REAL_WORLD_RESULTS",
+        "message": "Real-world testing completed",
+        "metadata": {
+          "legitimate_accuracy": 0.8181818181818182,
+          "phishing_detection_rate": 0.8421052631578947,
+          "overall_accuracy": 0.8333333333333334,
+          "meets_performance_targets": false,
+          "false_negatives_realworld": 3,
+          "false_positives_realworld": 2
+        }
+      },
+      {
+        "timestamp": "2025-06-22T18:54:30.195932",
+        "event_type": "TIMING",
+        "message": "Real-world testing completed in 118.36 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:55:23.441684",
+        "event_type": "MODEL_SAVING",
+        "message": "Saving high-performance model and metadata",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-22T18:55:31.270615",
+        "event_type": "TIMING",
+        "message": "Model saving completed in 7.83 seconds",
+        "metadata": {}
+      }
+    ]
+  }
+]
