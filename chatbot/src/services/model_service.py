@@ -37,9 +37,9 @@ class ModelService:
         self.scaler = None
         self.feature_list = []
         self.model_info = {
-            "name": "chatbot_random_forest",
+            "name": "advanced_random_forest_model",
             "type": "random_forest",
-            "version": "2.0"
+            "version": "3.0"
         }
         self.redis = RedisService()
 
@@ -68,18 +68,30 @@ class ModelService:
             if os.path.exists(CHATBOT_FEATURES_PATH):
                 logger.info(f"Loading feature list from {CHATBOT_FEATURES_PATH}")
                 with open(CHATBOT_FEATURES_PATH, 'r') as f:
-                    self.feature_list = json.load(f)
+                    feature_config = json.load(f)
+                    if "selected_features" in feature_config:
+                        self.feature_list = feature_config["selected_features"]
+                    else:
+                        self.feature_list = feature_config  # fallback for old format
                     logger.info(f"Loaded {len(self.feature_list)} features")
             else:
                 logger.warning(f"Feature list not found at {CHATBOT_FEATURES_PATH}")
-                # default feature list based on notebook features
+                # updated feature list
                 self.feature_list = [
+                    # top high-impact features from analysis
                     'uses_http', 'LegitimacyScore', 'PrefixSuffix-', 
                     'WebsiteTraffic', 'DNSRecording', 'PageRank', 
                     'GoogleIndex', 'SubDomains', 'DomainLength', 
                     'LinksPointingToPage', 'StatsReport', 'DomainRegLen', 
                     'RequestURL', 'AbnormalURL', 'Symbol@', 'IsTyposquatting',
-                    'BrandInSubdomain', 'UsingIP', 'AgeofDomain'
+                    'BrandInSubdomain', 'UsingIP', 'AgeofDomain',
+                    # enhanced ultra-high recall features
+                    'has_ip', 'has_https', 'suspicious_tld', 'domain_length',
+                    'subdomain_count', 'excessive_subdomains', 'ultra_excessive_subdomains',
+                    'has_hyphen_in_domain', 'multiple_hyphens', 'high_digit_ratio',
+                    'url_length', 'extremely_long_url', 'suspicious_url_length',
+                    'keyword_count', 'has_phishing_keywords', 'multiple_phishing_keywords',
+                    'has_brand_impersonation', 'has_suspicious_domain_pattern'
                 ]
             
             # load model metadata if available
@@ -87,14 +99,20 @@ class ModelService:
                 logger.info(f"Loading model metadata from {CHATBOT_METADATA_PATH}")
                 with open(CHATBOT_METADATA_PATH, 'r') as f:
                     metadata = json.load(f)
-                    if "name" in metadata:
-                        self.model_info["name"] = metadata["name"]
-                    if "type" in metadata:
-                        self.model_info["type"] = metadata["type"]
-                    if "version" in metadata:
-                        self.model_info["version"] = metadata["version"]
+                    if "model_info" in metadata:
+                        self.model_info.update(metadata["model_info"])
+                    else:
+                        # fallback for direct metadata fields
+                        if "name" in metadata:
+                            self.model_info["name"] = metadata["name"]
+                        if "type" in metadata:
+                            self.model_info["type"] = metadata["type"]
+                        if "version" in metadata:
+                            self.model_info["version"] = metadata["version"]
             
             logger.info("Chatbot model and related artifacts loaded successfully")
+            logger.info(f"Model: {self.model_info}")
+            logger.info(f"Features: {len(self.feature_list)}")
             self._register_model_in_database()
             
         except Exception as e:
@@ -114,7 +132,9 @@ class ModelService:
                     "version": self.model_info["version"],
                     "parameters": json.dumps({
                         "feature_count": len(self.feature_list) if self.feature_list else 0,
-                        "has_scaler": self.scaler is not None
+                        "has_scaler": self.scaler is not None,
+                        "optimization": "ultra_comprehensive",
+                        "purpose": "chatbot_phishing_detection"
                     })
                 }
                 
@@ -179,7 +199,9 @@ class ModelService:
                 recommendations.append("The website may be attempting to impersonate a brand using subdomains.")
             if features.get('uses_http', 1) == 1:
                 recommendations.append("The website doesn't use secure HTTPS protocol, which is unusual for legitimate sites collecting information.")
-        elif threat_score >= 30:  # Suspicious but not phishing
+            if features.get('ultra_high_risk', 0) == 1:
+                recommendations.append("Multiple critical risk factors detected - this is extremely dangerous.")
+        elif threat_score >= 30:  # suspicious but not phishing
             recommendations.append("This website shows some suspicious patterns. Exercise caution when sharing information.")
             if features.get('uses_http', 1) == 1:
                 recommendations.append("The website doesn't use secure HTTPS protocol, which increases risk.")
@@ -202,7 +224,22 @@ class ModelService:
         
         if is_phishing:
             if threat_score > 85:
-                return f"This URL has been identified as a high-risk phishing website with {threat_score}% confidence. It uses {protocol} and has an {domain_age} domain age. Multiple phishing indicators were detected including {'typosquatting' if features.get('IsTyposquatting', 0) == 1 else 'suspicious URL patterns'} and {'brand impersonation in the subdomain' if features.get('BrandInSubdomain', 0) == 1 else 'suspicious content patterns'}."
+                explanation = f"This URL has been identified as a high-risk phishing website with {threat_score}% confidence. "
+                explanation += f"It uses {protocol} and has an {domain_age} domain age. "
+                explanation += "Multiple phishing indicators were detected including "
+                
+                indicators = []
+                if features.get('IsTyposquatting', 0) == 1:
+                    indicators.append("typosquatting")
+                if features.get('BrandInSubdomain', 0) == 1:
+                    indicators.append("brand impersonation in the subdomain")
+                if features.get('ultra_high_risk', 0) == 1:
+                    indicators.append("ultra-high risk patterns")
+                if not indicators:
+                    indicators.append("suspicious URL patterns")
+                
+                explanation += ", ".join(indicators) + "."
+                return explanation
             else:
                 return f"This URL appears to be a phishing website with {threat_score}% confidence. It uses {protocol} and shows several concerning patterns including {'typosquatting' if features.get('IsTyposquatting', 0) == 1 else 'suspicious URL structure'}."
         elif threat_score >= 30:
@@ -241,12 +278,14 @@ class ModelService:
             else:
                 # fallback if feature list is not available
                 X = np.array(list(features.values())).reshape(1, -1)
+                logger.warning("No feature list available, using all features")
             
             # scale features
             if self.scaler:
                 X_scaled = self.scaler.transform(X)
             else:
                 X_scaled = X
+                logger.warning("No scaler available, using raw features")
             
             # make prediction
             raw_prediction = self.model.predict(X_scaled)[0]
@@ -254,16 +293,29 @@ class ModelService:
             
             logger.info(f"Raw model output: prediction={raw_prediction}, probability={raw_probability:.4f}")
             
-            # threashold settings
-            phishing_threshold = float(PHISHING_THRESHOLD_CB) if PHISHING_THRESHOLD_CB else 0.5
+            # ultra-high recall threshold for chatbot safety 
+            phishing_threshold = 0.4  # lower threshold for maximum security
             warning_threshold = float(WARNING_THRESHOLD_CB) if WARNING_THRESHOLD_CB else 0.3
             
+            # ultra-sensitive override
+            ultra_sensitive_override = (
+                features.get('UsingIP', 0) == 1 or 
+                features.get('ultra_high_risk', 0) == 1 or
+                features.get('IsTyposquatting', 0) == 1 or
+                features.get('BrandInSubdomain', 0) == 1
+            )
+            
             # apply the threshold to determine if it's phishing
-            is_phishing = raw_probability >= phishing_threshold
+            is_phishing = raw_probability >= phishing_threshold or ultra_sensitive_override
             is_suspicious = raw_probability >= warning_threshold
             
             # calculate threat score based on raw probability
             threat_score = int(raw_probability * 100)
+            
+            # boost threat score for ultra-sensitive cases
+            if ultra_sensitive_override:
+                threat_score = max(threat_score, 85)
+                logger.info("Ultra-sensitive override: Critical phishing indicators detected")
             
             # determine confidence level
             if threat_score > 85 or threat_score < 15:
@@ -277,7 +329,8 @@ class ModelService:
             features_analyzed = [
                 "domain_age", "ssl_cert", "url_length", 
                 "special_chars", "typosquatting", "subdomains",
-                "dns_records", "domain_registration", "brand_impersonation"
+                "dns_records", "domain_registration", "brand_impersonation",
+                "ultra_comprehensive_analysis"
             ]
             
             # generate deep analysis
