@@ -96,12 +96,36 @@ const ResultsComp = () => {
     hasPopup: 'Uses popup windows',
     disablesRightClick: 'Prevents right-click',
     hasSpecialChars: 'Unusual special characters',
-    isTyposquatting: 'Attempts to mimic a popular website',
-    hasSuspiciousRedirect: 'Contains suspicious redirects',
-    externalScripts: 'Loads scripts from external domains',
-    suspiciousURL: 'URL structure has suspicious patterns',
-    potentialPhishing: 'Contains characteristics of phishing URLs',
-    suspiciousDomain: 'Domain name has suspicious characteristics'
+    
+    // ultra-comprehensive features
+    IsTyposquatting: 'Attempts to mimic a popular website through typosquatting',
+    BrandInSubdomain: 'Uses brand names in subdomain to impersonate legitimate sites',
+    has_brand_impersonation: 'Contains brand impersonation indicators',
+    has_phishing_keywords: 'Contains common phishing keywords',
+    multiple_phishing_keywords: 'Contains multiple phishing keywords',
+    suspicious_tld: 'Uses suspicious top-level domain',
+    is_shortener: 'Uses URL shortening service',
+    excessive_subdomains: 'Unusually high number of subdomains',
+    ultra_excessive_subdomains: 'Extremely high number of subdomains',
+    high_digit_ratio: 'High ratio of digits in domain name',
+    extremely_long_url: 'Extremely long URL structure',
+    high_special_char_density: 'High density of special characters',
+    ultra_high_risk: 'Multiple critical risk factors detected',
+    
+    // compatibility mappings
+    UsingIP: 'Uses IP address instead of domain name',
+    Symbol: 'Contains @ symbol in URL',
+    PrefixSuffix: 'Contains dashes in domain name',
+    SubDomains: 'Multiple subdomains',
+    uses_http: 'Missing secure HTTPS connection',
+    has_https: 'Secure HTTPS connection',
+    has_ip: 'Uses IP address instead of domain name',
+    has_at_symbol: 'Contains @ symbol in URL',
+    subdomain_count: 'Multiple subdomains',
+    url_length: 'Long URL structure',
+    has_hyphen_in_domain: 'Contains hyphens in domain',
+    suspicious_url_length: 'Suspicious URL length',
+    has_suspicious_domain_pattern: 'Suspicious domain patterns detected'
   }
   
   // security tips

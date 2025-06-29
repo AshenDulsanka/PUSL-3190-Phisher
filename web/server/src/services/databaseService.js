@@ -16,19 +16,27 @@ class DatabaseService {
 
       // extract feature data
       const featureData = {
-        usingIP: features.usingIP || features.has_ip || null,
+        // legacy features
+        hasHTTPS: features.hasHTTPS || features.has_https || features.uses_http === 0 || null,
+        usingIP: features.usingIP || features.UsingIP || features.has_ip || null,
+        hasHyphen: features.hasHyphen || features.PrefixSuffix || features.has_hyphen_in_domain || null,
+        numSubdomains: features.numSubdomains || features.SubDomains || features.subdomain_count || null,
         urlLength: features.urlLength || features.url_length || null,
-        domainAge: features.domainAge || features.domain_age || null,
-        hasHTTPS: features.hasHTTPS || (features.uses_http === 0) || null,
-        numDots: features.numDots || features.num_dots || null,
-        numHyphens: features.numHyphens || features.num_hyphens || null,
-        numSubdomains: features.numSubdomains || features.sub_domains || null,
-        hasAtSymbol: features.hasAtSymbol || features.has_at_symbol || null,
-        isShortened: features.isShortened || features.is_shortened || null,
-        hasSpecialChars: features.hasSpecialChars || features.has_special_chars || null,
+        hasAtSymbol: features.hasAtSymbol || features.Symbol || features.has_at_symbol || null,
+        hasSpecialChars: features.hasSpecialChars || features.AbnormalURL || features.high_special_char_density || null,
+        
+        // ultra-comprehensive features
+        isTyposquatting: features.IsTyposquatting || features.is_typosquatting || null,
+        hasBrandImpersonation: features.BrandInSubdomain || features.has_brand_impersonation || null,
+        hasPhishingKeywords: features.has_phishing_keywords || null,
+        isSuspiciousTLD: features.suspicious_tld || null,
+        isShortener: features.is_shortener || null,
+        hasUltraHighRisk: features.ultra_high_risk || null,
+        
         hasIframe: features.hasIframe || features.has_iframe || null,
         disablesRightClick: features.disablesRightClick || null,
         hasPopup: features.hasPopup || features.has_popup || null,
+        isShortened: features.isShortened || features.is_shortened || null,
       }
 
       // prepare source tracking
