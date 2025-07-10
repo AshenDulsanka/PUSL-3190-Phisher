@@ -22,6 +22,10 @@ logger = get_logger(__name__)
 # whitelist for legitimate HTTP URLs
 HTTP_WHITELIST = ['example.com', 'info.cern.ch', 'localhost']
 
+def is_domain_whitelisted(domain: str) -> bool:
+    """Check if the domain is in the whitelist."""
+    return any(domain.endswith(allowed) for allowed in HTTP_WHITELIST)
+
 class FeatureExtractor:
     """service for extracting comprehensive features for deep URL analysis"""
 
@@ -290,7 +294,13 @@ class FeatureExtractor:
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
             }
 
-            response = session.get(url, headers=headers, timeout=3, allow_redirects=False, verify=False)
+            # Ensure the domain is whitelisted
+            if not is_domain_whitelisted(domain):
+                logger.warning(f"Skipping URL with non-whitelisted domain: {domain}")
+                return FeatureExtractor.get_default_html_features()
+            
+            # Perform the HTTP request with SSL verification enabled
+            response = session.get(url, headers=headers, timeout=3, allow_redirects=False, verify=True)
 
             if response.status_code != 200:
                 return FeatureExtractor.get_default_html_features()
