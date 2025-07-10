@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Phisher - AI URL Phishing Detector",
-  "version": "1.3",
+  "version": "2.0",
   "description": "AI-powered phishing URL detection with real-time analysis",
   "permissions": [
     "activeTab",
@@ -12,7 +12,7 @@
     "notifications"
   ],
   "host_permissions": [
-    "https://extension.phisher.live/*"
+    "http://localhost:8000/*"
   ],
   "background": {
     "service_worker": "./background.js"
@@ -34,8 +34,5 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://extension.phisher.live https://chatbot.phisher.live https://phisher.live"
   }
 }

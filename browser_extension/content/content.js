@@ -1,6 +1,4 @@
 (() => {
-  console.log('Phisher content script loaded')
-  
   // create and inject warning overlay
   function createWarningOverlay(data) {
     // remove any existing overlay
@@ -191,7 +189,7 @@
     })
     
     learnMoreButton.addEventListener('click', () => {
-      window.open('https://chatbot.phisher.live/learn', '_blank')
+      window.open('http://localhost:3000', '_blank')
     })
     
     // prevent scrolling on the page while the overlay is shown

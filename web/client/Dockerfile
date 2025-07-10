@@ -11,14 +11,8 @@ RUN npm install
 # copy source code
 COPY . .
 
-# build the app
-RUN npm run build
-
-# simple server to serve the static files
-RUN npm install -g serve
-
 # expose dev server port
-EXPOSE 8080
+EXPOSE 3000
 
-# start the built app on port 8080
-CMD ["serve", "-s", "dist", "-l", "8080"]
+# start the development server with host set for docker
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

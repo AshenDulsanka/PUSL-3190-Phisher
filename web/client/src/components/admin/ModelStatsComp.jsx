@@ -215,14 +215,21 @@ const ModelStatsComp = () => {
                       {model.name}
                     </Typography>
                     <Chip 
-                      label={model.feedbackIncorporated ? "Continuous Learning" : "Static"} 
-                      color={model.feedbackIncorporated ? "success" : "default"}
+                      label={model.name.includes('ultra_comprehensive') ? 
+                        "Ultra-High Recall" : 
+                        model.feedbackIncorporated ? "Continuous Learning" : "Static"} 
+                      color={model.name.includes('ultra_comprehensive') ? 
+                        "error" : 
+                        model.feedbackIncorporated ? "success" : "default"}
                       size="small"
                       sx={{ height: 24 }}
                     />
                   </Box>
                   <Typography variant="body2" color="text.secondary">
-                    {model.type} / v{model.version}
+                    {model.name.includes('ultra_comprehensive') ? 
+                      'Advanced model optimized for maximum phishing detection with 0 false negatives' :
+                      `${model.type} / v${model.version}`
+                    }
                   </Typography>
                 </Box>
               </Box>

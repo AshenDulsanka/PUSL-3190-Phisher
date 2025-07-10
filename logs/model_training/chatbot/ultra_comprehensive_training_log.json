@@ -1,0 +1,798 @@
+[
+  {
+    "timestamp": "2025-06-29T13:16:26.128552",
+    "event_type": "DATA_LOADING",
+    "message": "Loading dataset and enhancing with modern phishing patterns",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:16:27.734060",
+    "event_type": "DATA_LOADED",
+    "message": "Enhanced dataset loaded with 4051 samples",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:16:42.524429",
+    "event_type": "TIMING",
+    "message": "Data loading completed in 16.40 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:16:52.624303",
+    "event_type": "FEATURE_ENGINEERING",
+    "message": "Starting comprehensive feature engineering for deep analysis",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:17:27.852744",
+    "event_type": "FEATURE_ENGINEERING",
+    "message": "Comprehensive feature extraction functions completed",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:17:29.525763",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Starting comprehensive feature extraction for chatbot model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:17:33.598160",
+    "event_type": "FEATURE_EXTRACTION",
+    "message": "Processing 4051 URLs in batches of 50",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:46:34.289025",
+    "event_type": "DATA_PROCESSING",
+    "message": "Creating feature DataFrame from extracted results",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:46:37.447733",
+    "event_type": "DATA_CLEANING",
+    "message": "Cleaning and validating extracted features",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:46:50.881696",
+    "event_type": "DATA_VALIDATION",
+    "message": "Validating feature extraction results",
+    "metadata": {
+      "total_samples": 4051,
+      "total_features": 52,
+      "phishing_samples": 2051,
+      "legitimate_samples": 2000,
+      "null_values": 0,
+      "infinite_values": 0
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:47:26.228185",
+    "event_type": "DATA_SAVING",
+    "message": "Saving processed features to /content/drive/MyDrive/PUSL3190/data/processed/chatbot/ultra_comprehensive_features.csv",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:47:32.378170",
+    "event_type": "TIMING",
+    "message": "Feature extraction completed in 1802.85 seconds",
+    "metadata": {
+      "num_features": 52
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:48:38.860006",
+    "event_type": "FEATURE_QUALITY_ANALYSIS",
+    "message": "Feature quality analysis completed",
+    "metadata": {
+      "extraction_summary": {
+        "total_urls": 4051,
+        "total_features": 52,
+        "processing_time_seconds": 1802.8521871566772,
+        "avg_time_per_url": 0.4450388020628677
+      },
+      "quality_metrics": {
+        "low_variance_features": 0,
+        "constant_features": 0,
+        "high_zero_features": 18,
+        "high_correlation_features": 36
+      },
+      "top_predictive_features": [
+        "LegitimacyScore",
+        "PrefixSuffix-",
+        "has_https",
+        "uses_http",
+        "GoogleIndex",
+        "DNSRecording",
+        "has_hyphen_in_domain",
+        "WebsiteTraffic",
+        "PageRank",
+        "multiple_hyphens",
+        "StatsReport",
+        "DomainLength",
+        "domain_length",
+        "LinksPointingToPage",
+        "DomainRegLen"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:49:08.889220",
+    "event_type": "FEATURE_ANALYSIS",
+    "message": "Starting advanced feature analysis and visualization",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:52:59.038680",
+    "event_type": "FEATURE_ANALYSIS_COMPLETE",
+    "message": "Advanced feature analysis completed",
+    "metadata": {
+      "feature_analysis_summary": {
+        "total_features": 52,
+        "high_impact_features": 36,
+        "medium_impact_features": 10,
+        "zero_variance_features": 0,
+        "low_variance_features": 12,
+        "high_correlation_pairs": 34
+      },
+      "top_features": [
+        "LegitimacyScore",
+        "PrefixSuffix-",
+        "has_https",
+        "uses_http",
+        "GoogleIndex",
+        "DNSRecording",
+        "has_hyphen_in_domain",
+        "WebsiteTraffic",
+        "PageRank",
+        "multiple_hyphens",
+        "StatsReport",
+        "domain_length",
+        "DomainLength",
+        "LinksPointingToPage",
+        "DomainRegLen",
+        "AgeofDomain",
+        "high_domain_entropy",
+        "has_phishing_keywords",
+        "AbnormalURL",
+        "SubDomains"
+      ],
+      "feature_correlations": {
+        "LegitimacyScore": -0.9199817899599879,
+        "PrefixSuffix-": 0.9191573412767942,
+        "has_https": -0.9180156785203761,
+        "uses_http": 0.9180156785203758,
+        "GoogleIndex": -0.9044572599084548,
+        "DNSRecording": -0.9044572599084548,
+        "has_hyphen_in_domain": 0.9038264853457483,
+        "WebsiteTraffic": -0.9008059940473729,
+        "PageRank": -0.8993260202859341,
+        "multiple_hyphens": 0.8195364883215654,
+        "StatsReport": -0.7933301435646328,
+        "domain_length": 0.7898121220403739,
+        "DomainLength": 0.7898121220403739,
+        "LinksPointingToPage": -0.7851751634413069,
+        "DomainRegLen": -0.7817669986324395,
+        "AgeofDomain": -0.7780346260532133,
+        "high_domain_entropy": 0.7065460261220147,
+        "has_phishing_keywords": 0.6512015430844095,
+        "AbnormalURL": 0.6512015430844095,
+        "SubDomains": -0.6477117365090385
+      },
+      "category_performance": {
+        "URL Structure": {
+          "avg_correlation": 0.23909084164813152,
+          "max_correlation": 0.9180156785203758,
+          "feature_count": 8
+        },
+        "Domain Analysis": {
+          "avg_correlation": 0.6396520226754152,
+          "max_correlation": 0.9191573412767942,
+          "feature_count": 8
+        },
+        "Subdomain Analysis": {
+          "avg_correlation": 0.3045391946211043,
+          "max_correlation": 0.6477117365090385,
+          "feature_count": 5
+        },
+        "Content Analysis": {
+          "avg_correlation": 0.4557866411322003,
+          "max_correlation": 0.6512015430844095,
+          "feature_count": 5
+        },
+        "Security Features": {
+          "avg_correlation": 0.21671927309208586,
+          "max_correlation": 0.9199817899599879,
+          "feature_count": 5
+        },
+        "Network Features": {
+          "avg_correlation": 0.8434191832302261,
+          "max_correlation": 0.9044572599084548,
+          "feature_count": 8
+        },
+        "Risk Assessment": {
+          "avg_correlation": 0.4545431801208305,
+          "max_correlation": 0.6512015430844095,
+          "feature_count": 5
+        }
+      },
+      "recommendations": {
+        "primary_features": [
+          "LegitimacyScore",
+          "PrefixSuffix-",
+          "has_https",
+          "uses_http",
+          "GoogleIndex",
+          "DNSRecording",
+          "has_hyphen_in_domain",
+          "WebsiteTraffic",
+          "PageRank",
+          "multiple_hyphens",
+          "StatsReport",
+          "domain_length",
+          "DomainLength",
+          "LinksPointingToPage",
+          "DomainRegLen"
+        ],
+        "secondary_features": [
+          "has_brand_impersonation",
+          "BrandInSubdomain",
+          "is_shortener",
+          "excessive_subdomains",
+          "query_length",
+          "long_query",
+          "UsingIP",
+          "has_ip",
+          "high_digit_ratio",
+          "ultra_excessive_subdomains"
+        ],
+        "features_to_remove": [
+          "Symbol@",
+          "IsTyposquatting",
+          "UsingIP",
+          "has_ip",
+          "excessive_subdomains",
+          "ultra_excessive_subdomains",
+          "high_digit_ratio",
+          "has_at_symbol",
+          "has_double_slash",
+          "special_char_density",
+          "homograph_risk",
+          "potential_typosquatting"
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:53:01.655383",
+    "event_type": "TIMING",
+    "message": "Feature analysis completed in 232.77 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:53:14.552563",
+    "event_type": "MODEL_TRAINING",
+    "message": "Starting optimized model training with feature selection for chatbot",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:53:30.983713",
+    "event_type": "FEATURE_SELECTION",
+    "message": "Optimized feature set created",
+    "metadata": {
+      "original_features": 52,
+      "selected_features": 35,
+      "removed_features": 12,
+      "feature_list": [
+        "LegitimacyScore",
+        "PrefixSuffix-",
+        "has_https",
+        "uses_http",
+        "GoogleIndex",
+        "DNSRecording",
+        "has_hyphen_in_domain",
+        "WebsiteTraffic",
+        "PageRank",
+        "multiple_hyphens",
+        "StatsReport",
+        "domain_length",
+        "DomainLength",
+        "LinksPointingToPage",
+        "DomainRegLen",
+        "AgeofDomain",
+        "high_domain_entropy",
+        "has_phishing_keywords",
+        "AbnormalURL",
+        "SubDomains",
+        "subdomain_count",
+        "keyword_count",
+        "multiple_phishing_keywords",
+        "risk_factor_count",
+        "RequestURL",
+        "has_brand_impersonation",
+        "BrandInSubdomain",
+        "is_shortener",
+        "excessive_subdomains",
+        "query_length",
+        "long_query",
+        "UsingIP",
+        "has_ip",
+        "high_digit_ratio",
+        "ultra_excessive_subdomains"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:53:50.671376",
+    "event_type": "DATA_SPLIT",
+    "message": "Optimized data split completed",
+    "metadata": {
+      "train_samples": 3240,
+      "test_samples": 811,
+      "train_phishing": 1640,
+      "train_legitimate": 1600,
+      "test_phishing": 411,
+      "test_legitimate": 400
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:54:11.385452",
+    "event_type": "MODEL_TRAINING_COMPLETE",
+    "message": "Chatbot model training finished",
+    "metadata": {
+      "training_time_seconds": 4.181926965713501,
+      "oob_score": 0.9771604938271605,
+      "n_estimators": 200,
+      "max_depth": 20
+    }
+  },
+  {
+    "timestamp": "2025-06-29T13:54:13.701453",
+    "event_type": "MODEL_EVALUATION",
+    "message": "Evaluating Random Forest model",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T13:59:44.829993",
+    "event_type": "HYPERPARAMETER_OPTIMIZATION",
+    "message": "Grid search completed",
+    "metadata": {
+      "optimization_time_seconds": 276.6980183124542,
+      "best_params": {
+        "class_weight": {
+          "0": 1,
+          "1": 12
+        },
+        "max_depth": 15,
+        "min_samples_leaf": 3,
+        "min_samples_split": 7,
+        "n_estimators": 150
+      },
+      "best_cv_recall": 0.9867619469213095,
+      "total_combinations_tested": 243
+    }
+  },
+  {
+    "timestamp": "2025-06-29T14:06:35.945101",
+    "event_type": "FINAL_MODEL_EVALUATION",
+    "message": "Comprehensive model evaluation completed",
+    "metadata": {
+      "model_info": {
+        "name": "advanced_random_forest_model",
+        "type": "random_forest",
+        "version": "3.0",
+        "training_date": "2025-06-29T14:06:33.322454",
+        "features_used": 35,
+        "training_samples": 3240,
+        "test_samples": 811
+      },
+      "performance_metrics": {
+        "training": {
+          "accuracy": 0.9783950617283951,
+          "precision": 0.9655990510083037,
+          "recall": 0.9926829268292683,
+          "f1_score": 0.9789536981358989
+        },
+        "test": {
+          "accuracy": 0.9765721331689272,
+          "precision": 0.9622641509433962,
+          "recall": 0.9927007299270073,
+          "f1_score": 0.9772455089820359,
+          "auc": 0.9989172749391727
+        }
+      },
+      "chatbot_specific": {
+        "false_negatives": 3,
+        "false_positives": 16,
+        "true_positives": 408,
+        "true_negatives": 384
+      },
+      "optimization_results": {
+        "best_parameters": {
+          "class_weight": {
+            "0": 1,
+            "1": 12
+          },
+          "max_depth": 15,
+          "min_samples_leaf": 3,
+          "min_samples_split": 7,
+          "n_estimators": 150
+        },
+        "best_cv_score": 0.9867619469213095,
+        "optimization_time": 276.6980183124542
+      },
+      "timing": {
+        "initial_training_time": 4.181926965713501,
+        "optimization_time": 276.6980183124542,
+        "final_training_time": 0.4781196117401123,
+        "total_time": 739.6209483146667
+      },
+      "feature_selection": {
+        "selected_features": [
+          "LegitimacyScore",
+          "PrefixSuffix-",
+          "has_https",
+          "uses_http",
+          "GoogleIndex",
+          "DNSRecording",
+          "has_hyphen_in_domain",
+          "WebsiteTraffic",
+          "PageRank",
+          "multiple_hyphens",
+          "StatsReport",
+          "domain_length",
+          "DomainLength",
+          "LinksPointingToPage",
+          "DomainRegLen",
+          "AgeofDomain",
+          "high_domain_entropy",
+          "has_phishing_keywords",
+          "AbnormalURL",
+          "SubDomains",
+          "subdomain_count",
+          "keyword_count",
+          "multiple_phishing_keywords",
+          "risk_factor_count",
+          "RequestURL",
+          "has_brand_impersonation",
+          "BrandInSubdomain",
+          "is_shortener",
+          "excessive_subdomains",
+          "query_length",
+          "long_query",
+          "UsingIP",
+          "has_ip",
+          "high_digit_ratio",
+          "ultra_excessive_subdomains"
+        ],
+        "top_features": [
+          {
+            "feature": "LegitimacyScore",
+            "importance": 0.1892947081379375
+          },
+          {
+            "feature": "PageRank",
+            "importance": 0.14589022201247698
+          },
+          {
+            "feature": "PrefixSuffix-",
+            "importance": 0.11690518128675184
+          },
+          {
+            "feature": "has_hyphen_in_domain",
+            "importance": 0.04696775858756004
+          },
+          {
+            "feature": "DomainRegLen",
+            "importance": 0.04639169432855708
+          },
+          {
+            "feature": "GoogleIndex",
+            "importance": 0.0424860308475717
+          },
+          {
+            "feature": "DNSRecording",
+            "importance": 0.04231138215648077
+          },
+          {
+            "feature": "has_https",
+            "importance": 0.04163106807638005
+          },
+          {
+            "feature": "uses_http",
+            "importance": 0.032441769387532536
+          },
+          {
+            "feature": "domain_length",
+            "importance": 0.030490201475787765
+          },
+          {
+            "feature": "StatsReport",
+            "importance": 0.030018482359427896
+          },
+          {
+            "feature": "DomainLength",
+            "importance": 0.02952175264869832
+          },
+          {
+            "feature": "SubDomains",
+            "importance": 0.027429564864342507
+          },
+          {
+            "feature": "subdomain_count",
+            "importance": 0.027400713172497516
+          },
+          {
+            "feature": "WebsiteTraffic",
+            "importance": 0.02733514947387985
+          },
+          {
+            "feature": "LinksPointingToPage",
+            "importance": 0.02240523196592102
+          },
+          {
+            "feature": "AgeofDomain",
+            "importance": 0.019655563912982284
+          },
+          {
+            "feature": "RequestURL",
+            "importance": 0.016761957076719812
+          },
+          {
+            "feature": "keyword_count",
+            "importance": 0.013114649952170846
+          },
+          {
+            "feature": "AbnormalURL",
+            "importance": 0.011753426338223698
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": "2025-06-29T14:06:50.693385",
+    "event_type": "MODEL_VALIDATION",
+    "message": "Starting comprehensive model validation and real-world testing",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:08:08.666436",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://www.netflix.com/login: ('Received response with content-encoding: zstd, but failed to decode it.', ZstdError('cannot use a decompressobj multiple times'))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:44.748862",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://paypal-verification.secure-login.net/signin: HTTPSConnectionPool(host='paypal-verification.secure-login.net', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274b97d50>: Failed to resolve 'paypal-verification.secure-login.net' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:45.021445",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for verify-security.com: No match for \"VERIFY-SECURITY.COM\".\r\n>>> Last update of whois database: 2025-06-29T14:09:27Z <<<\r\n\r\nNOTICE: The expiration date displayed in this record is the date the\r\nregistrar's sponsorship of the domain name registration in the registry is\r\ncurrently set to expire. This date does not necessarily reflect the expiration\r\ndate of the domain name registrant's agreement with the sponsoring\r\nregistrar.  Users may consult the sponsoring registrar's Whois database to\r\nview the registrar's reported date of expiration for this registration.\r\n\r\nTERMS OF USE: You are not authorized to access or query our Whois\r\ndatabase through the use of electronic processes that are high-volume and\r\nautomated except as reasonably necessary to register domain names or\r\nmodify existing registrations; the Data in VeriSign Global Registry\r\nServices' (\"VeriSign\") Whois database is provided by VeriSign for\r\ninformation purposes only, and to assist persons in obtaining information\r\nabout or related to a domain name registration record. VeriSign does not\r\nguarantee its accuracy. By submitting a Whois query, you agree to abide\r\nby the following terms of use: You agree that you may use this Data only\r\nfor lawful purposes and that under no circumstances will you use this Data\r\nto: (1) allow, enable, or otherwise support the transmission of mass\r\nunsolicited, commercial advertising or solicitations via e-mail, telephone,\r\nor facsimile; or (2) enable high volume, automated, electronic processes\r\nthat apply to VeriSign (or its computer systems). The compilation,\r\nrepackaging, dissemination or other use of this Data is expressly\r\nprohibited without the prior written consent of VeriSign. You agree not to\r\nuse electronic processes that are automated and high-volume to access or\r\nquery the Whois database except as reasonably necessary to register\r\ndomain names or modify existing registrations. VeriSign reserves the right\r\nto restrict your access to the Whois database in its sole discretion to ensure\r\noperational stability.  VeriSign may restrict or terminate your access to the\r\nWhois database for failure to abide by these terms of use. VeriSign\r\nreserves the right to modify these terms at any time.\r\n\r\nThe Registry database contains ONLY .COM, .NET, .EDU domains and\r\nRegistrars.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:45.099847",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://accounts-google.verify-security.com/login: HTTPSConnectionPool(host='accounts-google.verify-security.com', port=443): Max retries exceeded with url: /login (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274b95f90>: Failed to resolve 'accounts-google.verify-security.com' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:45.454909",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for security-update.org: Domain not found.\r\n>>> Last update of WHOIS database: 2025-06-29T14:09:45Z <<<\r\n\r\nTerms of Use: Access to Public Interest Registry WHOIS information is provided to assist persons in determining the contents of a domain name registration record in the Public Interest Registry registry database. The data in this record is provided by Public Interest Registry for informational purposes only, and Public Interest Registry does not guarantee its accuracy. This service is intended only for query-based access. You agree that you will use this data only for lawful purposes and that, under no circumstances will you use this data to (a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the data recipient's own existing customers; or (b) enable high volume, automated, electronic processes that send queries or data to the systems of Registry Operator, a Registrar, or Identity Digital except as reasonably necessary to register domain names or modify existing registrations. All rights reserved. Public Interest Registry reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy.  The Registrar of Record identified in this output may have an RDDS service that can be queried for additional information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:46.674749",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://microsoft-login.security-update.org/signin: HTTPSConnectionPool(host='microsoft-login.security-update.org', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274b96050>: Failed to resolve 'microsoft-login.security-update.org' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:46.945224",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for customer-verification.org: Domain not found.\r\n>>> Last update of WHOIS database: 2025-06-29T14:09:46Z <<<\r\n\r\nTerms of Use: Access to Public Interest Registry WHOIS information is provided to assist persons in determining the contents of a domain name registration record in the Public Interest Registry registry database. The data in this record is provided by Public Interest Registry for informational purposes only, and Public Interest Registry does not guarantee its accuracy. This service is intended only for query-based access. You agree that you will use this data only for lawful purposes and that, under no circumstances will you use this data to (a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the data recipient's own existing customers; or (b) enable high volume, automated, electronic processes that send queries or data to the systems of Registry Operator, a Registrar, or Identity Digital except as reasonably necessary to register domain names or modify existing registrations. All rights reserved. Public Interest Registry reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy.  The Registrar of Record identified in this output may have an RDDS service that can be queried for additional information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:47.167121",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://amazon-security.customer-verification.org/signin: HTTPSConnectionPool(host='amazon-security.customer-verification.org', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0272662e90>: Failed to resolve 'amazon-security.customer-verification.org' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:47.788818",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://apple-id-verify.security-update.com/unlock: HTTPSConnectionPool(host='apple-id-verify.security-update.com', port=443): Max retries exceeded with url: /unlock (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0273912290>: Failed to resolve 'apple-id-verify.security-update.com' ([Errno -5] No address associated with hostname)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:48.498498",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://chase-mobile-banking.security-alert.net/verify: HTTPSConnectionPool(host='chase-mobile-banking.security-alert.net', port=443): Max retries exceeded with url: /verify (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274b95a10>: Failed to resolve 'chase-mobile-banking.security-alert.net' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:48.704175",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for payment-required.org: Domain not found.\r\n>>> Last update of WHOIS database: 2025-06-29T14:09:48Z <<<\r\n\r\nTerms of Use: Access to Public Interest Registry WHOIS information is provided to assist persons in determining the contents of a domain name registration record in the Public Interest Registry registry database. The data in this record is provided by Public Interest Registry for informational purposes only, and Public Interest Registry does not guarantee its accuracy. This service is intended only for query-based access. You agree that you will use this data only for lawful purposes and that, under no circumstances will you use this data to (a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the data recipient's own existing customers; or (b) enable high volume, automated, electronic processes that send queries or data to the systems of Registry Operator, a Registrar, or Identity Digital except as reasonably necessary to register domain names or modify existing registrations. All rights reserved. Public Interest Registry reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy.  The Registrar of Record identified in this output may have an RDDS service that can be queried for additional information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:49.713946",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://netflix-billing-update.payment-required.org/renew: HTTPSConnectionPool(host='netflix-billing-update.payment-required.org', port=443): Max retries exceeded with url: /renew (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d02726607d0>: Failed to resolve 'netflix-billing-update.payment-required.org' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:55.652932",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://facebook-security.account-verify.com/login: HTTPSConnectionPool(host='facebook-security.account-verify.com', port=443): Max retries exceeded with url: /login (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7d0272660550>, 'Connection to facebook-security.account-verify.com timed out. (connect timeout=5)'))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:56.498780",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://login.secure.accounts.verification.google.security-check.net/signin: HTTPSConnectionPool(host='login.secure.accounts.verification.google.security-check.net', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274373a50>: Failed to resolve 'login.secure.accounts.verification.google.security-check.net' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:56.710555",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for account-locked.org: Domain not found.\r\n>>> Last update of WHOIS database: 2025-06-29T14:09:56Z <<<\r\n\r\nTerms of Use: Access to Public Interest Registry WHOIS information is provided to assist persons in determining the contents of a domain name registration record in the Public Interest Registry registry database. The data in this record is provided by Public Interest Registry for informational purposes only, and Public Interest Registry does not guarantee its accuracy. This service is intended only for query-based access. You agree that you will use this data only for lawful purposes and that, under no circumstances will you use this data to (a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the data recipient's own existing customers; or (b) enable high volume, automated, electronic processes that send queries or data to the systems of Registry Operator, a Registrar, or Identity Digital except as reasonably necessary to register domain names or modify existing registrations. All rights reserved. Public Interest Registry reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy.  The Registrar of Record identified in this output may have an RDDS service that can be queried for additional information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:56.987466",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://banking.secure.chase.customer.verification.account-locked.org/verify: HTTPSConnectionPool(host='banking.secure.chase.customer.verification.account-locked.org', port=443): Max retries exceeded with url: /verify (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274372c10>: Failed to resolve 'banking.secure.chase.customer.verification.account-locked.org' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:09:57.781885",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://payment.billing.paypal.customer.support.verification-required.com/signin: HTTPSConnectionPool(host='payment.billing.paypal.customer.support.verification-required.com', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0272662210>: Failed to resolve 'payment.billing.paypal.customer.support.verification-required.com' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:10:02.970896",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for http://45.67.89.123/secure-banking/chase/login: HTTPConnectionPool(host='45.67.89.123', port=80): Max retries exceeded with url: /secure-banking/chase/login (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x7d0272660810>, 'Connection to 45.67.89.123 timed out. (connect timeout=5)'))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:10:08.211371",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for http://192.168.100.50/paypal-verification/account: HTTPConnectionPool(host='192.168.100.50', port=80): Max retries exceeded with url: /paypal-verification/account (Caused by ConnectTimeoutError(<urllib3.connection.HTTPConnection object at 0x7d0272660fd0>, 'Connection to 192.168.100.50 timed out. (connect timeout=5)'))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:10:13.391415",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://203.45.67.89/apple-id-verify/security: HTTPSConnectionPool(host='203.45.67.89', port=443): Max retries exceeded with url: /apple-id-verify/security (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x7d0274b94190>, 'Connection to 203.45.67.89 timed out. (connect timeout=5)'))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:10:42.227098",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://luresta.top/login: HTTPSConnectionPool(host='luresta.top', port=443): Max retries exceeded with url: /login (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0273913e90>: Failed to resolve 'luresta.top' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:14.532163",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://faceit.eternalgamlng.com/signin: HTTPSConnectionPool(host='faceit.eternalgamlng.com', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d027258a090>: Failed to resolve 'faceit.eternalgamlng.com' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:31.176337",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://www.paypaI.com/login: HTTPSConnectionPool(host='www.paypai.com', port=443): Max retries exceeded with url: /login (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0274368ad0>: Failed to resolve 'www.paypai.com' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:31.755074",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://www.gmai1.com/signin: HTTPSConnectionPool(host='www.gmai1.com', port=443): Max retries exceeded with url: /signin (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0272bc5590>: Failed to resolve 'www.gmai1.com' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:32.837395",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for wallet-verification.net: No match for \"WALLET-VERIFICATION.NET\".\r\n>>> Last update of whois database: 2025-06-29T14:11:14Z <<<\r\n\r\nNOTICE: The expiration date displayed in this record is the date the\r\nregistrar's sponsorship of the domain name registration in the registry is\r\ncurrently set to expire. This date does not necessarily reflect the expiration\r\ndate of the domain name registrant's agreement with the sponsoring\r\nregistrar.  Users may consult the sponsoring registrar's Whois database to\r\nview the registrar's reported date of expiration for this registration.\r\n\r\nTERMS OF USE: You are not authorized to access or query our Whois\r\ndatabase through the use of electronic processes that are high-volume and\r\nautomated except as reasonably necessary to register domain names or\r\nmodify existing registrations; the Data in VeriSign Global Registry\r\nServices' (\"VeriSign\") Whois database is provided by VeriSign for\r\ninformation purposes only, and to assist persons in obtaining information\r\nabout or related to a domain name registration record. VeriSign does not\r\nguarantee its accuracy. By submitting a Whois query, you agree to abide\r\nby the following terms of use: You agree that you may use this Data only\r\nfor lawful purposes and that under no circumstances will you use this Data\r\nto: (1) allow, enable, or otherwise support the transmission of mass\r\nunsolicited, commercial advertising or solicitations via e-mail, telephone,\r\nor facsimile; or (2) enable high volume, automated, electronic processes\r\nthat apply to VeriSign (or its computer systems). The compilation,\r\nrepackaging, dissemination or other use of this Data is expressly\r\nprohibited without the prior written consent of VeriSign. You agree not to\r\nuse electronic processes that are automated and high-volume to access or\r\nquery the Whois database except as reasonably necessary to register\r\ndomain names or modify existing registrations. VeriSign reserves the right\r\nto restrict your access to the Whois database in its sole discretion to ensure\r\noperational stability.  VeriSign may restrict or terminate your access to the\r\nWhois database for failure to abide by these terms of use. VeriSign\r\nreserves the right to modify these terms at any time.\r\n\r\nThe Registry database contains ONLY .COM, .NET, .EDU domains and\r\nRegistrars.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:33.013640",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://coinbase-security.wallet-verification.net/unlock: HTTPSConnectionPool(host='coinbase-security.wallet-verification.net', port=443): Max retries exceeded with url: /unlock (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0272bc7290>: Failed to resolve 'coinbase-security.wallet-verification.net' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:33.326724",
+    "event_type": "DEBUG",
+    "message": "WHOIS lookup failed for kyc-verification.org: Domain not found.\r\n>>> Last update of WHOIS database: 2025-06-29T14:11:33Z <<<\r\n\r\nTerms of Use: Access to Public Interest Registry WHOIS information is provided to assist persons in determining the contents of a domain name registration record in the Public Interest Registry registry database. The data in this record is provided by Public Interest Registry for informational purposes only, and Public Interest Registry does not guarantee its accuracy. This service is intended only for query-based access. You agree that you will use this data only for lawful purposes and that, under no circumstances will you use this data to (a) allow, enable, or otherwise support the transmission by e-mail, telephone, or facsimile of mass unsolicited, commercial advertising or solicitations to entities other than the data recipient's own existing customers; or (b) enable high volume, automated, electronic processes that send queries or data to the systems of Registry Operator, a Registrar, or Identity Digital except as reasonably necessary to register domain names or modify existing registrations. All rights reserved. Public Interest Registry reserves the right to modify these terms at any time. By submitting this query, you agree to abide by this policy.  The Registrar of Record identified in this output may have an RDDS service that can be queried for additional information on how to contact the Registrant, Admin, or Tech contact of the queried domain name.\r\n",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:11:34.933861",
+    "event_type": "DEBUG",
+    "message": "HTML analysis failed for https://binance-urgent.kyc-verification.org/complete: HTTPSConnectionPool(host='binance-urgent.kyc-verification.org', port=443): Max retries exceeded with url: /complete (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7d0272bc69d0>: Failed to resolve 'binance-urgent.kyc-verification.org' ([Errno -2] Name or service not known)\"))",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:13:18.376081",
+    "event_type": "MODEL_VALIDATION_COMPLETE",
+    "message": "Comprehensive model validation completed",
+    "metadata": {
+      "validation_summary": {
+        "legitimate_urls_tested": 27,
+        "phishing_urls_tested": 33,
+        "legitimate_accuracy": 0.9259259259259259,
+        "phishing_accuracy": 1.0,
+        "overall_accuracy": 0.9666666666666667,
+        "false_positives": 2,
+        "false_negatives": 0,
+        "false_negative_rate": 0.0,
+        "false_positive_rate": 0.07407407407407407
+      },
+      "deployment_readiness": {
+        "ready_for_deployment": true,
+        "meets_fn_criteria": true,
+        "meets_fp_criteria": true,
+        "meets_detection_criteria": true,
+        "deployment_status": "READY FOR DEPLOYMENT"
+      },
+      "failed_cases": {
+        "false_negatives": [],
+        "false_positives": [
+          {
+            "url": "https://login.microsoftonline.com",
+            "probability": 0.6448543022063477
+          },
+          {
+            "url": "https://www.usa.gov/services",
+            "probability": 0.5878931172318627
+          }
+        ]
+      },
+      "feature_analysis": {
+        "typosquatting_detections": 4,
+        "brand_subdomain_detections": 12,
+        "ultra_high_risk_detections": 4
+      }
+    }
+  },
+  {
+    "timestamp": "2025-06-29T14:13:19.348029",
+    "event_type": "TIMING",
+    "message": "Model validation completed in 388.65 seconds",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:13:25.231202",
+    "event_type": "MODEL_SAVING",
+    "message": "Starting comprehensive model saving and documentation",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:13:27.713730",
+    "event_type": "MODEL_FILES_SAVED",
+    "message": "Core model files saved successfully",
+    "metadata": {}
+  },
+  {
+    "timestamp": "2025-06-29T14:13:41.057910",
+    "event_type": "MODEL_SAVING_COMPLETE",
+    "message": "All model artifacts saved successfully",
+    "metadata": {
+      "saving_time_seconds": 13.559783935546875,
+      "files_created": 4,
+      "model_ready": true
+    }
+  }
+]

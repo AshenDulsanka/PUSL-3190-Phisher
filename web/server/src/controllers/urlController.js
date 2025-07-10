@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client'
 import axios from 'axios'
 
 const prisma = new PrismaClient()
-const EXTENSION_API_ENDPOINT = process.env.EXTENSION_API_ENDPOINT
 const CHATBOT_API_ENDPOINT = process.env.CHATBOT_API_ENDPOINT
 
 // analyze a URL for phishing indicators with option for deep analysis
@@ -50,15 +49,25 @@ export const analyzeUrl = async (req, res) => {
       })
     }
 
-    // choose appropriate API endpoint based on analysis depth
-    const apiEndpoint = deepAnalysis ? CHATBOT_API_ENDPOINT : EXTENSION_API_ENDPOINT
-
     // call the ML API to analyze the URL
-    const response = await axios.post(apiEndpoint, {
-      url,
-      client: deepAnalysis ? 'chatbot' : 'web_client'
+    const chatbotResponse = await fetch(CHATBOT_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': process.env.API_KEY_CB
+      },
+      body: JSON.stringify({ 
+        url: url,
+        deep_analysis: deepAnalysis 
+      }),
+      timeout: parseInt(process.env.ANALYSIS_TIMEOUT) || 30000
     })
-    const analysisResult = response.data
+
+    if (!chatbotResponse.ok) {
+      throw new Error(`Chatbot service error: ${chatbotResponse.status}`)
+    }
+
+    const analysisResult = await chatbotResponse.json()
 
     // check if URL already exists 
     const updatedUrl = await prisma.uRL.findUnique({
@@ -67,24 +76,31 @@ export const analyzeUrl = async (req, res) => {
 
     // define urlData to ensure its available in all code paths
     const urlData = {
-      url,
-      isPhishing: analysisResult.is_phishing,
-      suspiciousScore: analysisResult.threat_score,
-      usingIP: analysisResult.features?.UsingIP === 1 || analysisResult.features?.using_ip === 1,
-      urlLength: analysisResult.features?.url_length || null,
-      hasHTTPS: analysisResult.features?.uses_http === 0 || null,
-      numDots: analysisResult.features?.num_dots || null,
-      numHyphens: analysisResult.features?.num_hyphens || null,
-      numSubdomains: analysisResult.features?.num_subdomains || null,
-      hasAtSymbol: analysisResult.features?.Symbol === 1 || analysisResult.features?.has_at_symbol === 1,
-      hasSpecialChars: analysisResult.features?.AbnormalURL === 1 || analysisResult.features?.has_special_chars === 1,
+      url: url,
+      isPhishing: analysisResult.is_phishing || false,
+      suspiciousScore: analysisResult.threat_score || 0,
       
-      // additional fields for deep analysis
+      // comprehensive features
+      hasHTTPS: analysisResult.features?.has_https === 1 || analysisResult.features?.uses_http === 0,
+      usingIP: analysisResult.features?.UsingIP === 1 || analysisResult.features?.has_ip === 1,
+      hasHyphen: analysisResult.features?.PrefixSuffix === 1 || analysisResult.features?.has_hyphen_in_domain === 1,
+      numSubdomains: analysisResult.features?.SubDomains || analysisResult.features?.subdomain_count || 0,
+      urlLength: analysisResult.features?.url_length || 0,
+      hasAtSymbol: analysisResult.features?.Symbol === 1 || analysisResult.features?.has_at_symbol === 1,
+      hasSpecialChars: analysisResult.features?.AbnormalURL === 1 || analysisResult.features?.high_special_char_density === 1,
+      
+      // ultra-comprehensive features
+      isTyposquatting: analysisResult.features?.IsTyposquatting === 1,
+      hasBrandImpersonation: analysisResult.features?.BrandInSubdomain === 1 || analysisResult.features?.has_brand_impersonation === 1,
+      hasPhishingKeywords: analysisResult.features?.has_phishing_keywords === 1,
+      isSuspiciousTLD: analysisResult.features?.suspicious_tld === 1,
+      isShortener: analysisResult.features?.is_shortener === 1,
+      
+      // deep analysis fields
       domainAge: deepAnalysis ? (analysisResult.deep_analysis?.domain_age_days || null) : null,
       hasIframe: deepAnalysis ? (analysisResult.deep_analysis?.content_analysis?.iframe_count > 0) : null,
       disablesRightClick: deepAnalysis ? (analysisResult.features?.disables_right_click || null) : null,
       hasPopup: deepAnalysis ? (analysisResult.features?.has_popup || null) : null,
-      isShortened: analysisResult.features?.is_shortened || null,
     }
 
     if (updatedUrl) {
@@ -119,29 +135,54 @@ export const analyzeUrl = async (req, res) => {
     }
 
     // return analysis result with extracted features
-    res.status(200).json({
-      url,
-      isPhishing: analysisResult.is_phishing,
-      threatScore: analysisResult.threat_score,
-      probability: analysisResult.probability,
-      details: analysisResult.explanation || analysisResult.details,
+    const response = {
+      url: url,
+      threatScore: analysisResult.threat_score || 0,
+      isPhishing: analysisResult.is_phishing || false,
+      confidence: analysisResult.confidence_level || 'Medium',
+      timestamp: new Date().toISOString(),
+      
+      // Include comprehensive analysis data
+      explanation: analysisResult.explanation || null,
+      recommendations: analysisResult.recommendations || [],
+      features: analysisResult.features || {},
+      
+      // Deep analysis if requested
+      deepAnalysis: deepAnalysis ? analysisResult.deep_analysis : null,
+      
+      // Legacy compatibility - keep existing feature mapping for backward compatibility
+      details: analysisResult.explanation || 
+        (analysisResult.is_phishing ? 
+          'This URL has been identified as a phishing attempt with high confidence.' :
+          'This URL appears to be legitimate based on our analysis.'),
+      
+      // Keep the normalized features for backward compatibility
       features: {
-        // surface key features in a normalized format
+        // Include both raw features and normalized features
+        ...analysisResult.features,
+        
+        // Normalized features for backward compatibility
         usingIP: analysisResult.features?.UsingIP === 1 || analysisResult.features?.using_ip === 1 || false,
         hasAtSymbol: analysisResult.features?.Symbol === 1 || analysisResult.features?.has_at_symbol === 1 || false,
-        hasDash: analysisResult.features?.['PrefixSuffix-'] === 1 || false,
-        numSubdomains: analysisResult.features?.SubDomains || analysisResult.features?.num_subdomains || 0,
-        urlLength: analysisResult.features?.url_length || analysisResult.deep_analysis?.content_analysis?.url_length || 0,
-        hasHTTPS: url.startsWith('https://') || analysisResult.features?.uses_https === true || false,
-        domainAge: analysisResult.features?.AgeofDomain === 1 || (analysisResult.deep_analysis?.domain_age_days < 180) || false,
-        hasSpecialChars: analysisResult.features?.AbnormalURL === 1 || false,
-        isTyposquatting: analysisResult.features?.IsTyposquatting === 1 || analysisResult.deep_analysis?.typosquatting_info?.is_typosquatting || false,
+        hasDash: analysisResult.features?.['PrefixSuffix-'] === 1 || analysisResult.features?.has_hyphen_in_domain === 1 || false,
+        numSubdomains: analysisResult.features?.SubDomains || analysisResult.features?.subdomain_count || 0,
+        urlLength: analysisResult.features?.url_length || 0,
+        hasHTTPS: url.startsWith('https://') || analysisResult.features?.has_https === 1 || false,
+        domainAge: analysisResult.features?.AgeofDomain === 1 || (analysisResult.deep_analysis?.domain_age_days > 180) || false,
+        hasSpecialChars: analysisResult.features?.AbnormalURL === 1 || analysisResult.features?.high_special_char_density === 1 || false,
+        isTyposquatting: analysisResult.features?.IsTyposquatting === 1 || false,
+        hasBrandImpersonation: analysisResult.features?.BrandInSubdomain === 1 || analysisResult.features?.has_brand_impersonation === 1 || false,
+        hasPhishingKeywords: analysisResult.features?.has_phishing_keywords === 1 || false,
+        isSuspiciousTLD: analysisResult.features?.suspicious_tld === 1 || false,
+        isShortener: analysisResult.features?.is_shortener === 1 || false,
         hasSuspiciousRedirect: analysisResult.features?.RequestURL === 1 || false,
         hasIframe: analysisResult.deep_analysis?.content_analysis?.iframe_count > 0 || false,
-        suspiciousURL: analysisResult.features?.suspiciousURL || analysisResult.threat_score > 50,
+        suspiciousURL: analysisResult.threat_score > 50,
         suspiciousDomain: analysisResult.features?.BrandInSubdomain === 1 || analysisResult.deep_analysis?.brand_impersonation?.detected || false
       }
-    })
+    }
+
+    res.status(200).json(response)
   } catch (error) {
     console.error('URL analysis error:', error)
     res.status(500).json({ message: 'Error analyzing URL' })

@@ -1,0 +1,288 @@
+[
+  {
+    "session_id": "20250625_053922",
+    "model_version": "5.0_ultra_high_recall",
+    "critical_success": true,
+    "perfect_detection": true,
+    "session_summary": {
+      "total_events": 17,
+      "phishing_detection_rate": 1.0,
+      "false_negatives": 0,
+      "dataset_enhanced": true,
+      "modern_patterns_added": 32
+    },
+    "events": [
+      {
+        "timestamp": "2025-06-25T05:36:19.199704",
+        "event_type": "DATA_LOADING",
+        "message": "Loading and enhancing dataset with modern phishing patterns",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:36:21.234632",
+        "event_type": "DATA_LOADED",
+        "message": "Enhanced dataset loaded with 4032 samples",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:36:33.689724",
+        "event_type": "TIMING",
+        "message": "Data loading and enhancement completed in 14.49 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:36:35.870006",
+        "event_type": "FEATURE_ENGINEERING",
+        "message": "Extracting ultra-high recall features",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:36:48.870097",
+        "event_type": "TIMING",
+        "message": "Ultra-high recall feature extraction completed in 13.00 seconds",
+        "metadata": {
+          "num_features": 33
+        }
+      },
+      {
+        "timestamp": "2025-06-25T05:36:50.235666",
+        "event_type": "MODEL_TRAINING",
+        "message": "Training ultra-high recall model - ZERO false negative tolerance",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:36:55.661657",
+        "event_type": "DATA_SPLIT",
+        "message": "Data split: 3225 train, 807 test",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:37:02.631588",
+        "event_type": "TIMING",
+        "message": "Ultra-high recall model training completed in 12.40 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:37:03.939938",
+        "event_type": "MODEL_EVALUATION",
+        "message": "Evaluating ultra-high recall model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:37:51.996536",
+        "event_type": "MODEL_PERFORMANCE",
+        "message": "Ultra-high recall evaluation completed",
+        "metadata": {
+          "accuracy": 0.9851301115241635,
+          "precision": 0.9949874686716792,
+          "recall": 0.9754299754299754,
+          "f1_score": 0.9851116625310173,
+          "auc": 0.9983968058968058,
+          "false_negative_rate": 0.02457002457002457,
+          "false_positive_rate": 0.005,
+          "false_negatives": 10,
+          "optimal_threshold": 0.1,
+          "min_false_negatives": 2
+        }
+      },
+      {
+        "timestamp": "2025-06-25T05:37:54.504109",
+        "event_type": "TIMING",
+        "message": "Model evaluation completed in 50.56 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:37:57.893387",
+        "event_type": "REAL_WORLD_TESTING",
+        "message": "Starting ultra-sensitive real-world testing",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:38:41.650361",
+        "event_type": "ULTRA_SENSITIVE_RESULTS",
+        "message": "Ultra-sensitive testing completed",
+        "metadata": {
+          "legitimate_accuracy": 0.9333333333333333,
+          "phishing_detection_rate": 1.0,
+          "overall_accuracy": 0.9722222222222222,
+          "critical_success": true,
+          "perfect_detection": true,
+          "false_negatives_realworld": 0,
+          "false_positives_realworld": 1
+        }
+      },
+      {
+        "timestamp": "2025-06-25T05:38:43.528980",
+        "event_type": "TIMING",
+        "message": "Ultra-sensitive testing completed in 45.64 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:39:06.359358",
+        "event_type": "MODEL_SAVING",
+        "message": "Saving ultra-high recall model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:39:12.720553",
+        "event_type": "TIMING",
+        "message": "Model saving completed in 6.36 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:39:18.916637",
+        "event_type": "ULTRA_TRAINING_COMPLETE",
+        "message": "Ultra-high recall training completed",
+        "metadata": {
+          "critical_success": true,
+          "phishing_detection_rate": 1.0,
+          "false_negatives": 0,
+          "deployment_ready": true
+        }
+      }
+    ]
+  },
+  {
+    "session_id": "20250625_054450",
+    "model_version": "5.0_ultra_high_recall",
+    "critical_success": true,
+    "perfect_detection": false,
+    "session_summary": {
+      "total_events": 17,
+      "phishing_detection_rate": 0.9655172413793104,
+      "false_negatives": 1,
+      "dataset_enhanced": true,
+      "modern_patterns_added": 32
+    },
+    "events": [
+      {
+        "timestamp": "2025-06-25T05:44:36.152139",
+        "event_type": "DATA_LOADING",
+        "message": "Loading and enhancing dataset with modern phishing patterns",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:36.188333",
+        "event_type": "DATA_LOADED",
+        "message": "Enhanced dataset loaded with 4032 samples",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:36.196017",
+        "event_type": "TIMING",
+        "message": "Data loading and enhancement completed in 0.04 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:36.204787",
+        "event_type": "FEATURE_ENGINEERING",
+        "message": "Extracting ultra-high recall features",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:37.147737",
+        "event_type": "TIMING",
+        "message": "Ultra-high recall feature extraction completed in 0.94 seconds",
+        "metadata": {
+          "num_features": 33
+        }
+      },
+      {
+        "timestamp": "2025-06-25T05:44:37.159736",
+        "event_type": "MODEL_TRAINING",
+        "message": "Training ultra-high recall model - ZERO false negative tolerance",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:37.203758",
+        "event_type": "DATA_SPLIT",
+        "message": "Data split: 3225 train, 807 test",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:38.193716",
+        "event_type": "TIMING",
+        "message": "Ultra-high recall model training completed in 1.03 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:38.205588",
+        "event_type": "MODEL_EVALUATION",
+        "message": "Evaluating ultra-high recall model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:38.944655",
+        "event_type": "MODEL_PERFORMANCE",
+        "message": "Ultra-high recall evaluation completed",
+        "metadata": {
+          "accuracy": 0.9851301115241635,
+          "precision": 0.9949874686716792,
+          "recall": 0.9754299754299754,
+          "f1_score": 0.9851116625310173,
+          "auc": 0.9983968058968058,
+          "false_negative_rate": 0.02457002457002457,
+          "false_positive_rate": 0.005,
+          "false_negatives": 10,
+          "optimal_threshold": 0.1,
+          "min_false_negatives": 2
+        }
+      },
+      {
+        "timestamp": "2025-06-25T05:44:38.971344",
+        "event_type": "TIMING",
+        "message": "Model evaluation completed in 0.76 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:39.007896",
+        "event_type": "REAL_WORLD_TESTING",
+        "message": "Starting ultra-sensitive real-world testing",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:46.086398",
+        "event_type": "ULTRA_SENSITIVE_RESULTS",
+        "message": "Ultra-sensitive testing completed",
+        "metadata": {
+          "legitimate_accuracy": 0.9333333333333333,
+          "phishing_detection_rate": 0.9655172413793104,
+          "overall_accuracy": 0.9545454545454546,
+          "critical_success": true,
+          "perfect_detection": false,
+          "false_negatives_realworld": 1,
+          "false_positives_realworld": 1
+        }
+      },
+      {
+        "timestamp": "2025-06-25T05:44:46.097402",
+        "event_type": "TIMING",
+        "message": "Ultra-sensitive testing completed in 7.09 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:49.287309",
+        "event_type": "MODEL_SAVING",
+        "message": "Saving ultra-high recall model",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:50.008136",
+        "event_type": "TIMING",
+        "message": "Model saving completed in 0.72 seconds",
+        "metadata": {}
+      },
+      {
+        "timestamp": "2025-06-25T05:44:50.058618",
+        "event_type": "ULTRA_TRAINING_COMPLETE",
+        "message": "Ultra-high recall training completed",
+        "metadata": {
+          "critical_success": true,
+          "phishing_detection_rate": 0.9655172413793104,
+          "false_negatives": 1,
+          "deployment_ready": true
+        }
+      }
+    ]
+  }
+]

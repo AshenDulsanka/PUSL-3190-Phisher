@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   retryBtn.addEventListener('click', analyzeCurrentUrl)
   
   deepAnalysisBtn.addEventListener('click', function() {
-    const chatbotUrl = 'https://phisher.live/?url=' + encodeURIComponent(activeTab.url)
+    const chatbotUrl = 'http://localhost:3000'
     chrome.tabs.create({ url: chatbotUrl })
   })
   
