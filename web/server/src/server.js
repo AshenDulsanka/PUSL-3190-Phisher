@@ -36,14 +36,14 @@ app.get('/health', (req, res) => {
 // root endpoint
 app.get('/', (req, res) => {
   res.status(200).json({ 
-    message: 'Phisher Chatbot API',
+    message: 'Phisher API',
     version: '1.0.0',
     endpoints: ['/health', '/api/url', '/api/url/admin']
   })
 })
 
 // global error handler
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack)
   res.status(500).json({
     error: 'Server error',

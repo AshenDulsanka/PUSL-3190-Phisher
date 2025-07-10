@@ -145,7 +145,7 @@ class DatabaseService {
           }
         })
       })
-      
+
       return result
     } catch (error) {
       console.error('Error logging system event:', error)
@@ -163,6 +163,7 @@ class DatabaseService {
       })
       
       if (!model) {
+        // eslint-disable-next-line no-unused-vars
         const [name, version = '1.0'] = modelName.split('_v')
         model = await this.prisma.mLModel.create({
           data: {
@@ -219,8 +220,8 @@ class DatabaseService {
         await this.saveFeedback({
           url: feedback.url,
           feedback_type: feedback.feedback_type,
-          comments: "From continuous learning queue",
-          source: "redis_queue"
+          comments: 'From continuous learning queue',
+          source: 'redis_queue'
         })
         
         results.push({

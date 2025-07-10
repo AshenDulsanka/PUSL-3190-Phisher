@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon --legacy-watch src/server.js",
-    "prisma:generate": "prisma generate --schema=../../database/prisma/schema.prisma"
+    "prisma:generate": "prisma generate --schema=../../database/prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate deploy",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -27,5 +29,10 @@
     "prisma": "^6.6.0",
     "uuid": "^11.1.0",
     "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "eslint": "^9.26.0",
+    "globals": "^16.0.0"
   }
 }
