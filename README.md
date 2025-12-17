@@ -1,6 +1,6 @@
 # Phisher 
 
-AI-Powered Phishing Detection System that combines browser extension and Web Application technologies to detect and analyze phishing URLs.
+Dual Architecture Phishing Detection System that combines browser extension and Web Application technologies to detect and analyze phishing URLs.
 
 ## Features
 
