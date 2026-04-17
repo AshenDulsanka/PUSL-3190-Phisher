@@ -1,11 +1,11 @@
 # Phisher 
 
-AI-Powered Phishing Detection System that combines browser extension and Web Application technologies to detect and analyze phishing URLs.
+Dual Architecture Phishing Detection System that combines browser extension and Web Application technologies to detect and analyze phishing URLs.
 
 ## Features
 
-- Browser extension with lightweight phishing detection (Random Forest classifier)
-- Web Application for deep URL analysis (Gradient Boosting classifier)
+- Browser extension with lightweight phishing detection
+- Web Application for deep URL analysis
 - Real-time URL analysis and threat scoring
 - Educational feedback to users about potential threats
 - Admin dashboard with model metrics and system logs
@@ -26,7 +26,7 @@ Browser Extension ──► Extension Backend ──► Deep Analysis Backend �
 
 - **Frontend**: React.js, Material UI, Chrome Extensions API
 - **Backend**: Python, FastAPI, PostgreSQL, Prisma
-- **AI/ML**: Scikit-learn (Random Forest & Gradient Boosting Classifiers)
+- **AI/ML**: Scikit-learn (Random Forest classifier for both extension and deep analysis)
 - **Infrastructure**: Docker, Google Cloud Platform
 
 ## Local/Docker Setup Instructions
